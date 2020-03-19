@@ -1,0 +1,7 @@
+{
+  "name": "VecinoIonic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
