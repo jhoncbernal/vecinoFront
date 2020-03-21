@@ -13,9 +13,10 @@ import {
   IonCard,
   IonToast,
   IonProgressBar,
-  IonImg
+  IonImg,
+  IonToggle
 } from "@ionic/react";
-import { person, lockClosed } from 'ionicons/icons';
+import { person, lockClosed, personOutline, keyOutline, bulbOutline } from 'ionicons/icons';
 
 export class LoginPage extends React.Component<{},
   {
@@ -79,7 +80,7 @@ export class LoginPage extends React.Component<{},
         .then(response => {
           this.setState({ 'hiddenbar': true })
           if (response.token) {
-            if (this.state.checked) {
+            if (JSON.stringify(this.state.checked)) {
               this.setObject(response)
             }
             console.log('ok')
@@ -89,7 +90,7 @@ export class LoginPage extends React.Component<{},
             //  });
           } else {
             this.setState({ 'loginMessage': response.message })
-            console.error(response.message);
+            console.error(response.message);            
           }
           this.setState({ 'showToast1': true })
         });
@@ -109,29 +110,34 @@ export class LoginPage extends React.Component<{},
           <IonItem >
             <IonImg class='img' src={'https://drive.google.com/uc?export=view&id=1ZyIa6S4-qgL1FpdhzYrbC8EEYhe1G7P0'} />
           </IonItem>
-          <IonCard class="card-login">
+          
             <form onSubmit={e => this.handleSubmit(e)} action="post">
-
+            <IonCard class="card-login">
               <IonItem>
-                <IonIcon color='dark' icon={person} slot="start" />
+                <IonIcon color='primary' icon={personOutline} slot="start" />
                 <IonLabel position="floating">Username o Email</IonLabel>
-                <IonInput color='light' required={true} autocomplete='on' name='email' type="email" value={this.state.email} onInput={(email: any) => this.setState({'email': email.target.value})} />
+                <IonInput color='dark' required={true} autocomplete='on' name='email' type="email" value={this.state.email} onInput={(email: any) => this.setState({'email': email.target.value})} />
               </IonItem>
               <IonItem>
-                <IonIcon color='dark' icon={lockClosed} slot="start" />
+                <IonIcon color='primary' icon={keyOutline} slot="start" />
                 <IonLabel position="floating">Contraseña</IonLabel>
-                <IonInput color='light' required={true} minlength={8} maxlength={18} name='password' type="password" value={this.state.password} onInput={(password: any) => this.setState({'password': password.target.value})} />
+                <IonInput color='dark' required={true} minlength={8} maxlength={18} name='password' type="password" value={this.state.password} onInput={(password: any) => this.setState({'password': password.target.value})} />
               </IonItem>
-              <IonItem id='btn-rememberme' >
-                <IonLabel>Recordar usuario</IonLabel>
-                <IonCheckbox name='checked' checked={this.state.checked} onIonChange={e => this.setState({ 'checked': e.detail.checked })} />
-              </IonItem >
+              
+              <IonItem>
+              <IonIcon color='primary' icon={bulbOutline} slot="start" />
+              <IonLabel>Recordar usuario:</IonLabel>
+            <IonToggle checked={this.state.checked} onIonChange={e => this.setState({ 'checked': e.detail.checked })} />
+               </IonItem >               
+               <IonProgressBar hidden={this.state.hiddenbar} type="indeterminate"></IonProgressBar><br />
+               </IonCard>
               <IonButton class='btn-login' type="submit">Ingresar</IonButton>
 
+              
 
             </form>
 
-            <IonProgressBar hidden={this.state.hiddenbar} type="indeterminate"></IonProgressBar><br />
+            
             <IonToast
               isOpen={this.state.showToast1}
               onDidDismiss={() => this.setState({ 'showToast1': false })}
@@ -139,11 +145,10 @@ export class LoginPage extends React.Component<{},
               duration={2000}
             />
 
-          </IonCard>
           <div id='btn-auth' >
-
-            <IonButton >¿Olvidaste tu usuario o contraseña?</IonButton>
-            <IonButton >Quiero registrarme</IonButton>
+          
+            <IonButton class='btn-auth' routerLink="/tab3"  >¿Olvidaste tu usuario o contraseña?</IonButton>
+            <IonButton class='btn-auth' routerLink="/tab2">Quiero registrarme</IonButton>
           </div>
 
         </IonContent>

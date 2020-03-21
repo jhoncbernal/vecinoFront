@@ -3,7 +3,9 @@ ion-content {
   --background-size: cover;
   background:#ffffff
 }
-
+ion-input{
+  color:#000000d4!important;
+}
 ion-label{
   color:#8c8c8c!important;
   font-weight: bolder;
@@ -38,20 +40,30 @@ ion-tab-bar {
 margin-top: 4%;
 }
 .btn-login{
+  margin-top: 1.5%;
   margin-left: auto;
   margin-right: auto;
   display: block !important;
   width: 200px;
   height: 50px;
 }
-#btn-auth{
-  margin-top: 0.5%;
-  color:#ffffff;
+#btn-auth{  
+  margin-top: 0.5%;  
   margin-right: auto;
   margin-left: 10%;
   display: block !important;
   width: 310px;
   height: 50px;
+ }
+ .btn-auth{
+  --color:#4c8dff;
+  --border-width: none;
+  --background : transparent!important;
+  --box-shadow:none;
+  --color-hover:#92949c;
+  --background-activated-opacity:transparent!important;
+  --background-activated:transparent!important;
+  
  }
  #btn-rememberme{
   margin-left: auto;
