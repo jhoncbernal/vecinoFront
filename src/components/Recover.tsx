@@ -88,7 +88,7 @@ export class RecoverPage extends React.Component<{},
               <IonItem>
                 <IonIcon color='primary' icon={personOutline} slot="start" />
                 <IonLabel position="floating">Username o Email</IonLabel>
-                <IonInput color='dark' required={true} autocomplete='on' name='email' type="email" value={this.state.email} onInput={(email: any) => this.setState({'email': email.target.value})} />
+                <IonInput color='dark' required={true} autocomplete='on' name='email' type="text" value={this.state.email} onInput={(email: any) => this.setState({'email': email.target.value})} />
               </IonItem>              
               <IonProgressBar hidden={this.state.hiddenbar} type="indeterminate"></IonProgressBar><br />
               </IonCard>
