@@ -8,7 +8,6 @@ import {
   IonLabel,
   IonInput,
   IonButton,
-  IonCheckbox,
   IonIcon,
   IonCard,
   IonToast,
@@ -16,7 +15,7 @@ import {
   IonImg,
   IonToggle
 } from "@ionic/react";
-import { person, lockClosed, personOutline, keyOutline, bulbOutline } from 'ionicons/icons';
+import { personOutline, keyOutline, bulbOutline } from 'ionicons/icons';
 
 export class LoginPage extends React.Component<{},
   {

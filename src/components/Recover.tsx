@@ -12,12 +12,8 @@ import {
   IonToast,
   IonProgressBar,
   IonImg,
-  IonFooter,
-  IonToolbar,
-  IonTitle,
   IonFab,
-  IonFabButton,
-  IonFabList
+  IonFabButton
 } from "@ionic/react";
 import { personOutline, arrowBackOutline } from 'ionicons/icons';
 
