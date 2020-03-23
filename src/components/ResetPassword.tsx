@@ -78,6 +78,7 @@ export class RecoverPage extends React.Component<{},
 
     return (
       <>
+      
         <IonContent class="bg-image">
           <IonItem >
             <IonImg class='img' src={'https://drive.google.com/uc?export=view&id=1ZyIa6S4-qgL1FpdhzYrbC8EEYhe1G7P0'} />

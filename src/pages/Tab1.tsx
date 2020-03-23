@@ -2,11 +2,12 @@ import React from 'react';
 import { IonContent,  IonPage  } from '@ionic/react';
 import './Tab1.css';
 import {LoginPage} from '../components/Login'
-const Tab1: React.FC = () => {
+import { RouteComponentProps } from 'react-router';
+const Tab1: React.FC<RouteComponentProps> = ({history}) => {
   return (
     <IonPage>
         <IonContent>
-        <LoginPage ></LoginPage>
+        <LoginPage history={history} ></LoginPage>
       </IonContent>
     </IonPage>
   );

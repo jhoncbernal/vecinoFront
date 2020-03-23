@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent,  IonPage } from '@ionic/react';
 import { RecoverPage } from '../components/Recover';
 import './Tab3.css';
 
