@@ -1,15 +1,16 @@
 import React  from 'react';
-import { IonContent, IonItem, IonImg,  IonCard,  IonCardHeader,   IonProgressBar, IonAlert } from '@ionic/react';
+import { IonContent, IonItem, IonImg,  IonCard,  IonCardHeader,   IonProgressBar, IonAlert, IonToolbar, IonSegment, IonSegmentButton, IonIcon } from '@ionic/react';
 import { HttpRequest } from '../hooks/HttpRequest';
 import DynamicList from './DynamicList';
 import { Storages } from '../hooks/Storage';
+import { carSportSharp, bicycleSharp, peopleSharp, bicycleOutline } from 'ionicons/icons';
 export class DynamicListPage extends React.Component<{ history: any }, {
   usersArray: Array<any>, hiddenbar: boolean, showAlert1: boolean, message: string
 }> {
   constructor(props: any) {
     super(props);
     this.state = {
-      usersArray: [''], hiddenbar: false, showAlert1: false, message: ''
+      usersArray: [], hiddenbar: false, showAlert1: false, message: ''
     }
 
     this.request();
@@ -35,13 +36,19 @@ export class DynamicListPage extends React.Component<{ history: any }, {
         this.setState({ 'usersArray': resultado.resultado.response });
       }
       else {
-        this.setState({ 'message': resultado.resultado.response.message });
-        this.setState({ 'showAlert1': true });
+        const err = new Error();
+        
+                    err.message = resultado.resultado.response.message;
+                    throw err;
+         
       }
       this.setState({ 'hiddenbar': true })
 
 
     } catch (e) {
+      console.log(e.message)
+      const {removeItem}=await Storages();
+      await removeItem('token');
       this.setState({ 'message': e.message });
       this.setState({ 'showAlert1': true });
       console.error("DynamicListPage: " + e);
@@ -61,10 +68,25 @@ export class DynamicListPage extends React.Component<{ history: any }, {
           <IonItem>
             <IonImg class='img' src={'https://drive.google.com/uc?export=view&id=1ZyIa6S4-qgL1FpdhzYrbC8EEYhe1G7P0'} />
           </IonItem>
-          <IonCardHeader>
-
-          </IonCardHeader>
+          
           <IonCard class="card-login">
+          <IonToolbar>
+          <IonSegment onIonChange={e => console.log('Segment selected', e.detail.value)}>
+          <IonSegmentButton value="Users">
+              <IonIcon icon={peopleSharp} />
+            </IonSegmentButton>
+            <IonSegmentButton value="Cars">
+              <IonIcon icon={carSportSharp} />
+            </IonSegmentButton>
+            <IonSegmentButton value="Bikes">
+            <IonIcon icon={bicycleSharp} />
+              <IonIcon color='light' size='large'  slot="icon-only" src='/assets/icons/Supersport.svg' />
+            </IonSegmentButton>
+            <IonSegmentButton value="Motorcycles">
+              <IonIcon icon={bicycleSharp} />
+            </IonSegmentButton>
+          </IonSegment>
+        </IonToolbar>
             <DynamicList inputs={this.state.usersArray}></DynamicList>
             <IonProgressBar hidden={this.state.hiddenbar} type="indeterminate"></IonProgressBar><br />
           </IonCard>

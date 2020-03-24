@@ -1,8 +1,4 @@
-ion-content {
-  --background: url('https://drive.google.com/uc?export=view&id=1wFsLvKXJOBMkpZoMVBcqGyGy5UwmtuDb') no-repeat center center fixed cover;
-  --background-size: cover;
-  background:#ffffff
-}
+
 ion-input{
   color:#000000d4!important;
 }
@@ -15,21 +11,14 @@ ion-item {
  --background: transparent;
  --ion-color-base: 'transparent' !important;
 }
-
-
-ion-tabs {
- --background: url('https://drive.google.com/uc?export=view&id=1wFsLvKXJOBMkpZoMVBcqGyGy5UwmtuDb') no-repeat center center fixed cover;
- --background-size: cover;
-
+ion-content{
+  --color:'dark'
 }
-ion-tab-bar {
- --background: url('https://drive.google.com/uc?export=view&id=1wFsLvKXJOBMkpZoMVBcqGyGy5UwmtuDb') no-repeat center center fixed cover;
- --background-size: cover;
 
-}
+
 .bg-image {
   background-color: inherit!important;
-  background: url('https://drive.google.com/uc?export=view&id=1wFsLvKXJOBMkpZoMVBcqGyGy5UwmtuDb') no-repeat center center fixed;
+  background: url('./para\ vectorizar.svg') no-repeat center center fixed;
   background-size: cover;
 }
 

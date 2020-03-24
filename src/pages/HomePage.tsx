@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { IonContent, IonPage, IonFab, IonFabButton, IonIcon,  IonModal, IonButton, IonFabList, IonAlert } from '@ionic/react';
+import { IonContent, IonPage, IonFab, IonFabButton, IonIcon,  IonModal,  IonFabList, IonAlert, IonBackdrop } from '@ionic/react';
 import './Tab1.css';
 import Home from '../components/Home'
 import { RouteComponentProps } from 'react-router';
-import { menuSharp, personSharp, buildSharp,  carSportSharp,  logOutSharp, cardSharp } from 'ionicons/icons';
+import { menuSharp,  buildSharp,  carSportSharp,  logOutSharp, cardSharp, documentTextSharp, arrowBackOutline } from 'ionicons/icons';
 import {Storages} from '../hooks/Storage'
+import { FileFormPage } from '../components/FileForm';
 const HomePage: React.FC<RouteComponentProps> = ({ history }) => {
   const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   return (
     <IonPage>
+      
       <IonContent>
         <Home history={history} ></Home>
         <div>
@@ -19,7 +21,7 @@ const HomePage: React.FC<RouteComponentProps> = ({ history }) => {
             </IonFabButton>
             <IonFabList side="bottom">
               <IonFabButton color='primary'><IonIcon icon={carSportSharp} /></IonFabButton>
-              <IonFabButton onClick={() => setShowModal(true)} color='primary'><IonIcon icon={personSharp} /></IonFabButton>
+              <IonFabButton onClick={() => setShowModal(true)} color='primary'><IonIcon icon={documentTextSharp} /></IonFabButton>
               <IonFabButton color='primary'><IonIcon icon={buildSharp} /></IonFabButton>
               <IonFabButton color='primary'><IonIcon icon={cardSharp} /></IonFabButton>
               <IonFabButton color='dark'onClick={() => setShowAlert(true)} ><IonIcon color='primary' icon={logOutSharp} /></IonFabButton>
@@ -56,13 +58,16 @@ const HomePage: React.FC<RouteComponentProps> = ({ history }) => {
           ]}
         />
         </div>
-          <IonModal isOpen={showModal} animated={true}  >
+
+          <IonModal backdropDismiss={false} isOpen={showModal} animated={true}  >
           <IonContent>
+         
+          <FileFormPage history={history}></FileFormPage>
             </IonContent>
-            <IonButton onClick={() => setShowModal(false)}>Close Modal</IonButton>
-            
-          </IonModal>
-        
+            <IonFab vertical="bottom" horizontal="start"  slot="fixed">       
+              <IonFabButton onClick={() => setShowModal(false)} routerLink="/home"><IonIcon icon={arrowBackOutline} /></IonFabButton>
+            </IonFab>
+          </IonModal>       
       </IonContent>
     </IonPage>
   );

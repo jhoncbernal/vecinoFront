@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonItem, IonIcon, IonLabel, IonCard, IonCardContent, IonAvatar, IonToggle, IonRow, IonGrid, IonCol, IonSearchbar } from '@ionic/react';
+import { IonItem, IonIcon, IonLabel, IonCard, IonCardContent, IonAvatar, IonToggle, IonRow, IonGrid, IonCol, IonSearchbar, IonText } from '@ionic/react';
 import { personCircleOutline } from 'ionicons/icons';
 interface ContainerProps {
   inputs: Array<any>;
@@ -7,13 +7,34 @@ interface ContainerProps {
 
 const DynamicList: React.FC<ContainerProps> = ({ inputs }) => {
   const [searchText, setSearchText] = useState('');
-  if (inputs.length < 0) {
-    return (<></>)
-  }
+  const [data, setdata] = useState(inputs);
+  if(inputs.length>0){
   return (
     <>
-      <IonSearchbar value={searchText} onIonChange={e => setSearchText(e.detail.value!)} showCancelButton="always"></IonSearchbar>
-      {inputs.map((input: any, index) => {
+    
+      <IonSearchbar value={searchText} onIonChange={   (e)=>{
+        setdata(inputs);
+        setSearchText(e.detail.value!);
+
+  let newData = inputs.filter(item =>{ 
+    const itemData = `T${item.blockNumber.toString().toUpperCase()} ${item.homeNumber.toString().toUpperCase()} 
+    ${item.firstName.toUpperCase()}${item.lastName.toUpperCase()}
+    ${item.email.toUpperCase()}
+    ${item.phone.toString().toUpperCase()}
+    ${item.documentId.toString().toUpperCase()}`;
+    const textData = searchText.toUpperCase();
+    return itemData.indexOf(textData) > -1;  
+  });
+  setdata(newData);
+}}
+
+
+  
+  
+
+       // e => setSearchText(e.detail.value!)}
+         showCancelButton="always"></IonSearchbar>
+      {data.map((input: any, index) => {
 
         return (
 
@@ -67,7 +88,9 @@ const DynamicList: React.FC<ContainerProps> = ({ inputs }) => {
 
     </>
 
-  );
+  );}else{
+    return (<><h1><IonText color='primary'>Sin conexion</IonText></h1></>)
+  }
 };
 
 export default DynamicList;

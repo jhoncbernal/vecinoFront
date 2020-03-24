@@ -1,5 +1,5 @@
 ion-content {
-  --background: url('https://drive.google.com/uc?export=view&id=1wFsLvKXJOBMkpZoMVBcqGyGy5UwmtuDb') no-repeat center center fixed cover;
+  --background: url('%PUBLIC_URL%//assets/BackgroundVecino.svg') no-repeat center center fixed cover;
   --background-size: cover;
   background:#ffffff
 }
@@ -18,18 +18,18 @@ ion-item {
 
 
 ion-tabs {
- --background: url('https://drive.google.com/uc?export=view&id=1wFsLvKXJOBMkpZoMVBcqGyGy5UwmtuDb') no-repeat center center fixed cover;
+ --background: url('%PUBLIC_URL%//assets/BackgroundVecino.svg') no-repeat center center fixed cover;
  --background-size: cover;
 
 }
 ion-tab-bar {
- --background: url('https://drive.google.com/uc?export=view&id=1wFsLvKXJOBMkpZoMVBcqGyGy5UwmtuDb') no-repeat center center fixed cover;
+ --background: url('%PUBLIC_URL%//assets/BackgroundVecino.svg') no-repeat center center fixed cover;
  --background-size: cover;
 
 }
 .bg-image {
   background-color: inherit!important;
-  background: url('https://drive.google.com/uc?export=view&id=1wFsLvKXJOBMkpZoMVBcqGyGy5UwmtuDb') no-repeat center center fixed;
+  background: url('%PUBLIC_URL%//assets/BackgroundVecino.svg') no-repeat center center fixed;
   background-size: cover;
 }
 
