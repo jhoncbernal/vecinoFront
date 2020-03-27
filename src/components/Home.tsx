@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonItem, IonImg, IonCard, IonProgressBar, IonAlert, IonToolbar, IonSegment, IonSegmentButton, IonIcon, IonButtons, IonButton, IonTitle } from '@ionic/react';
+import { IonContent,  IonImg, IonCard, IonProgressBar, IonAlert, IonToolbar, IonSegment, IonSegmentButton, IonIcon,  IonTitle } from '@ionic/react';
 import { HttpRequest } from '../hooks/HttpRequest';
 import DynamicList from './DynamicList';
 import { Storages } from '../hooks/Storage';

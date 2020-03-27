@@ -1,6 +1,6 @@
 import React from 'react';
-import { IonToolbar, IonTitle, IonContent, IonCard, IonItem, IonIcon, IonLabel, IonInput, IonCol, IonRow, IonGrid, IonToggle, IonProgressBar, IonButton, IonFab, IonFabButton } from '@ionic/react';
-import { personOutline, phonePortraitOutline, mailOpenOutline, homeOutline, cardOutline, bulbOutline, arrowBackOutline, pushOutline } from 'ionicons/icons';
+import { IonToolbar, IonTitle, IonContent, IonCard, IonItem, IonIcon, IonLabel, IonInput, IonCol, IonRow, IonGrid, IonToggle, IonProgressBar, IonButton, } from '@ionic/react';
+import { personOutline, phonePortraitOutline, mailOpenOutline, homeOutline, cardOutline, bulbOutline,  pushOutline } from 'ionicons/icons';
 
 interface ContainerProps {
     dataModal: any;

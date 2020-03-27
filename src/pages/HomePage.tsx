@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonContent, IonPage, IonFab, IonFabButton, IonIcon,  IonModal,  IonFabList, IonAlert, IonBackdrop, IonTitle, IonToolbar, IonImg } from '@ionic/react';
+import { IonContent, IonPage, IonFab, IonFabButton, IonIcon,  IonModal,  IonFabList, IonAlert, } from '@ionic/react';
 import './Tab1.css';
 import Home from '../components/Home'
 import { RouteComponentProps } from 'react-router';
