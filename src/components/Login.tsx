@@ -1,5 +1,5 @@
 import React, { FormEvent } from 'react';
-import {Storages} from '../hooks/Storage'
+import { Storages } from '../hooks/Storage'
 
 import {
   IonContent,
@@ -16,6 +16,7 @@ import {
 } from "@ionic/react";
 import { personOutline, keyOutline, bulbOutline } from 'ionicons/icons';
 import { HttpRequest } from '../hooks/HttpRequest'
+import { APIVERSION, BASEURL } from '../config';
 export class LoginPage extends React.Component<{ history: any },
   {
     email: string
@@ -39,43 +40,44 @@ export class LoginPage extends React.Component<{ history: any },
     }
     this.preValues();
   }
- async preValues(){
-   try{
-  const {getObject}= Storages();  
-  let rememberme= await getObject('rememberme');
-   this.setState({'email':rememberme.obj.username});
-   this.setState({'checked':rememberme.obj.checked});
-   let token= await getObject('token');
-   if(token){
-    this.props.history.push(
-      '/home'
-    )
-   }
-  }catch(e){
-    console.error(e);
+  async preValues() {
+    try {
+      const { getObject } = Storages();
+      let rememberme = await getObject('rememberme');
+      this.setState({ 'email': rememberme.obj.username });
+      this.setState({ 'checked': rememberme.obj.checked });
+      let token = await getObject('token');
+      if (token) {
+        this.props.history.push(
+          '/home'
+        )
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
- }
   async handleSubmit(e: FormEvent) {
     e.preventDefault();
 
     try {
-      const {setObject,removeItem}= Storages();
+      const { setObject, removeItem } = Storages();
       let header = {
         'Content-Type': 'application/json',
       }
-      let url = 'http://localhost:4000/v1/api/auth/signin';
+      let url = `${BASEURL}${APIVERSION}/auth/signin`
       let data = { email: this.state.email, password: this.state.password };
       this.setState({ 'hiddenbar': false })
       const { resultado } = await HttpRequest(url, 'POST', header, data);
       this.setState({ 'hiddenbar': true })
       if (!resultado.response.ErrorMessage) {
-         await setObject('token',resultado);
+        await setObject('token', resultado);
         if (this.state.checked) {
-          let rememberme={
-            'checked':this.state.checked,
-            'username':this.state.email}
-          await setObject('rememberme',rememberme);
-        }else{
+          let rememberme = {
+            'checked': this.state.checked,
+            'username': this.state.email
+          }
+          await setObject('rememberme', rememberme);
+        } else {
           await removeItem('checked');
           await removeItem('username');
         }
@@ -104,7 +106,7 @@ export class LoginPage extends React.Component<{ history: any },
       <>
         <IonContent class="bg-image">
           <IonItem >
-            <IonImg class='img' src={'https://drive.google.com/uc?export=view&id=1ZyIa6S4-qgL1FpdhzYrbC8EEYhe1G7P0'} />
+            <IonImg class='img' src={'/assets/img/IconLogo.png'} />
           </IonItem>
 
           <form onSubmit={e => this.handleSubmit(e)} action="post">

@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { IonItem, IonIcon, IonLabel, IonCard, IonCardContent, IonAvatar, IonToggle, IonRow, IonGrid, IonCol, IonSearchbar, IonText } from '@ionic/react';
-import { personCircleOutline } from 'ionicons/icons';
+import { IonItem, IonIcon, IonLabel, IonCard, IonCardContent, IonAvatar, IonToggle, IonRow, IonGrid, IonCol, IonSearchbar, IonText, IonModal, IonContent, IonFab, IonFabButton, IonInput, IonToolbar, IonTitle, IonProgressBar, IonButton } from '@ionic/react';
+import { personCircleOutline, arrowBackOutline, personOutline, mailOpenOutline, phonePortraitOutline, homeOutline, cardOutline, bulbOutline, pushOutline } from 'ionicons/icons';
+import UpdateUser from './UpdateUser';
 interface ContainerProps {
   inputs: Array<any>;
 }
 
 const DynamicList: React.FC<ContainerProps> = ({ inputs }) => {
+  const dataModalIni:any={};
   const [searchText, setSearchText] = useState('');
   const [data, setdata] = useState(inputs);
+  const [dataModal, setdataModal] = useState(dataModalIni);
+  const [showModal, setShowModal] = useState(false);
   if(inputs.length>0){
   return (
     <>
@@ -38,35 +42,33 @@ const DynamicList: React.FC<ContainerProps> = ({ inputs }) => {
 
         return (
 
-          <IonCard key={index} id='card' class="card-login">
-            <IonCardContent>
-              <IonGrid>
+          <IonCard  key={index} id='card'  >
+            <IonCardContent    onClick={() => {setShowModal(true);setdataModal(input)}}>
+              <IonGrid >
+              <h1><IonTitle color='primary'>T{input.blockNumber} {input.homeNumber}</IonTitle></h1>
                 <IonRow>
                   <IonCol>
                     <IonItem>
                       <IonAvatar slot="start">
-                        <IonIcon size="large" color='primary' src={personCircleOutline} />
+                        <IonIcon class='icon-avatar' size='large' color={input.debt >= 0 ? 'danger' :'primary' } src={personCircleOutline} />
                       </IonAvatar>
-                      <IonLabel>
-                        <h1><strong>T{input.blockNumber} {input.homeNumber}</strong></h1>
-                        <h2> {input.firstName} {input.lastName}</h2>
-                        <h3> {input.debt}</h3>
-                        <p>
-                          {input.email}<br />
-                          {input.phone}<br />
-                        </p>
-                      </IonLabel>
+                      <IonText>
+                        <IonItem>{input.firstName}<br/> {input.lastName}</IonItem>
+                        <IonItem>{input.email}</IonItem>
+                        <IonItem>{input.phone}</IonItem>
+                      </IonText>
                     </IonItem>
                   </IonCol>
                   <IonCol>
-                    <IonItem>
-                      <IonToggle checked={input.enabled} />
+                    <IonItem><IonLabel >Estado:</IonLabel>
+                      <IonToggle checked={input.enabled} onClick={() => setShowModal(true)} />
                     </IonItem>
                     <IonItem>
-                      <IonLabel>Points: {input.points}</IonLabel>
+                      <IonText>{`Points:    ${input.points}`}</IonText>
                     </IonItem>
-                    <IonItem>
-                      <IonLabel>Deuda:{input.debt}</IonLabel>
+                    <IonItem >
+                    <IonText >{`Deuda: `}</IonText>
+                    <IonText color={input.debt > 0 ? 'danger' :'dark' } ><strong>${input.debt}</strong></IonText>
                     </IonItem>
                   </IonCol>
                 </IonRow>
@@ -74,10 +76,18 @@ const DynamicList: React.FC<ContainerProps> = ({ inputs }) => {
                 <IonItem hidden={true}>
                   <IonLabel>{input.documentId}</IonLabel>
                 </IonItem>
-
+                <IonItem hidden={true}>
+                  <IonLabel>{input._id}</IonLabel>
+                </IonItem>
 
               </IonGrid>
             </IonCardContent>
+            <IonModal backdropDismiss={false} isOpen={showModal} animated={true}  >
+            <UpdateUser dataModal={dataModal}></UpdateUser>
+            <IonFab vertical="bottom" horizontal="start"  slot="fixed">       
+              <IonFabButton onClick={() => setShowModal(false)} routerLink="/home"><IonIcon icon={arrowBackOutline} /></IonFabButton>
+            </IonFab>
+          </IonModal> 
           </IonCard>
 
 

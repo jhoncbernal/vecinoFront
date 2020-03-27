@@ -1,16 +1,17 @@
-import React  from 'react';
-import { IonContent, IonItem, IonImg,  IonCard,  IonCardHeader,   IonProgressBar, IonAlert, IonToolbar, IonSegment, IonSegmentButton, IonIcon } from '@ionic/react';
+import React from 'react';
+import { IonContent, IonItem, IonImg, IonCard, IonProgressBar, IonAlert, IonToolbar, IonSegment, IonSegmentButton, IonIcon, IonButtons, IonButton, IonTitle } from '@ionic/react';
 import { HttpRequest } from '../hooks/HttpRequest';
 import DynamicList from './DynamicList';
 import { Storages } from '../hooks/Storage';
-import { carSportSharp, bicycleSharp, peopleSharp, bicycleOutline } from 'ionicons/icons';
+import { carSportSharp, bicycleSharp, peopleSharp } from 'ionicons/icons';
+import { APIVERSION, BASEURL } from '../config';
 export class DynamicListPage extends React.Component<{ history: any }, {
-  usersArray: Array<any>, hiddenbar: boolean, showAlert1: boolean, message: string
+  usersArray: Array<any>, hiddenbar: boolean, showAlert1: boolean, message: string,currentUser:any
 }> {
   constructor(props: any) {
     super(props);
     this.state = {
-      usersArray: [], hiddenbar: false, showAlert1: false, message: ''
+      usersArray: [], hiddenbar: false, showAlert1: false, message: '',currentUser:''
     }
 
     this.request();
@@ -18,36 +19,36 @@ export class DynamicListPage extends React.Component<{ history: any }, {
 
   async request() {
     try {
-      const {getObject}=await Storages();
-      let user: any = await getObject('token');
+      const { getObject } = await Storages();
+      const user: any = await getObject('token');
       if (!user) {
         const err = new Error();
-                    err.message = 'sus credenciales vencieron';
-                    throw err;
+        err.message = 'sus credenciales vencieron';
+        throw err;
       }
-      
+      this.setState({'currentUser':user.obj.response.user})
       let header = {
         'Authorization': user.obj.response.token,
       }
-      let url = 'http://localhost:4000/v1/api/user';
-
+      let url = `${BASEURL}${APIVERSION}/user`;
+      console.log(url)
       const resultado: any = await HttpRequest(url, 'GET', header);
       if (!resultado.resultado.response.status) {
         this.setState({ 'usersArray': resultado.resultado.response });
       }
       else {
         const err = new Error();
-        
-                    err.message = resultado.resultado.response.message;
-                    throw err;
-         
+
+        err.message = resultado.resultado.response.message;
+        throw err;
+
       }
       this.setState({ 'hiddenbar': true })
 
 
     } catch (e) {
       console.log(e.message)
-      const {removeItem}=await Storages();
+      const { removeItem } = await Storages();
       await removeItem('token');
       this.setState({ 'message': e.message });
       this.setState({ 'showAlert1': true });
@@ -64,29 +65,33 @@ export class DynamicListPage extends React.Component<{ history: any }, {
     return (
 
       <>
+      <IonToolbar><IonTitle> <IonImg class='img' src={'/assets/img/IconLogo.png'} /></IonTitle>
+      <IonTitle color='primary'>{`${this.state.currentUser.firstName}`}</IonTitle>
+      </IonToolbar>
+      <IonToolbar >
+  
+
+  </IonToolbar>
         <IonContent class="bg-image">
-          <IonItem>
-            <IonImg class='img' src={'https://drive.google.com/uc?export=view&id=1ZyIa6S4-qgL1FpdhzYrbC8EEYhe1G7P0'} />
-          </IonItem>
           
+
           <IonCard class="card-login">
-          <IonToolbar>
-          <IonSegment onIonChange={e => console.log('Segment selected', e.detail.value)}>
-          <IonSegmentButton value="Users">
-              <IonIcon icon={peopleSharp} />
-            </IonSegmentButton>
-            <IonSegmentButton value="Cars">
-              <IonIcon icon={carSportSharp} />
-            </IonSegmentButton>
-            <IonSegmentButton value="Bikes">
-            <IonIcon icon={bicycleSharp} />
-              <IonIcon color='light' size='large'  slot="icon-only" src='/assets/icons/Supersport.svg' />
-            </IonSegmentButton>
-            <IonSegmentButton value="Motorcycles">
-              <IonIcon icon={bicycleSharp} />
-            </IonSegmentButton>
-          </IonSegment>
-        </IonToolbar>
+            <IonToolbar>
+              <IonSegment value="Users" onIonChange={e => console.log('Segment selected', e.detail.value)}>
+                <IonSegmentButton value="Users" >
+                  <IonIcon class='icons-segment' size='medium' icon={peopleSharp} />
+                </IonSegmentButton>
+                <IonSegmentButton  value="Cars">
+                  <IonIcon class='icons-segment' size='medium' icon={carSportSharp} />
+                </IonSegmentButton>
+                <IonSegmentButton value="Motorcycles">
+                  <IonIcon class='icons-segment'  size='medium' src={'assets/icons/Helmet.svg'}  />
+                </IonSegmentButton>
+                <IonSegmentButton value="Bikes">
+                  <IonIcon class='icons-segment' size='medium' icon={bicycleSharp} />
+                </IonSegmentButton>
+              </IonSegment>
+            </IonToolbar>
             <DynamicList inputs={this.state.usersArray}></DynamicList>
             <IonProgressBar hidden={this.state.hiddenbar} type="indeterminate"></IonProgressBar><br />
           </IonCard>
