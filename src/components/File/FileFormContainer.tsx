@@ -42,13 +42,13 @@ export class FileFormPage extends React.Component<{ history: any },
         try {
             this.setState({ 'hiddenbar': false })
             const { getObject } = await Storages();
-            let user: any = await getObject('token');
-            if (!user) {
+            let token: any = await getObject('token');
+            if (!token) {
                 const err = new Error();
                 err.message = 'sus credenciales vencieron';
                 throw err;
             } let header = {
-                'Authorization': user.obj.response.token,
+                'Authorization': token.obj,
                 'Access-Control-Allow-Origin': '*',
                 'encType': 'multipart/form-data'
             }

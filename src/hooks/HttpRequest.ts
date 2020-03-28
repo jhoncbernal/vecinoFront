@@ -6,14 +6,14 @@ export async function HttpRequest(pathurl:string,method:any,data:any='',authoriz
   let jsonheader={'Content-Type': 'application/json','Access-Control-Allow-Origin': '*',}
   if(authorization){
   const { getObject } = await Storages();
-  const user: any = await getObject('token');
-      if (!user) {
+  const token: any = await getObject('token');
+      if (!token) {
         const err = new Error();
         err.message = 'sus credenciales vencieron';
         throw err;
       }
       else{
-        jsonheader= {...{'Authorization': user.obj.token},...jsonheader}
+        jsonheader= {...{'Authorization': token.obj},...jsonheader}
       }
     }
     

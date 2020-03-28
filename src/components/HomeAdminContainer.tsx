@@ -26,14 +26,14 @@ export class DynamicListPage extends React.Component<{ history: any }, {
       this.setState({ 'usersArray': resultado });      
       this.setState({ 'hiddenbar': true });
       const { getObject } = await Storages();
-      const user: any = await getObject('token');
+      const user: any = await getObject('user');
       if (!user) {
         const err = new Error();
         err.message = 'sus credenciales vencieron';
         throw err;
       }
       else{
-        this.setState({'currentUser':user.obj.user})
+        this.setState({'currentUser':user.obj})
       }
       });
 
@@ -41,6 +41,7 @@ export class DynamicListPage extends React.Component<{ history: any }, {
       console.log(e.message)
       const { removeItem } = await Storages();
       await removeItem('token');
+      await removeItem('user');
       this.setState({ 'message': e.message });
       this.setState({ 'showAlert1': true });
       console.error("DynamicListPage: " + e);

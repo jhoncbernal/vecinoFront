@@ -45,8 +45,8 @@ export class LoginPage extends React.Component<{ history: any },
       let rememberme = await getObject('rememberme');
       this.setState({ 'email': rememberme.obj.username });
       this.setState({ 'checked': rememberme.obj.checked });
-      let token = await getObject('token');
-      if (token) {
+      let user = await getObject('user');
+      if (user) {
         this.props.history.push(
           '/home'
         )
@@ -59,7 +59,7 @@ export class LoginPage extends React.Component<{ history: any },
     e.preventDefault();
 
     try {
-      const { getObject,setObject, removeItem } = Storages();
+      const { setObject, removeItem } = Storages();
       let pathurl = `/auth/signin`
       let data = { email: this.state.email, password: this.state.password };
       this.setState({ 'hiddenbar': false })
@@ -68,7 +68,8 @@ export class LoginPage extends React.Component<{ history: any },
         .then(async(resultado: any) => {
           
           this.setState({ 'hiddenbar': true })
-          await setObject('token', resultado); 
+          await setObject('user', resultado.user); 
+          await setObject('token', resultado.token);
           if (this.state.checked) {
             let rememberme = {
               'checked': this.state.checked,

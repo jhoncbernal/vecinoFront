@@ -25,14 +25,14 @@ const HomePage: React.FC<RouteComponentProps> = ({ history }) => {
               <IonFabButton onClick={async () => {
                 try {
                   const { getObject } = await Storages();
-                  const user: any = await getObject('token');
+                  const user: any = await getObject('user');
                   if (!user) {
                     const err = new Error();
                     err.message = 'sus credenciales vencieron';
                     throw err;
                   }
                   setShowModal(true);
-                  setdataModal(user.obj.user);
+                  setdataModal(user.obj);
                 } catch (e) { console.error(e) }
               }} color='primary'><IonIcon icon={buildSharp} /></IonFabButton>
               <IonFabButton color='primary'><IonIcon icon={cardSharp} /></IonFabButton>
@@ -59,6 +59,7 @@ const HomePage: React.FC<RouteComponentProps> = ({ history }) => {
                   try {
                     const { removeItem } = await Storages();
                     await removeItem('token');
+                    await removeItem('user');
                     history.push(
                       '/login'
                     )
