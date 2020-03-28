@@ -19,7 +19,7 @@ import {
   IonFabButton
 } from "@ionic/react";
 import { mailOpenOutline, personOutline, homeOutline, bookOutline, keyOutline, cardOutline, phonePortraitOutline, arrowBackOutline } from 'ionicons/icons';
-import { APIVERSION, BASEURL } from '../config';
+import { HttpRequest } from '../../hooks/HttpRequest';
 
 export class SignUpPage extends React.Component<{},
   {
@@ -67,10 +67,7 @@ export class SignUpPage extends React.Component<{},
         this.setState({ 'loginMessage': 'la confirmacion de contraseña no coincide' })
         this.setState({ 'showToast1': true })
       } else {
-        // const email,password
-        //const user = await login(email, password);
-
-        let url = `${BASEURL}${APIVERSION}/auth/signup`;
+        let pathurl = `/auth/signup`;
         let data = {
           roles: ['ROLE_USER_ACCESS'],
           username: this.state.username,
@@ -85,16 +82,9 @@ export class SignUpPage extends React.Component<{},
           neighborhoodcode: this.state.neighborhoodcode,
         };
         this.setState({ 'hiddenbar': false })
-        await fetch(url, {
-          method: 'POST',
-          body: JSON.stringify(data),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-          .then(res => res.json())
+        await HttpRequest(pathurl, 'POST', data)
           .catch(error => console.error('Error:', error))
-          .then(response => {
+          .then((response:any) => {
             this.setState({ 'hiddenbar': true })
             if (response.emailResult) {
               console.log('ok')
@@ -102,9 +92,6 @@ export class SignUpPage extends React.Component<{},
                 'loginMessage': 'se envio un correo de verificacion de cuenta a ' +
                   response.emailResult.email.result.accepted[0]
               })
-              //  navigation.navigate('Home', {
-              //    userInfo: response,
-              //  });
             } else {
               this.setState({ 'loginMessage': response.message })
               console.error(response.message);
@@ -127,7 +114,6 @@ export class SignUpPage extends React.Component<{},
           <IonItem >
             <IonImg class='img' src={'/assets/img/IconLogo.png'} />
           </IonItem>
-
           <form onSubmit={e => this.handleSubmit(e)} action="post">
             <IonCard class="card-login">
               <IonItem>
@@ -183,7 +169,6 @@ export class SignUpPage extends React.Component<{},
                   </IonCol>
                 </IonRow>
               </IonGrid>
-
               <IonItem>
                 <IonIcon color='primary' icon={cardOutline} slot="start" />
                 <IonLabel position="floating">Numero de identificación</IonLabel>
@@ -207,21 +192,15 @@ export class SignUpPage extends React.Component<{},
               <IonProgressBar hidden={this.state.hiddenbar} type="indeterminate"></IonProgressBar><br />
             </IonCard>
             <IonButton class='btn-login' type="submit">Registrarse</IonButton>
-
-
           </form>
-
-
           <IonToast
             isOpen={this.state.showToast1}
             onDidDismiss={() => this.setState({ 'showToast1': false })}
             message={this.state.loginMessage}
             duration={3000}
           />
-
-
           <IonFab vertical="bottom" horizontal="start" slot="fixed">
-            <IonFabButton routerLink="/tab1"><IonIcon icon={arrowBackOutline} /></IonFabButton>
+            <IonFabButton routerLink="/login"><IonIcon icon={arrowBackOutline} /></IonFabButton>
           </IonFab>
         </IonContent>
       </>

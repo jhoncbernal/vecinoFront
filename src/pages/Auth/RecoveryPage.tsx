@@ -1,13 +1,12 @@
 import React from 'react';
 import { IonContent,  IonPage } from '@ionic/react';
-import { RecoverPage } from '../components/Recover';
-import './Tab3.css';
+import { RecoverContainer } from '../../components/Auth/RecoverContainer';
 
 const Tab3: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
-<RecoverPage></RecoverPage>
+        <RecoverContainer></RecoverContainer>
       </IonContent>
     </IonPage>
   );

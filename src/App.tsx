@@ -11,9 +11,9 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { ellipse, square, triangle } from 'ionicons/icons';
-import Tab1 from './pages/Tab1';
-import Tab2 from './pages/Tab2';
-import Tab3 from './pages/Tab3';
+import LoginPage from './pages/Auth/LoginPage';
+import SignUpPage from './pages/Auth/SignUpPage';
+import RecoveryPage from './pages/Auth/RecoveryPage';
 import HomePage from './pages/HomePage';
 
 /* Core CSS required for Ionic components to work properly */
@@ -39,22 +39,22 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route path="/tab1" component={Tab1} exact={true} />
-          <Route path="/tab2" component={Tab2} exact={true} />
-          <Route path="/tab3" component={Tab3} />
-          <Route path="/home" component={HomePage} exact={true}/>
-          <Route path="/" render={() => <Redirect to="/tab1" />} exact={true} />
+          <Route path="/login"    component={LoginPage} exact={true} />
+          <Route path="/signup"   component={SignUpPage} exact={true} />
+          <Route path="/recover"  component={RecoveryPage} />
+          <Route path="/home"     component={HomePage} exact={true}/>
+          <Route path="/" render={() => <Redirect to="/login" />} exact={true} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1" hidden={true}>
+          <IonTabButton tab="tab1" href="/login" hidden={true}>
             <IonIcon icon={triangle} />
             <IonLabel>Tab 1</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2" hidden={true}>
+          <IonTabButton tab="tab2" href="/signup" hidden={true}>
             <IonIcon icon={ellipse} />
             <IonLabel>Tab 2</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3" hidden={true}>
+          <IonTabButton tab="tab3" href="/recover" hidden={true}>
             <IonIcon icon={square} />
             <IonLabel>Tab 3</IonLabel>
           </IonTabButton>

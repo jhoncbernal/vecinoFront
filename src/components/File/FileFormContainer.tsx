@@ -1,6 +1,6 @@
 import React, { FormEvent } from 'react';
-import { Storages } from '../hooks/Storage'
-import { APIVERSION, BASEURL } from '../config/index';
+import { Storages } from '../../hooks/Storage'
+import { APIVERSION, BASEURL } from '../../config/index';
 import {
     IonContent,
     IonItem,

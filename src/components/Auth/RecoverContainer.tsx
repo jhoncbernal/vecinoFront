@@ -16,8 +16,9 @@ import {
   IonFabButton
 } from "@ionic/react";
 import { personOutline, arrowBackOutline } from 'ionicons/icons';
-import { APIVERSION, BASEURL } from '../config';
-export class RecoverPage extends React.Component<{},
+import { HttpRequest } from '../../hooks/HttpRequest';
+
+export class RecoverContainer extends React.Component<{},
   {
     email: string
     showToast1: boolean,
@@ -39,29 +40,19 @@ export class RecoverPage extends React.Component<{},
     e.preventDefault();
 
     try {
-      let url = `${BASEURL}${APIVERSION}/auth/recover`
+
+      let pathurl = `/auth/recover`;
       let data = { email: this.state.email };
-      this.setState({ 'hiddenbar': false })
-      await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(res => res.json())
+      this.setState({ 'hiddenbar': false });
+      await HttpRequest(pathurl, 'POST', data)
         .catch(error => console.error('Error:', error))
-        .then(response => {
+        .then((response: any) => {
           this.setState({ 'hiddenbar': true })
           if (response.emailResult) {
             this.setState({
               'loginMessage': 'se envio un correo para restablecimiento de su cuenta a ' +
                 response.emailResult.result.accepted[0]
             });
-
-            //  navigation.navigate('Home', {
-            //    userInfo: response,
-            //  });
           } else {
             this.setState({ 'loginMessage': response.message })
             console.error(response.message);
@@ -80,7 +71,6 @@ export class RecoverPage extends React.Component<{},
 
     return (
       <>
-
         <IonContent class="bg-image">
           <IonItem >
             <IonImg class='img' src={'/assets/img/IconLogo.png'} />
@@ -110,7 +100,7 @@ export class RecoverPage extends React.Component<{},
 
 
           <IonFab vertical="bottom" horizontal="start" slot="fixed">
-            <IonFabButton routerLink="/tab1"><IonIcon icon={arrowBackOutline} /></IonFabButton>
+            <IonFabButton routerLink="/login"><IonIcon icon={arrowBackOutline} /></IonFabButton>
           </IonFab>
         </IonContent>
       </>

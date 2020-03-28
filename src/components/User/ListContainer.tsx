@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IonItem, IonIcon, IonLabel, IonCard, IonCardContent, IonAvatar, IonToggle, IonRow, IonGrid, IonCol, IonSearchbar, IonText, IonModal,  IonFab, IonFabButton,   IonTitle,  } from '@ionic/react';
 import { personCircleOutline, arrowBackOutline } from 'ionicons/icons';
-import UpdateUser from './UpdateUser';
+import UpdateUser from './UpdateContainer';
 interface ContainerProps {
   inputs: Array<any>;
 }

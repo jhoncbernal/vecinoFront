@@ -1,17 +1,16 @@
 import React from 'react';
-import { IonContent,  IonImg, IonCard, IonProgressBar, IonAlert, IonToolbar, IonSegment, IonSegmentButton, IonIcon,  IonTitle } from '@ionic/react';
+import { IonContent, IonImg, IonCard, IonProgressBar, IonAlert, IonToolbar, IonSegment, IonSegmentButton, IonIcon, IonTitle } from '@ionic/react';
 import { HttpRequest } from '../hooks/HttpRequest';
-import DynamicList from './DynamicList';
+import DynamicList from './User/ListContainer';
 import { Storages } from '../hooks/Storage';
 import { carSportSharp, bicycleSharp, peopleSharp } from 'ionicons/icons';
-import { APIVERSION, BASEURL } from '../config';
 export class DynamicListPage extends React.Component<{ history: any }, {
-  usersArray: Array<any>, hiddenbar: boolean, showAlert1: boolean, message: string,currentUser:any
+  usersArray: Array<any>, hiddenbar: boolean, showAlert1: boolean, message: string, currentUser: any
 }> {
   constructor(props: any) {
     super(props);
     this.state = {
-      usersArray: [], hiddenbar: false, showAlert1: false, message: '',currentUser:''
+      usersArray: [], hiddenbar: false, showAlert1: false, message: '', currentUser: ''
     }
 
     this.request();
@@ -19,6 +18,13 @@ export class DynamicListPage extends React.Component<{ history: any }, {
 
   async request() {
     try {
+      let pathurl = `/user`;
+      await HttpRequest(pathurl, 'GET', '',true)
+      .catch(error =>  {throw error})
+      .then(async(resultado: any) => {
+        console.log(resultado);
+      this.setState({ 'usersArray': resultado });      
+      this.setState({ 'hiddenbar': true });
       const { getObject } = await Storages();
       const user: any = await getObject('token');
       if (!user) {
@@ -26,25 +32,10 @@ export class DynamicListPage extends React.Component<{ history: any }, {
         err.message = 'sus credenciales vencieron';
         throw err;
       }
-      this.setState({'currentUser':user.obj.response.user})
-      let header = {
-        'Authorization': user.obj.response.token,
+      else{
+        this.setState({'currentUser':user.obj.user})
       }
-      let url = `${BASEURL}${APIVERSION}/user`;
-      console.log(url)
-      const resultado: any = await HttpRequest(url, 'GET', header);
-      if (!resultado.resultado.response.status) {
-        this.setState({ 'usersArray': resultado.resultado.response });
-      }
-      else {
-        const err = new Error();
-
-        err.message = resultado.resultado.response.message;
-        throw err;
-
-      }
-      this.setState({ 'hiddenbar': true })
-
+      });
 
     } catch (e) {
       console.log(e.message)
@@ -55,7 +46,7 @@ export class DynamicListPage extends React.Component<{ history: any }, {
       console.error("DynamicListPage: " + e);
       this.setState({ 'hiddenbar': true })
       this.props.history.push(
-        '/tab1'
+        '/login'
       )
     }
   }
@@ -65,15 +56,15 @@ export class DynamicListPage extends React.Component<{ history: any }, {
     return (
 
       <>
-      <IonToolbar><IonTitle> <IonImg class='img' src={'/assets/img/IconLogo.png'} /></IonTitle>
-      <IonTitle color='primary'>{`${this.state.currentUser.firstName}`}</IonTitle>
-      </IonToolbar>
-      <IonToolbar >
-  
+        <IonToolbar><IonTitle> <IonImg class='img' src={'/assets/img/IconLogo.png'} /></IonTitle>
+          <IonTitle color='primary'>{`${this.state.currentUser.firstName}`}</IonTitle>
+        </IonToolbar>
+        <IonToolbar >
 
-  </IonToolbar>
+
+        </IonToolbar>
         <IonContent class="bg-image">
-          
+
 
           <IonCard class="card-login">
             <IonToolbar>
@@ -81,11 +72,11 @@ export class DynamicListPage extends React.Component<{ history: any }, {
                 <IonSegmentButton value="Users" >
                   <IonIcon class='icons-segment' size='medium' icon={peopleSharp} />
                 </IonSegmentButton>
-                <IonSegmentButton  value="Cars">
+                <IonSegmentButton value="Cars">
                   <IonIcon class='icons-segment' size='medium' icon={carSportSharp} />
                 </IonSegmentButton>
                 <IonSegmentButton value="Motorcycles">
-                  <IonIcon class='icons-segment'  size='medium' src={'assets/icons/Helmet.svg'}  />
+                  <IonIcon class='icons-segment' size='medium' src={'assets/icons/Helmet.svg'} />
                 </IonSegmentButton>
                 <IonSegmentButton value="Bikes">
                   <IonIcon class='icons-segment' size='medium' icon={bicycleSharp} />

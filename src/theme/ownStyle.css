@@ -9,9 +9,11 @@ ion-item {
 }
 ion-content{
   color:#000000d4!important;
-  --background: url('/assets/svgs/backgroundVecino.svg') no-repeat center center fixed ;
-  --background-size: cover;
-  background:#ffffff
+ --background: url('/assets/svgs/backgroundVecino.svg')  no-repeat cover fixed;
+  background: url('/assets/svgs/backgroundVecino.svg') no-repeat fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
 }
 
 

@@ -1,5 +1,5 @@
 import React, { FormEvent } from 'react';
-import { Storages } from '../hooks/Storage'
+import { Storages } from '../../hooks/Storage'
 
 import {
   IonContent,
@@ -15,8 +15,7 @@ import {
   IonToggle
 } from "@ionic/react";
 import { personOutline, keyOutline, bulbOutline } from 'ionicons/icons';
-import { HttpRequest } from '../hooks/HttpRequest'
-import { APIVERSION, BASEURL } from '../config';
+import { HttpRequest } from '../../hooks/HttpRequest';
 export class LoginPage extends React.Component<{ history: any },
   {
     email: string
@@ -60,36 +59,34 @@ export class LoginPage extends React.Component<{ history: any },
     e.preventDefault();
 
     try {
-      const { setObject, removeItem } = Storages();
-      let header = {
-        'Content-Type': 'application/json',
-      }
-      let url = `${BASEURL}${APIVERSION}/auth/signin`
+      const { getObject,setObject, removeItem } = Storages();
+      let pathurl = `/auth/signin`
       let data = { email: this.state.email, password: this.state.password };
       this.setState({ 'hiddenbar': false })
-      const { resultado } = await HttpRequest(url, 'POST', header, data);
-      this.setState({ 'hiddenbar': true })
-      if (!resultado.response.ErrorMessage) {
-        await setObject('token', resultado);
-        if (this.state.checked) {
-          let rememberme = {
-            'checked': this.state.checked,
-            'username': this.state.email
+      await HttpRequest(pathurl, 'POST', data)
+      .catch(error =>  this.setState({ 'loginMessage': error.response.ErrorMessage }))
+        .then(async(resultado: any) => {
+          
+          this.setState({ 'hiddenbar': true })
+          await setObject('token', resultado); 
+          if (this.state.checked) {
+            let rememberme = {
+              'checked': this.state.checked,
+              'username': this.state.email
+            }
+            await setObject('rememberme', rememberme);
+          } else {
+            await removeItem('checked');
+            await removeItem('username');
           }
-          await setObject('rememberme', rememberme);
-        } else {
-          await removeItem('checked');
-          await removeItem('username');
-        }
-        this.setState({ 'loginMessage': 'Bienvenido!' });
-        this.setState({ 'password': '' })
-
-        this.props.history.push(
-          '/home'
-        );
-      } else {
-        this.setState({ 'loginMessage': resultado.response.ErrorMessage })
-      }
+          this.setState({ 'loginMessage': 'Bienvenido!' });
+          this.setState({ 'password': '' })
+  
+          this.props.history.push(
+            '/home'
+          );
+        });
+     
       this.setState({ 'showToast1': true })
 
 
@@ -145,8 +142,8 @@ export class LoginPage extends React.Component<{ history: any },
 
           <div id='btn-auth' >
 
-            <IonButton class='btn-auth' routerLink="/tab3"  >¿Olvidaste tu usuario o contraseña?</IonButton>
-            <IonButton class='btn-auth' routerLink="/tab2">Quiero registrarme</IonButton>
+            <IonButton class='btn-auth' routerLink="/recover"  >¿Olvidaste tu usuario o contraseña?</IonButton>
+            <IonButton class='btn-auth' routerLink="/signup">Quiero registrarme</IonButton>
           </div>
 
         </IonContent>
