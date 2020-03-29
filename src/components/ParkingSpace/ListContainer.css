@@ -1,0 +1,11 @@
+.card {
+  margin: 10px;
+  flex-basis: calc(25% - 2 * 10px); 
+}
+.chip{
+  margin-left: auto!important;
+}
+.title{
+  margin: auto;
+  padding-left: 15px;
+}
