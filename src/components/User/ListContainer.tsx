@@ -3,16 +3,19 @@ import { IonItem, IonIcon, IonLabel, IonCard, IonCardContent, IonAvatar, IonTogg
 import { personCircleOutline, arrowBackOutline } from 'ionicons/icons';
 import UpdateUser from './UpdateContainer';
 interface ContainerProps {
+  loaddata:boolean;
   inputs: Array<any>;
 }
 
-const DynamicList: React.FC<ContainerProps> = ({ inputs }) => {
+const ListContainer: React.FC<ContainerProps> = ({loaddata, inputs }) => {
   const dataModalIni:any={};
   const [searchText, setSearchText] = useState('');
   const [data, setdata] = useState(inputs);
   const [dataModal, setdataModal] = useState(dataModalIni);
   const [showModal, setShowModal] = useState(false);
+  try{
   if(inputs.length>0){
+
   return (
     <>
     
@@ -37,7 +40,8 @@ const DynamicList: React.FC<ContainerProps> = ({ inputs }) => {
   
 
        // e => setSearchText(e.detail.value!)}
-         showCancelButton="always"></IonSearchbar>
+         showCancelButton="always" hidden={!loaddata}></IonSearchbar>
+         
       {data.map((input: any, index) => {
 
         return (
@@ -89,9 +93,6 @@ const DynamicList: React.FC<ContainerProps> = ({ inputs }) => {
             </IonFab>
           </IonModal> 
           </IonCard>
-
-
-
         )
       })}
 
@@ -100,7 +101,7 @@ const DynamicList: React.FC<ContainerProps> = ({ inputs }) => {
 
   );}else{
     return (<><h1><IonText color='primary'>Sin conexion</IonText></h1></>)
-  }
+  }}catch(e){console.log(e);throw e}
 };
 
-export default DynamicList;
+export default ListContainer;

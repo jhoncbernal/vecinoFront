@@ -30,17 +30,18 @@ export async function HttpRequest(pathurl:string,method:any,data:any='',authoriz
      }
     const result:any = async () => {
       try{
-          return await Axios(options)
-          .catch(error => {return { 'ErrorMessage': 'sin conexion con el servidor '+error } }) 
+          return await Axios(options)        
           .then((response: any) => {
                         if (response.status === 200) {
                           return response.data;
-                        } else {
+                        }  
+                        else{
                             const err = new Error();
                             err.message = 'sin conexion con el servidor ' + response.ErrorMessage;
                             throw err;
                         }                        
-          });
+          })
+          .catch(err => {throw err});
          }catch(err){ throw err;}
     }
       return await result();

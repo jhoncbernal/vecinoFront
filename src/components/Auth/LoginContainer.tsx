@@ -63,11 +63,8 @@ export class LoginPage extends React.Component<{ history: any },
       let pathurl = `/auth/signin`
       let data = { email: this.state.email, password: this.state.password };
       this.setState({ 'hiddenbar': false })
-      await HttpRequest(pathurl, 'POST', data)
-      .catch(error =>  this.setState({ 'loginMessage': error.response.ErrorMessage }))
-        .then(async(resultado: any) => {
-          
-          this.setState({ 'hiddenbar': true })
+      await HttpRequest(pathurl, 'POST', data)     
+        .then(async(resultado: any) => {         
           await setObject('user', resultado.user); 
           await setObject('token', resultado.token);
           if (this.state.checked) {
@@ -86,12 +83,14 @@ export class LoginPage extends React.Component<{ history: any },
           this.props.history.push(
             '/home'
           );
-        });
-     
+        })
+        .catch(error =>  this.setState({ 'loginMessage': error.response.ErrorMessage }));
+      this.setState({ 'hiddenbar': true })
       this.setState({ 'showToast1': true })
 
 
     } catch (e) {
+      this.setState({ 'hiddenbar': true })
       console.error("Login: " + e);
     }
   }

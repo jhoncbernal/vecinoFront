@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react';
-import { IonToolbar, IonTitle, IonContent, IonCard, IonItem, IonIcon, IonLabel, IonInput, IonCol, IonRow, IonGrid, IonToggle, IonProgressBar, IonButton, } from '@ionic/react';
+import { IonToolbar, IonTitle, IonContent, IonCard, IonItem, IonIcon, IonLabel, IonInput, IonCol, IonRow, IonGrid, IonToggle, IonProgressBar, IonButton, IonAlert, } from '@ionic/react';
 import { personOutline, phonePortraitOutline, mailOpenOutline, homeOutline, cardOutline, bulbOutline, pushOutline } from 'ionicons/icons';
 import { HttpRequest } from '../../hooks/HttpRequest';
+import { Storages } from '../../hooks/Storage';
 
 interface ContainerProps {
   dataModal: any;
@@ -9,11 +10,18 @@ interface ContainerProps {
 
 const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
   let body:any={};
+  const [showAlert, setShowAlert] = useState(false);
+
+  const [message, setMessage] = useState('');
+  const [dataModall, setdataModall] = useState(dataModal);
   const [showProgressBar, setShowProgressBar] = useState(false);
+  const [bodyChange, setbodyChange] = useState(false);
   const handleValueChange = useCallback(
     (property:string,value) => {
       try{
+        setbodyChange(true);
           body[property]=value;
+          console.log(body);
       }catch(e){
         console.error(e);
       }
@@ -23,21 +31,44 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
   const handleSubmit = useCallback(
    async (e:any) => {
       try{
+        const { setObject } = Storages();   
+        console.log(bodyChange);
         e.preventDefault();
-        let pathurl = `/user/${dataModal._id}`
+        let pathurl = `/neighborhood/${dataModal._id}`
+        if(dataModal.roles.includes('ROLE_USER_ACCESS')){
+           pathurl = `/user/${dataModal._id}`
+        }else{
+           pathurl = `/neighborhood/${dataModal._id}`
+        }
+       
         let data = body;
-        setShowProgressBar(true);
-        await HttpRequest(pathurl, 'PATH', data,true)
-        .catch(error => console.error('Error:', error))
-        .then((response: any) => {
-          setShowProgressBar(false);
-          console.log(response);
-        });        
+        console.log(data);
+        if(!bodyChange){         
+          setMessage('No se modifico ningun campo');
+        }
+        else{
+          setShowProgressBar(true);
+          await HttpRequest(pathurl, 'PATCH', data,true)          
+          .then(async(response:any)=>{
+            setMessage('Actualizacion Exitosa');            
+            setbodyChange(false);
+            setdataModall(response);
+            if(!dataModal.roles.includes('ROLE_USER_ACCESS')){
+              await setObject('user',response);    
+           }            
+        })
+        .catch(error =>{throw error});   
+      }        
+      setShowProgressBar(false);
+      setShowAlert(true);
       }catch(e){
+        setShowProgressBar(false);
+        setShowAlert(true);
+        setMessage(e);
         console.error(e);
       }
     },
-    [body],
+    [body,dataModal,bodyChange],
   );
   return (<>
     <IonToolbar color='primary'>
@@ -50,17 +81,17 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
           <IonItem>
             <IonIcon color='primary' icon={personOutline} slot="start" />
             <IonLabel position="floating">Nombre de usuario</IonLabel>
-            <IonInput disabled color='dark' required={true} autocomplete='on' type="text" value={dataModal.username} />
+            <IonInput disabled color='dark' required={true} autocomplete='off' type="text" value={dataModall.username} />
           </IonItem>
           <IonItem>
             <IonIcon color='primary' icon={mailOpenOutline} slot="start" />
             <IonLabel position="floating">Email</IonLabel>
-            <IonInput color='dark' required={true} autocomplete='on'  type="email" value={dataModal.email} name='email' onInput={(e:any)=>{ handleValueChange(e.target.name,e.target.value)}}/>
+            <IonInput color='dark' required={true} autocomplete='off'  type="email" value={dataModall.email} name='email' onInput={(e:any)=>{ handleValueChange(e.target.name,e.target.value)}}/>
           </IonItem>
           <IonItem>
             <IonIcon color='primary' icon={phonePortraitOutline} slot="start" />
             <IonLabel position="floating">Telefono</IonLabel>
-            <IonInput color='dark' required={true} autocomplete='on' type="number" value={dataModal.phone} name='phone' onInput={(e:any)=>{handleValueChange(e.target.name,Number(e.target.value))}} />
+            <IonInput color='dark' required={true} autocomplete='off' type="number" value={dataModall.phone} name='phone' onInput={(e:any)=>{handleValueChange(e.target.name,Number(e.target.value))}} />
           </IonItem>
           <IonGrid>
             <IonLabel >Nombre completo</IonLabel>
@@ -69,33 +100,33 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
                 <IonItem>
                   <IonIcon color='primary' icon={personOutline} slot="start" />
                   <IonLabel position="floating">Nombre</IonLabel>
-                  <IonInput color='dark' required={true} autocomplete='on' type="text" value={dataModal.firstName} name='firstName' onInput={(e:any)=>{ handleValueChange(e.target.name,e.target.value)}}/>
+                  <IonInput color='dark' required={true} autocomplete='off' type="text" value={dataModall.firstName} name='firstName' onInput={(e:any)=>{ handleValueChange(e.target.name,e.target.value)}}/>
                 </IonItem>
               </IonCol>
-              <IonCol>
+              <IonCol  hidden={dataModal.roles.includes('ROLE_USER_ACCESS')?false:true}> 
                 <IonItem>
                   <IonIcon color='primary' icon={personOutline} slot="start" />
                   <IonLabel position="floating">Apellido</IonLabel>
-                  <IonInput color='dark'  autocomplete='on' type="text" value={dataModal.lastName} name='lastName' onInput={(e:any)=>{ handleValueChange(e.target.name,e.target.value)}}/>
+                  <IonInput color='dark'  autocomplete='off' type="text" value={dataModall.lastName} name='lastName' onInput={(e:any)=>{ handleValueChange(e.target.name,e.target.value)}}/>
                 </IonItem>
               </IonCol>
             </IonRow>
           </IonGrid>
-          <IonGrid>
+          <IonGrid  hidden={dataModal.roles.includes('ROLE_USER_ACCESS')?false:true}>
             <IonLabel >Info de recidencia</IonLabel>
             <IonRow>
               <IonCol>
                 <IonItem>
                   <IonIcon color='primary' icon={homeOutline} slot="start" />
                   <IonLabel position="floating">Torre</IonLabel>
-                  <IonInput color='dark'  autocomplete='on' type="number" value={dataModal.blockNumber} name='blockNumber' onInput={(e:any)=>{ handleValueChange(e.target.name,Number(e.target.value))}}/>
+                  <IonInput color='dark'  autocomplete='off' type="number" value={dataModall.blockNumber} name='blockNumber' onInput={(e:any)=>{ handleValueChange(e.target.name,Number(e.target.value))}}/>
                 </IonItem>
               </IonCol>
               <IonCol>
                 <IonItem>
                   <IonIcon color='primary' icon={homeOutline} slot="start" />
                   <IonLabel position="floating">Apartamento</IonLabel>
-                  <IonInput color='dark'  autocomplete='on' type="number" value={dataModal.homeNumber} name='homeNumber'  onInput={(e:any)=>{ handleValueChange(e.target.name,Number(e.target.value))}}/>
+                  <IonInput color='dark'  autocomplete='off' type="number" value={dataModall.homeNumber} name='homeNumber'  onInput={(e:any)=>{ handleValueChange(e.target.name,Number(e.target.value))}}/>
                 </IonItem>
               </IonCol>
             </IonRow>
@@ -103,17 +134,25 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
           <IonItem>
             <IonIcon color='primary' icon={cardOutline} slot="start" />
             <IonLabel position="floating">Numero de identificación</IonLabel>
-            <IonInput color='dark' required={true} autocomplete='on' type="number" value={dataModal.documentId} name='documentId' onInput={(e:any)=>{ handleValueChange(e.target.name,Number(e.target.value))}}/>
+            <IonInput color='dark' required={true} autocomplete='off' type="number" value={dataModall.documentId} name='documentId' onInput={(e:any)=>{ handleValueChange(e.target.name,Number(e.target.value))}}/>
           </IonItem>
-          <IonItem>
+          <IonItem hidden={dataModal.roles.includes('ROLE_USER_ACCESS')?false:true}>
             <IonIcon color='primary' icon={bulbOutline} slot="start" />
             <IonLabel >Habilitar usuario</IonLabel>
-            <IonToggle checked={dataModal.enabled} name='enabled' onIonChange={(e:any)=>{ handleValueChange(e.target.name,e.detail.checked)}}/>
+            <IonToggle checked={dataModall.enabled} name="enabled" onIonChange={(e:any)=>{ handleValueChange(e.target.name.toString(),e.detail.checked)}}/>
           </IonItem>
           <IonProgressBar hidden={!showProgressBar} type="indeterminate"></IonProgressBar><br />
         </IonCard>
         <IonButton class='btn-login' type="submit"><IonIcon icon={pushOutline} slot="start" />Actualizar</IonButton>
       </form>
+      <IonAlert
+            isOpen={showAlert}
+            onDidDismiss={() => setShowAlert(false)}
+            header={'Actualizacion'}
+            subHeader={'respuesta:'}
+            message={message}
+            buttons={['OK']}
+          />
     </IonContent>
   </>
   );

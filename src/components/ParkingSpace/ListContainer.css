@@ -3,9 +3,11 @@
   flex-basis: calc(25% - 2 * 10px); 
 }
 .chip{
-  margin-left: auto!important;
+  margin-right: 400px;
 }
 .title{
   margin: auto;
-  padding-left: 15px;
+}
+.topicon{
+  padding-top: 15px;
 }

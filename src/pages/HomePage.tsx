@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
-import { IonContent, IonPage, IonFab, IonFabButton, IonIcon, IonModal, IonFabList, IonAlert, } from '@ionic/react';
+import { IonContent, IonPage, IonFab, IonFabButton, IonIcon, IonModal, IonFabList, IonAlert, IonRefresher, IonRefresherContent, } from '@ionic/react';
 import Home from '../components/HomeAdminContainer'
 import { RouteComponentProps } from 'react-router';
 import { menuSharp, buildSharp, carSportSharp, logOutSharp, cardSharp, documentTextSharp, arrowBackOutline } from 'ionicons/icons';
 import { Storages } from '../hooks/Storage'
 import { FileFormPage } from '../components/File/FileFormContainer';
 import UpdateUser from '../components/User/UpdateContainer';
+import { RefresherEventDetail } from '@ionic/core';
 const HomePage: React.FC<RouteComponentProps> = ({ history }) => {
   const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [dataModal, setdataModal] = useState();
+  function doRefresh(event: CustomEvent<RefresherEventDetail>) {
+    console.log('Begin async operation');
+  
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      history.go(0);
+      event.detail.complete();
+    }, 2000);
+  }
+  
   return (
     <IonPage>
       <IonContent>
@@ -71,7 +82,16 @@ const HomePage: React.FC<RouteComponentProps> = ({ history }) => {
             ]}
           />
         </div>
-
+        <IonContent>
+      <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
+        <IonRefresherContent color='primary'
+          pullingIcon="arrow-dropdown"
+          pullingText="Deslice para actualizar"
+          refreshingSpinner="circles"
+          refreshingText="Actualizando...">
+        </IonRefresherContent>
+      </IonRefresher>
+    </IonContent>
         <IonModal backdropDismiss={false} isOpen={showModal} animated={true}  >
           <IonContent>
             {!dataModal
@@ -81,7 +101,10 @@ const HomePage: React.FC<RouteComponentProps> = ({ history }) => {
 
           </IonContent>
           <IonFab vertical="bottom" horizontal="start" slot="fixed">
-            <IonFabButton onClick={() => { setShowModal(false); setdataModal(false) }} routerLink="/home"><IonIcon icon={arrowBackOutline} /></IonFabButton>
+            <IonFabButton onClick={async() => { 
+              setShowModal(false); setdataModal(false);
+              history.goForward();    
+             }}><IonIcon icon={arrowBackOutline} /></IonFabButton>
           </IonFab>
         </IonModal>
       </IonContent>

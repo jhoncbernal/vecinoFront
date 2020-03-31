@@ -82,8 +82,7 @@ export class SignUpPage extends React.Component<{},
           neighborhoodcode: this.state.neighborhoodcode,
         };
         this.setState({ 'hiddenbar': false })
-        await HttpRequest(pathurl, 'POST', data)
-          .catch(error => console.error('Error:', error))
+        await HttpRequest(pathurl, 'POST', data)          
           .then((response:any) => {
             this.setState({ 'hiddenbar': true })
             if (response.emailResult) {
@@ -97,7 +96,8 @@ export class SignUpPage extends React.Component<{},
               console.error(response.message);
             }
             this.setState({ 'showToast1': true })
-          });
+          })
+          .catch(error => console.error('Error:', error));
       }
     } catch (e) {
       console.error(e);
