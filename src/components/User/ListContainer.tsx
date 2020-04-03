@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { IonItem, IonIcon, IonLabel, IonCard, IonCardContent, IonAvatar, IonToggle, IonRow, IonGrid, IonCol, IonSearchbar, IonText, IonModal,  IonFab, IonFabButton,   IonTitle,  } from '@ionic/react';
-import { personCircleOutline, arrowBackOutline } from 'ionicons/icons';
+import { IonItem, IonIcon, IonLabel, IonCard, IonCardContent, IonAvatar, IonToggle, IonRow, IonGrid, IonCol, IonSearchbar, IonText, IonModal,  IonFab, IonFabButton,   IonTitle, IonCardHeader,  } from '@ionic/react';
+import { personCircleOutline, arrowBackOutline, personOutline, warningOutline } from 'ionicons/icons';
 import UpdateUser from './UpdateContainer';
 interface ContainerProps {
   loaddata:boolean;
@@ -47,36 +47,38 @@ const ListContainer: React.FC<ContainerProps> = ({loaddata, inputs }) => {
         return (
 
           <IonCard  key={index} id='card'  >
+            <IonCardHeader color={input.debt > 0 ? 'danger' :'primary' }>
+            <IonTitle ><strong>T{input.blockNumber} {input.homeNumber} {input.debt > 0 ? '  ¡Usuario en mora!' :'' }</strong></IonTitle>
+            </IonCardHeader>
             <IonCardContent    onClick={() => {setShowModal(true);setdataModal(input)}}>
               <IonGrid >
-              <h1><IonTitle color='primary'>T{input.blockNumber} {input.homeNumber}</IonTitle></h1>
+              <IonItem><IonLabel >Habilidar o deshabilitar usuario:</IonLabel>
+                      <IonToggle checked={input.enabled} onClick={() => setShowModal(true)} />
+                    </IonItem>
                 <IonRow>
                   <IonCol>
                     <IonItem>
                       <IonAvatar slot="start">
-                        <IonIcon class='icon-avatar' size='large' color={input.debt >= 0 ? 'danger' :'primary' } src={personCircleOutline} />
+                        <IonIcon class='icon-avatar' size='large' color={input.debt > 0 ? 'danger' :'primary' } src={input.debt > 0 ? warningOutline :personOutline } />
                       </IonAvatar>
-                      <IonText>
-                        <IonItem>{input.firstName}<br/> {input.lastName}</IonItem>
-                        <IonItem>{input.email}</IonItem>
-                        <IonItem>{input.phone}</IonItem>
-                      </IonText>
+                      <IonLabel>
+                                <h2>{input ? input.firstName : ''} {input ? input.lastName : ''}</h2>
+                                <h3>{input ? input.email : ''}</h3>
+                                <p>{input ? input.phone : ''}</p>
+                      </IonLabel>
                     </IonItem>
                   </IonCol>
                   <IonCol>
-                    <IonItem><IonLabel >Estado:</IonLabel>
-                      <IonToggle checked={input.enabled} onClick={() => setShowModal(true)} />
-                    </IonItem>
                     <IonItem>
-                      <IonText>{`Points:    ${input.points}`}</IonText>
-                    </IonItem>
-                    <IonItem >
-                    <IonText >{`Deuda: `}</IonText>
-                    <IonText color={input.debt > 0 ? 'danger' :'dark' } ><strong>${input.debt}</strong></IonText>
-                    </IonItem>
+                    <IonLabel>
+                                <h2>{`Points:    ${input.points}`}</h2>
+                                <h3>{`Deuda: `} <strong>${input.debt}</strong></h3>
+                                  <p>{`${input.isOwner ? 'Propietario' : 'No es propietario'}`}</p>
+                      </IonLabel>
+                  </IonItem>
                   </IonCol>
                 </IonRow>
-
+                
                 <IonItem hidden={true}>
                   <IonLabel>{input.documentId}</IonLabel>
                 </IonItem>

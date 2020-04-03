@@ -1,7 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import { IonToolbar, IonTitle, IonContent, IonCard, IonItem, IonIcon, IonLabel, IonInput, IonProgressBar, IonButton, IonAlert, IonSelect, IonSelectOption, } from '@ionic/react';
-import { personOutline, pushOutline, listCircleOutline, colorPaletteOutline, buildOutline, searchOutline, logOutOutline } from 'ionicons/icons';
-import { Storages } from '../../hooks/Storage';
+import { personOutline, pushOutline, listCircleOutline, colorPaletteOutline, buildOutline, searchOutline, logOutOutline } from 'ionicons/icons'; 
 import { HttpRequest } from '../../hooks/HttpRequest';
 
 interface ContainerProps {
@@ -10,9 +9,9 @@ interface ContainerProps {
 
 const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
   let body:any={};
+  const dataModall = useRef<any>(dataModal);
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState('');
-  const [dataModall, setdataModall] = useState(dataModal);
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [bodyChange, setbodyChange] = useState(false);
   const handleValueChange = useCallback(
@@ -20,7 +19,6 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
       try{
         setbodyChange(true);
           body[property]=value;
-          console.log(body);
       }catch(e){
         console.error(e);
       }
@@ -30,19 +28,16 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
   const handleSubmit = useCallback(
    async (e:any) => {
       try{
-        const { setObject } = Storages();   
-        console.log(bodyChange);
         e.preventDefault();
-        let pathurl = `/neighborhood/${dataModal._id}`
-        if(dataModal.roles.includes('ROLE_USER_ACCESS')){
-           pathurl = `/user/${dataModal._id}`
+       let pathurl = `/parkingspace/positions/${dataModal.vehicletype}s/${dataModal.posnumber}`;
+       let data;
+        if(dataModal.available==='false'){          
+          data = {};          
         }else{
-           pathurl = `/neighborhood/${dataModal._id}`
+          data=body;
         }
-       
-        let data = body;
         console.log(data);
-        if(!bodyChange){         
+        if(!bodyChange&&!(dataModal.available==='false')){         
           setMessage('No se modifico ningun campo');
         }
         else{
@@ -51,13 +46,10 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
           .then(async(response:any)=>{
             setMessage('Actualizacion Exitosa');            
             setbodyChange(false);
-            setdataModall(response);
-            if(!dataModal.roles.includes('ROLE_USER_ACCESS')){
-              await setObject('user',response);    
-           }            
+            dataModall.current=response.result.positions[0];  ;
         })
-        .catch(error =>{throw error});   
-      }        
+        .catch(error =>{ console.log(error);   throw error});   
+      }    
       setShowProgressBar(false);
       setShowAlert(true);
       }catch(e){
@@ -67,11 +59,11 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
         console.error(e);
       }
     },
-    [body,dataModal,bodyChange],
+    [bodyChange, dataModal.vehicletype, dataModal.posnumber, dataModal.available, body],
   );
   return (<>
     <IonToolbar color='primary'>
-  <IonTitle><h1>Estacionamiento #{dataModall.posnumber}</h1></IonTitle>
+  <IonTitle><h1>Estacionamiento #{dataModall.current.posnumber}</h1></IonTitle>
     </IonToolbar>
     <IonContent>
       <form onSubmit={e => {handleSubmit(e)
@@ -80,13 +72,13 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
         <IonItem>
             <IonIcon color='primary' icon={personOutline} slot="start" />
             <IonLabel >Placa:</IonLabel>
-            <IonInput color='dark' required={true} autocomplete='off' type="text" value={dataModall.vehicle ? dataModall.vehicle.plate : ''} />
+            <IonInput color='dark' required={true} autocomplete='off' type="text" value={dataModall.current.vehicle ? dataModall.current.vehicle.plate : ''} name='plate' onIonChange={(e:any)=>{ handleValueChange(e.target.name,e.target.value)}} />
             <IonButton size="default" color='secondary' ><IonIcon icon={searchOutline} /></IonButton>
           </IonItem>
           <IonItem>
                         <IonIcon color='primary' size='medium' icon={listCircleOutline} slot="start" />
                         <IonLabel position="floating">Parqueadero para:</IonLabel>
-                        <IonSelect disabled  interface="popover" value={dataModall.vehicle ? dataModall.vehicle.vehicletype : ''} placeholder="Seleccione uno" >
+                        <IonSelect disabled  interface="popover" value={dataModall.current.vehicle ? dataModall.current.vehicle.vehicletype : ''} placeholder="Seleccione uno" >
                             <IonSelectOption value="Car" >Carro</IonSelectOption>
                             <IonSelectOption value="Motorcycle">Moto</IonSelectOption>
                             <IonSelectOption value="Bike">Bicicleta</IonSelectOption>
@@ -95,16 +87,16 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
           <IonItem>
             <IonIcon color='primary' icon={buildOutline} slot="start" />
             <IonLabel position="floating">Marca:</IonLabel>
-            <IonInput color='dark' disabled required={true} autocomplete='off' type="text" value={dataModall.vehicle ? dataModall.vehicle.brand : ''} name='phone' onInput={(e:any)=>{handleValueChange(e.target.name,Number(e.target.value))}} />
+            <IonInput color='dark' disabled required={true} autocomplete='off' type="text" value={dataModall.current.vehicle ? dataModall.current.vehicle.brand : ''} name='brand' onIonChange={(e:any)=>{handleValueChange(e.target.name,e.target.value)}} />
           </IonItem>
          <IonItem>
             <IonIcon color='primary' icon={colorPaletteOutline} slot="start" />
             <IonLabel position="floating">Color:</IonLabel>
-            <IonInput color='dark' disabled  required={true} autocomplete='off' type="text" value={dataModall.vehicle ? dataModall.vehicle.color : ''} name='documentId' onInput={(e:any)=>{ handleValueChange(e.target.name,Number(e.target.value))}}/>
+            <IonInput color='dark' disabled  required={true} autocomplete='off' type="text" value={dataModall.current.vehicle ? dataModall.current.vehicle.color : ''} name='color' onIonChange={(e:any)=>{ handleValueChange(e.target.name,e.target.value)}}/>
           </IonItem>
           <IonProgressBar hidden={!showProgressBar} type="indeterminate"></IonProgressBar><br />
         </IonCard>
-        {dataModall.available==='false'
+        {dataModall.current.available==='false'
         ?<IonButton color='primary' class='btn-login' type="submit"><IonIcon icon={pushOutline} slot="start" />LIBERAR</IonButton>
         :<IonButton color='danger' class='btn-login' type="submit"><IonIcon icon={logOutOutline} slot="start" />OCUPAR</IonButton>
         }
@@ -112,7 +104,7 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
       <IonAlert
             isOpen={showAlert}
             onDidDismiss={() => setShowAlert(false)}
-            header={'Actualizacion'}
+            header={'Asignacion'}
             subHeader={'respuesta:'}
             message={message}
             buttons={['OK']}

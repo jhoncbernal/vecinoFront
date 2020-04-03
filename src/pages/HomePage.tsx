@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonContent, IonPage, IonFab, IonFabButton, IonIcon, IonModal, IonFabList, IonAlert, IonRefresher, IonRefresherContent, } from '@ionic/react';
+import { IonContent, IonPage, IonFab, IonFabButton, IonIcon, IonModal, IonFabList, IonAlert, IonRefresher, IonRefresherContent, IonText, IonCard, IonCardContent, } from '@ionic/react';
 import Home from '../components/HomeAdminContainer'
 import { RouteComponentProps } from 'react-router';
 import { menuSharp, buildSharp, carSportSharp, logOutSharp, cardSharp, documentTextSharp, arrowBackOutline } from 'ionicons/icons';
@@ -7,10 +7,15 @@ import { Storages } from '../hooks/Storage'
 import { FileFormPage } from '../components/File/FileFormContainer';
 import UpdateUser from '../components/User/UpdateContainer';
 import { RefresherEventDetail } from '@ionic/core';
-const HomePage: React.FC<RouteComponentProps> = ({ history }) => {
+import BestListContainer from '../components/User/BestListContainer';
+interface ContainerProps {
+  history: any;
+}
+const HomePage: React.FC<ContainerProps> = ({ history }) => { 
   const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [dataModal, setdataModal] = useState();
+  const [fabButtonValue, setFabButtonValue] = useState('');
   function doRefresh(event: CustomEvent<RefresherEventDetail>) {
     console.log('Begin async operation');
   
@@ -22,17 +27,16 @@ const HomePage: React.FC<RouteComponentProps> = ({ history }) => {
   }
   
   return (
-    <IonPage>
-      <IonContent>
-        <Home history={history} ></Home>
+    <>
         <div>
           <IonFab horizontal="end" vertical="top" slot="fixed">
             <IonFabButton>
               <IonIcon icon={menuSharp} />
             </IonFabButton>
             <IonFabList side="bottom">
-              <IonFabButton color='primary'><IonIcon icon={carSportSharp} /></IonFabButton>
-              <IonFabButton onClick={() => setShowModal(true)} color='primary'><IonIcon icon={documentTextSharp} /></IonFabButton>
+              <IonFabButton color='primary' onClick={()=>{setFabButtonValue('bestPoints');
+                  setShowModal(true);}}><IonIcon icon={carSportSharp} /></IonFabButton>
+              <IonFabButton onClick={() => {setFabButtonValue('document');setShowModal(true)}} color='primary'><IonIcon icon={documentTextSharp} /></IonFabButton>
               <IonFabButton onClick={async () => {
                 try {
                   const { getObject } = await Storages();
@@ -42,11 +46,14 @@ const HomePage: React.FC<RouteComponentProps> = ({ history }) => {
                     err.message = 'sus credenciales vencieron';
                     throw err;
                   }
+                  setFabButtonValue('config');
                   setShowModal(true);
                   setdataModal(user.obj);
+                  console.log(user.obj)
                 } catch (e) { console.error(e) }
               }} color='primary'><IonIcon icon={buildSharp} /></IonFabButton>
-              <IonFabButton color='primary'><IonIcon icon={cardSharp} /></IonFabButton>
+              <IonFabButton color='primary'><IonIcon icon={cardSharp} onClick={()=>{setFabButtonValue('payment');
+                  setShowModal(true);}} /></IonFabButton>
               <IonFabButton color='dark' onClick={() => setShowAlert(true)} ><IonIcon color='primary' icon={logOutSharp} /></IonFabButton>
             </IonFabList>
           </IonFab>
@@ -94,9 +101,11 @@ const HomePage: React.FC<RouteComponentProps> = ({ history }) => {
     </IonContent>
         <IonModal backdropDismiss={false} isOpen={showModal} animated={true}  >
           <IonContent>
-            {!dataModal
-              ? <FileFormPage history={history}></FileFormPage>
-              : <UpdateUser dataModal={dataModal}></UpdateUser>
+            {fabButtonValue==='document'
+              ? (<FileFormPage history={history}></FileFormPage>)
+              : fabButtonValue==='config'?( <UpdateUser dataModal={dataModal}></UpdateUser>)
+              :fabButtonValue==='bestPoints'?(<BestListContainer dataModal={dataModal}></BestListContainer>)
+              :<IonCard disabled  ><IonCardContent><IonText color='primary'><h1>En el futuro aca podra realizar sus pagos de administracion</h1><p>Esperelo muy pronto!</p></IonText></IonCardContent></IonCard>
             }
 
           </IonContent>
@@ -107,8 +116,7 @@ const HomePage: React.FC<RouteComponentProps> = ({ history }) => {
              }}><IonIcon icon={arrowBackOutline} /></IonFabButton>
           </IonFab>
         </IonModal>
-      </IonContent>
-    </IonPage>
+      </>
   );
 };
 

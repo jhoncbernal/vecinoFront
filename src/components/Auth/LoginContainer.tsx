@@ -84,7 +84,7 @@ export class LoginPage extends React.Component<{ history: any },
             '/home'
           );
         })
-        .catch(error =>  this.setState({ 'loginMessage': error.response.ErrorMessage }));
+        .catch(error =>  {console.log(error);this.setState({ 'loginMessage': error.ErrorMessage })});
       this.setState({ 'hiddenbar': true })
       this.setState({ 'showToast1': true })
 

@@ -41,7 +41,7 @@ export async function HttpRequest(pathurl:string,method:any,data:any='',authoriz
                             throw err;
                         }                        
           })
-          .catch(err => {throw err});
+          .catch((err:any) => {console.log(err);throw err});
          }catch(err){ throw err;}
     }
       return await result();
