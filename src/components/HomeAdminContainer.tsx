@@ -4,14 +4,15 @@ import { HttpRequest } from '../hooks/HttpRequest';
 import ListContainer from './User/ListContainer';
 import ParkingListContainer from './ParkingSpace/ListContainer';
 import { Storages } from '../hooks/Storage';
-import { carSportSharp, bicycleSharp, peopleSharp } from 'ionicons/icons';
+import { carSportSharp, bicycleSharp, peopleSharp, barChartSharp } from 'ionicons/icons';
 
-import Pusher from 'pusher-js';
+//import Pusher from 'pusher-js';
+import ChartsContainer from './Dashboard/ChartsContainer';
 
 interface ContainerProps {
   history: any;
 }
-Pusher.logToConsole = true;
+/* Pusher.logToConsole = true;
 var pusher = new Pusher('37e1cd4cd2b7c28cfa9e', {
   cluster: 'us2',
   forceTLS: true
@@ -19,7 +20,7 @@ var pusher = new Pusher('37e1cd4cd2b7c28cfa9e', {
 var channel = pusher.subscribe('my-channel');
 channel.bind('my-event', function(data: any) {
   console.log(JSON.stringify(data))
-});
+}); */
 const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
   const [hiddenBar, setHiddenBar] = useState(false);
   const [loadData, setloadData] = useState(false);
@@ -113,7 +114,10 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
             <IonSegment onIonChange={(e) => {
               setSegmentValue(e.detail.value);
             }
-            } color="secondary" value={segmentValue}>
+            }  value={segmentValue}>
+              <IonSegmentButton value="dashboard" >
+                <IonIcon class='icons-segment' size='medium' icon={barChartSharp} />
+              </IonSegmentButton>
               <IonSegmentButton value="user" >
                 <IonIcon class='icons-segment' size='medium' icon={peopleSharp} />
               </IonSegmentButton>
@@ -129,10 +133,11 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
             </IonSegment>
           </IonToolbar>
           {segmentValue
-            ? <>{segmentValue === 'user' && hiddenBar
-              ? <ListContainer loaddata={loadData} inputs={usersArray}></ListContainer>
-              : <ParkingListContainer history={history} parkingType={segmentValue} loaddata={loadData} inputs={vehiclesArray}></ParkingListContainer>
-            }</>
+            ? <>{
+            segmentValue==='user' && hiddenBar ? (<ListContainer loaddata={loadData} inputs={usersArray}></ListContainer>)
+            :segmentValue==='dashboard'?(<ChartsContainer ></ChartsContainer>)
+            :(<ParkingListContainer history={history} parkingType={segmentValue} loaddata={loadData} inputs={vehiclesArray}></ParkingListContainer>)
+          }</>
             : <></>}
           <IonProgressBar hidden={hiddenBar} type="indeterminate"></IonProgressBar><br />
         </IonCard>

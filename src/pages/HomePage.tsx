@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { IonContent, IonPage, IonFab, IonFabButton, IonIcon, IonModal, IonFabList, IonAlert, IonRefresher, IonRefresherContent, IonText, IonCard, IonCardContent, } from '@ionic/react';
-import Home from '../components/HomeAdminContainer'
-import { RouteComponentProps } from 'react-router';
+import { IonContent, IonFab, IonFabButton, IonIcon, IonModal, IonFabList, IonAlert, IonRefresher, IonRefresherContent, IonText, IonCard, IonCardContent, } from '@ionic/react';
 import { menuSharp, buildSharp, carSportSharp, logOutSharp, cardSharp, documentTextSharp, arrowBackOutline } from 'ionicons/icons';
 import { Storages } from '../hooks/Storage'
 import { FileFormPage } from '../components/File/FileFormContainer';

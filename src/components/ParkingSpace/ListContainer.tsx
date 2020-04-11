@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { IonItem, IonIcon, IonCard, IonAvatar, IonSearchbar, IonModal, IonFab, IonFabButton, IonLabel, IonCardTitle, IonItemDivider, IonButton, IonCardContent, IonCardHeader, IonText, IonInput } from '@ionic/react';
 import { arrowBackOutline, carSportOutline, closeCircle, checkmarkCircle, bicycleOutline } from 'ionicons/icons';
 import './ListContainer.css';
@@ -116,7 +116,7 @@ const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs
           <CreateContainer parkingType={parkingType}></CreateContainer>
           <IonFab vertical="bottom" horizontal="start" slot="fixed">
                     <IonFabButton onClick={() => {
-                      setShowModal(false); 
+                      setShowModal2(false); 
                       history.push(
                         '/home'
                       )

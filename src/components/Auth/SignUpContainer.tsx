@@ -16,7 +16,9 @@ import {
   IonRow,
   IonCol,
   IonFab,
-  IonFabButton
+  IonFabButton,
+  IonSelect,
+  IonSelectOption
 } from "@ionic/react";
 import { mailOpenOutline, personOutline, homeOutline, bookOutline, keyOutline, cardOutline, phonePortraitOutline, arrowBackOutline } from 'ionicons/icons';
 import { HttpRequest } from '../../hooks/HttpRequest';
@@ -34,6 +36,7 @@ export class SignUpPage extends React.Component<{},
     homeNumber: number | string,
     documentId: number | string,
     neighborhoodcode: string,
+    neighborhoods: Array<any>,
     showToast1: boolean,
     loginMessage: string,
     hiddenbar: boolean,
@@ -41,7 +44,6 @@ export class SignUpPage extends React.Component<{},
 
   constructor(props: any, private storage: Storage) {
     super(props);
-
     this.state = {
       username: '',
       email: '',
@@ -54,10 +56,21 @@ export class SignUpPage extends React.Component<{},
       homeNumber: '',
       documentId: '',
       neighborhoodcode: '',
+      neighborhoods:[''],
       showToast1: false,
       loginMessage: '',
       hiddenbar: true,
     }
+    this.getAllNeighborhoodNames();
+  }
+  async getAllNeighborhoodNames(){
+    let pathurl = `/neighborhood/names/1`;
+    await HttpRequest(pathurl, 'GET', '')          
+          .then((response:any) => {
+              console.log('ok')
+              this.setState({'neighborhoods': response})
+          })
+          .catch(error => console.error('Error:', error));
   }
   async handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -82,6 +95,7 @@ export class SignUpPage extends React.Component<{},
           neighborhoodcode: this.state.neighborhoodcode,
         };
         this.setState({ 'hiddenbar': false })
+        console.log(data);
         await HttpRequest(pathurl, 'POST', data)          
           .then((response:any) => {
             this.setState({ 'hiddenbar': true })
@@ -175,10 +189,16 @@ export class SignUpPage extends React.Component<{},
                 <IonInput color='dark' required={true} autocomplete='on' type="number" value={this.state.documentId} onInput={(e: any) => this.setState({ 'documentId': e.target.value })} />
               </IonItem>
               <IonItem>
-                <IonIcon color='primary' icon={bookOutline} slot="start" />
-                <IonLabel position="floating">Codigo de conjunto</IonLabel>
-                <IonInput color='dark' required={true} autocomplete="on" autocapitalize="on" type="text" value={this.state.neighborhoodcode} onInput={(e: any) => this.setState({ 'neighborhoodcode': e.target.value })} />
-              </IonItem>
+              <IonIcon color='primary' icon={bookOutline} slot="start" />
+              <IonLabel>Conjunto</IonLabel>
+            <IonSelect interface="popover" color='dark' placeholder={'Seleccione un conjunto'}  onIonChange={(e:any) => this.setState({ 'neighborhoodcode': e.target.value })}>
+              {this.state.neighborhoods.map((neighborhood,index) => (
+                <IonSelectOption key={index} value={neighborhood.neighborhoodcode}>
+                  {neighborhood.firstName} 
+                </IonSelectOption>
+              ))}
+            </IonSelect>
+            </IonItem>
               <IonItem>
                 <IonIcon color='primary' icon={keyOutline} slot="start" />
                 <IonLabel position="floating">Contraseña</IonLabel>

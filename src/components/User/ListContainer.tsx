@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IonItem, IonIcon, IonLabel, IonCard, IonCardContent, IonAvatar, IonToggle, IonRow, IonGrid, IonCol, IonSearchbar, IonText, IonModal,  IonFab, IonFabButton,   IonTitle, IonCardHeader,  } from '@ionic/react';
-import { personCircleOutline, arrowBackOutline, personOutline, warningOutline } from 'ionicons/icons';
+import { arrowBackOutline, personOutline, warningOutline } from 'ionicons/icons';
 import UpdateUser from './UpdateContainer';
 interface ContainerProps {
   loaddata:boolean;

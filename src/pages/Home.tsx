@@ -6,9 +6,6 @@ import HomePage from './HomePage';
 export class Home extends React.Component<{ history: any },
   {}> {
 
-  constructor(props: any) {
-    super(props);
-  }
 
   render() {
     const { history } = this.props;

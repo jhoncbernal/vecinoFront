@@ -1,15 +1,13 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { IonToolbar, IonTitle, IonContent, IonCard, IonItem, IonIcon, IonLabel, IonInput, IonCol, IonRow, IonGrid, IonToggle, IonProgressBar, IonButton, IonAlert, IonList, IonItemSliding, IonItemOptions, IonItemOption, IonAvatar, IonText, } from '@ionic/react';
-import { personOutline, phonePortraitOutline, mailOpenOutline, homeOutline, cardOutline, bulbOutline, pushOutline } from 'ionicons/icons';
+import { IonToolbar, IonTitle, IonContent, IonItem, IonIcon, IonLabel, IonProgressBar, IonAlert, IonList, IonItemSliding, IonItemOptions, IonItemOption, IonAvatar, } from '@ionic/react';
+import { personOutline } from 'ionicons/icons';
 import { HttpRequest } from '../../hooks/HttpRequest';
-import { Storages } from '../../hooks/Storage';
 
 interface ContainerProps {
     dataModal: any;
 }
 
 const BestListContainer: React.FC<ContainerProps> = ({ dataModal }) => {
-    let body: any = {};
     const [showAlert, setShowAlert] = useState(false);
     const [message, setMessage] = useState('');
     const [dataModall, setdataModall] = useState([{}]);
