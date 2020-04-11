@@ -35,7 +35,7 @@ export class SignUpPage extends React.Component<{},
     blockNumber: number | string,
     homeNumber: number | string,
     documentId: number | string,
-    neighborhoodcode: string,
+    uniquecode: string,
     neighborhoods: Array<any>,
     showToast1: boolean,
     loginMessage: string,
@@ -55,22 +55,22 @@ export class SignUpPage extends React.Component<{},
       blockNumber: '',
       homeNumber: '',
       documentId: '',
-      neighborhoodcode: '',
-      neighborhoods:[''],
+      uniquecode: '',
+      neighborhoods: [''],
       showToast1: false,
       loginMessage: '',
       hiddenbar: true,
     }
     this.getAllNeighborhoodNames();
   }
-  async getAllNeighborhoodNames(){
+  async getAllNeighborhoodNames() {
     let pathurl = `/neighborhood/names/1`;
-    await HttpRequest(pathurl, 'GET', '')          
-          .then((response:any) => {
-              console.log('ok')
-              this.setState({'neighborhoods': response})
-          })
-          .catch(error => console.error('Error:', error));
+    await HttpRequest(pathurl, 'GET', '')
+      .then((response: any) => {
+        console.log('ok')
+        this.setState({ 'neighborhoods': response })
+      })
+      .catch(error => console.error('Error:', error));
   }
   async handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -92,12 +92,12 @@ export class SignUpPage extends React.Component<{},
           blockNumber: this.state.blockNumber,
           homeNumber: this.state.homeNumber,
           documentId: this.state.documentId,
-          neighborhoodcode: this.state.neighborhoodcode,
+          uniquecode: this.state.uniquecode,
         };
         this.setState({ 'hiddenbar': false })
         console.log(data);
-        await HttpRequest(pathurl, 'POST', data)          
-          .then((response:any) => {
+        await HttpRequest(pathurl, 'POST', data)
+          .then((response: any) => {
             this.setState({ 'hiddenbar': true })
             if (response.emailResult) {
               console.log('ok')
@@ -189,16 +189,16 @@ export class SignUpPage extends React.Component<{},
                 <IonInput color='dark' required={true} autocomplete='on' type="number" value={this.state.documentId} onInput={(e: any) => this.setState({ 'documentId': e.target.value })} />
               </IonItem>
               <IonItem>
-              <IonIcon color='primary' icon={bookOutline} slot="start" />
-              <IonLabel>Conjunto</IonLabel>
-            <IonSelect interface="popover" color='dark' placeholder={'Seleccione un conjunto'}  onIonChange={(e:any) => this.setState({ 'neighborhoodcode': e.target.value })}>
-              {this.state.neighborhoods.map((neighborhood,index) => (
-                <IonSelectOption key={index} value={neighborhood.neighborhoodcode}>
-                  {neighborhood.firstName} 
-                </IonSelectOption>
-              ))}
-            </IonSelect>
-            </IonItem>
+                <IonIcon color='primary' icon={bookOutline} slot="start" />
+                <IonLabel>Conjunto</IonLabel>
+                <IonSelect interface="popover" color='dark' placeholder={'Seleccione un conjunto'} onIonChange={(e: any) => this.setState({ 'uniquecode': e.target.value })}>
+                  {this.state.neighborhoods.map((neighborhood, index) => (
+                    <IonSelectOption key={index} value={neighborhood.uniquecode}>
+                      {neighborhood.firstName}
+                    </IonSelectOption>
+                  ))}
+                </IonSelect>
+              </IonItem>
               <IonItem>
                 <IonIcon color='primary' icon={keyOutline} slot="start" />
                 <IonLabel position="floating">Contraseña</IonLabel>
