@@ -64,7 +64,7 @@ export class SignUpPage extends React.Component<{},
     this.getAllNeighborhoodNames();
   }
   async getAllNeighborhoodNames() {
-    let pathurl = `/neighborhood/names/1`;
+    let pathurl = `/admin/names/1`;
     await HttpRequest(pathurl, 'GET', '')
       .then((response: any) => {
         console.log('ok')
