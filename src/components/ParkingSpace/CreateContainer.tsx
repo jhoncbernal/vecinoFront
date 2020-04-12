@@ -29,7 +29,7 @@ const CreateContainer: React.FC<ContainerProps> = ({ parkingType }) => {
                 let positions=[];
             if(numPositions>0){
             for (let index = 1; index <= numPositions; index++) {
-                let pos={ "posnumber": `${index}`, "available": true, "vehicletype": "Motorcycle" }                
+                let pos={ "posnumber": `${index}`, "available": true, "vehicletype": `"${parkingType.substring(0, parkingType.length - 1)}"` }                
                 positions.push(pos);
                 
             }
