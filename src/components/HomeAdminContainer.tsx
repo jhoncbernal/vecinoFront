@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { IonContent, IonImg, IonCard, IonProgressBar, IonAlert, IonToolbar, IonSegment, IonSegmentButton, IonIcon, IonTitle } from '@ionic/react';
+import { IonCard, IonProgressBar, IonAlert, IonToolbar, IonSegment, IonSegmentButton, IonIcon } from '@ionic/react';
 import { HttpRequest } from '../hooks/HttpRequest';
 import ListContainer from './User/ListContainer';
 import ParkingListContainer from './ParkingSpace/ListContainer';
@@ -28,7 +28,6 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
   const [message, setMessage] = useState('');
   const [usersArray, setUsersArray] = useState<any>([{}]);
   const [vehiclesArray, setVehiclesArray] = useState<any>([{}]);
-  const [currentUser, setCurrentUser] = useState<any>({});
   const [segmentValue, setSegmentValue] = useState<any>("user");
   const httpRequest = useCallback(
     async () => {
@@ -56,16 +55,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
               setVehiclesArray(resultado.positions);
             }
             setHiddenBar(true);
-            const { getObject } = await Storages();
-            const user: any = await getObject('user');
-            if (!user) {
-              const err = new Error();
-              err.message = 'sus credenciales vencieron';
-              throw err;
-            }
-            else {
-              setCurrentUser(user.obj)
-            }
+            
             setloadData(true);
           })
           .catch(error => {
@@ -103,13 +93,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
  
   return (
     <>
-      <IonContent class="bg-image">
-        <IonTitle> <IonImg class='img' src={'/assets/img/IconLogo.png'} /></IonTitle>
-        {currentUser.firstName
-          ? <IonTitle color='primary'>{`${currentUser.firstName}`}</IonTitle>
-          : <></>}
-
-        <IonCard class="card-login">
+       <IonCard class="card-login">
           <IonToolbar>
             <IonSegment onIonChange={(e) => {
               setSegmentValue(e.detail.value);
@@ -150,7 +134,6 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
           message={message}
           buttons={['OK']}
         />
-      </IonContent>
     </>
   );
 };
