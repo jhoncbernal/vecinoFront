@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
-import { IonItem, IonIcon, IonLabel, IonCard, IonCardContent, IonRow, IonGrid, IonCol, IonSearchbar, IonText, IonModal, IonFab, IonFabButton, IonTitle, IonCardHeader, IonThumbnail, IonImg, } from '@ionic/react';
-import { arrowBackOutline } from 'ionicons/icons';
+import React, { useState, useCallback, useEffect } from 'react';
+import { IonItem, IonIcon, IonLabel, IonCard, IonCardContent, IonRow, IonGrid, IonCol, IonSearchbar, IonText, IonModal, IonFab, IonFabButton, IonTitle, IonCardHeader, IonThumbnail, IonImg, IonButton, IonInput, } from '@ionic/react';
+import { arrowBackOutline, addSharp, removeSharp } from 'ionicons/icons';
 import UpdateProvider from './UpdateContainer';
 interface ContainerProps {
   loaddata: boolean;
@@ -15,21 +15,26 @@ const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs, currentUser
   const [dataModal, setdataModal] = useState({});
   const [showModal, setShowModal] = useState(false);
 
-  const handleAddProductCart = useCallback(
-    (property: string) => {
+  const handleProductCart = useCallback(
+    (property: string,operation:string) => {
       try {
-        if (productCart[property]) {
-          productCart[property]++;
+        if (productCart[`${property}`] >= 0&&operation==='Add') {
+          productCart[`${property}`]++;
+        }else if (productCart[`${property}`] > 0&&operation==='Less') {
+          productCart[`${property}`]--;
         } else {
-          productCart[property] = 0;
+          productCart[`${property}`] = 0;
         }
-        console.log(productCart);
+        console.log(productCart)
       } catch (e) {
         console.error(e);
       }
     },
     [productCart],
   );
+  useEffect(() => {
+    console.log(productCart)
+  }, [productCart])
   try {
     if (inputs.length > 0) {
 
@@ -63,7 +68,6 @@ const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs, currentUser
             showCancelButton="always" hidden={!loaddata}></IonSearchbar>
 
           {data.map((input: any, index) => {
-
             return (
 
               <IonCard key={index} id='card'>
@@ -75,14 +79,12 @@ const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs, currentUser
                     if (currentUser.roles.includes('ROLE_PROVIDER_ACCESS')) {
                       setShowModal(true);
                       setdataModal(input)
-                    } else {
-                      handleAddProductCart(input.id);
                     }
                   }
 
                 }}>
                   <IonGrid>
-                    
+
                     <IonRow>
                       <IonCol>
                         <IonItem>
@@ -90,14 +92,23 @@ const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs, currentUser
                             <IonImg src={input.urlImage} />
                           </IonThumbnail>
                           <IonLabel>
-                            <h2>{input ? input.productName : ''} {input ? input.productType : ''}</h2>
-                            <h3><strong>$ {input ? (input.price) :input.promotionPrice?(<s>{input.price}</s>): ''}</strong></h3>
-                            {input ?(input.promotionPrice ?(<h3 color="dark">Precio de Oferta: <strong>$ {input.promotionPrice}</strong></h3>):null):null}
+                            <h2>{input ? input.productType : ''} {input ? input.productName : ''} </h2>
+                            <h3><strong>$ {input ? (input.price) : input.promotionPrice ? (<s>{input.price}</s>) : ''}</strong></h3>
+                            {input ? (input.promotionPrice ? (<h3 color="dark">Precio de Oferta: <strong>$ {input.promotionPrice}</strong></h3>) : null) : null}
                             <p>{input ? input.features : ''}</p>
                           </IonLabel>
                         </IonItem>
+                        <IonItem>
+                          <IonButton onClick={()=>{handleProductCart(input._id,'Less')}}>
+                            <IonIcon slot="icon-only" icon={removeSharp} />
+                          </IonButton>
+                          <IonInput value={productCart[`${input._id}`]}></IonInput>
+                          <IonButton onClick={()=>{if(input.totalAmount<=productCart[`${input._id}`]){handleProductCart(input._id,'Add')}}}>
+                            <IonIcon slot="icon-only" icon={addSharp} />
+                          </IonButton>
+                        </IonItem>
                       </IonCol>
-                      <IonCol hidden={currentUser.roles.includes('ROLE_PROVIDER_ACCESS')?false:true}>
+                      <IonCol hidden={currentUser.roles.includes('ROLE_PROVIDER_ACCESS') ? false : true}>
                         <IonItem>
                           <IonLabel>
                             <h2> </h2>
@@ -112,7 +123,7 @@ const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs, currentUser
                   </IonGrid>
                 </IonCardContent>
                 <IonModal backdropDismiss={false} isOpen={showModal} animated={true}  >
-                  {/* <UpdateProvider dataModal={dataModal}></UpdateProvider> */}
+                  <UpdateProvider dataModal={dataModal}></UpdateProvider>
                   <IonFab vertical="bottom" horizontal="start" slot="fixed">
                     <IonFabButton onClick={() => setShowModal(false)} routerLink="/home"><IonIcon icon={arrowBackOutline} /></IonFabButton>
                   </IonFab>

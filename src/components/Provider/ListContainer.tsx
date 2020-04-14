@@ -1,0 +1,118 @@
+import React, { useState, useCallback } from 'react';
+import { IonItem, IonIcon, IonLabel, IonCard, IonCardContent, IonRow, IonGrid, IonCol, IonSearchbar, IonText, IonModal, IonFab, IonFabButton, IonTitle, IonCardHeader, IonThumbnail, IonImg, IonContent, } from '@ionic/react';
+import { arrowBackOutline } from 'ionicons/icons';
+import ListContainerProduct from '../Product/ListContainer';
+import { HttpRequest } from '../../hooks/HttpRequest';
+interface ContainerProps {
+  loaddata: boolean;
+  inputs: Array<any>;
+  currentUser: any;
+}
+
+const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs, currentUser }) => {
+  let productCart: any = {};
+  const [searchText, setSearchText] = useState('');
+  const [data, setdata] = useState(inputs);
+  const [dataModal, setdataModal] = useState({});
+  const [showModal, setShowModal] = useState(false);
+  const [productsArray, setProductsArray] = useState<any>([{}]);
+  const [loadData, setloadData] = useState(false);
+
+  const handleAddProductCart = useCallback(
+    (property: string) => {
+      try {
+        if (productCart[property]) {
+          productCart[property]++;
+        } else {
+          productCart[property] = 0;
+        }
+        console.log(productCart);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [productCart],
+  );
+  try {
+    if (inputs.length > 0) {
+
+      return (
+        <>
+
+          <IonSearchbar value={searchText} onIonChange={(e) => {
+            setdata(inputs);
+            setSearchText(e.detail.value!);
+
+            let newData = inputs.filter(item => {
+              let itemData = `${item.productType.toUpperCase()} ${item.productName.toUpperCase()} 
+              ${item.features.toUpperCase()}
+              ${item.price.toString().toUpperCase()}
+              ${item.totalAmount.toString().toUpperCase()}
+              ${item.measureType.toUpperCase()}`;
+              if (item.promotionPrice) {
+                itemData = itemData + `${item.documentId.toString().toUpperCase()}`;
+              }
+              const textData = searchText.toUpperCase();
+              return itemData.indexOf(textData) > -1;
+            });
+            setdata(newData);
+          }}
+
+
+
+
+
+            // e => setSearchText(e.detail.value!)}
+            showCancelButton="always" hidden={!loaddata}></IonSearchbar>
+
+          {data.map((input: any, index) => {
+
+            return (
+
+              <IonCard key={index} id='card'>
+                <IonCardHeader color='primary'>
+                  <IonTitle><strong>{input.firstName}</strong></IonTitle>
+                </IonCardHeader>
+                <IonCardContent onClick={async() => {
+                  let pathurl = `/product?providerId=${input._id}`;
+                  console.log(pathurl);
+                  await HttpRequest(pathurl, 'GET', '', true)
+                    .then(async (resultado: any) => {
+                      setProductsArray(resultado);
+                      setShowModal(true);
+                      setdataModal(input);
+                    });
+                  
+                }}>
+                  <IonItem>
+                          <IonThumbnail class='productImage' slot="start">
+                            <IonImg src={input ? input.urlImage : null} />
+                          </IonThumbnail>
+                          <IonLabel>
+                            <h1>{input ? input.category : ''}</h1>
+                          </IonLabel>
+                          </IonItem>
+                </IonCardContent>
+                <IonModal backdropDismiss={false} isOpen={showModal} animated={true}  >
+                  <IonContent>
+                   <ListContainerProduct loaddata={loadData} inputs={productsArray} currentUser={currentUser}></ListContainerProduct> 
+                  <IonFab vertical="bottom" horizontal="start" slot="fixed">
+                    <IonFabButton onClick={() => setShowModal(false)} routerLink="/home"><IonIcon icon={arrowBackOutline} /></IonFabButton>
+                  </IonFab>
+                  </IonContent>
+                </IonModal>
+              </IonCard>
+            )
+          })}
+
+
+        </>
+
+      );
+    } else {
+      return (<><h1><IonText color='primary'>Sin conexion</IonText></h1></>)
+    }
+  } catch (e) { console.log(e); throw e }
+};
+
+export default ListContainer;

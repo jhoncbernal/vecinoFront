@@ -82,26 +82,26 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
         <IonCard class="card-login">
           <IonItem>
             <IonIcon color='primary' icon={personOutline} slot="start" />
-            <IonLabel position="floating">Nombre de usuario</IonLabel>
+            <IonLabel position="floating">Nombre del producto</IonLabel>
             <IonInput disabled color='dark' required={true} autocomplete='off' type="text" value={dataModall ? dataModall.username : ''} />
           </IonItem>
           <IonItem>
             <IonIcon color='primary' icon={mailOpenOutline} slot="start" />
-            <IonLabel position="floating">Email</IonLabel>
+            <IonLabel position="floating">Precio</IonLabel>
             <IonInput color='dark' required={true} autocomplete='off' type="email" value={dataModall ? dataModall.email : ''} name='email' onIonChange={(e: any) => { handleValueChange(e.target.name, e.target.value) }} />
           </IonItem>
           <IonItem>
             <IonIcon color='primary' icon={phonePortraitOutline} slot="start" />
-            <IonLabel position="floating">Telefono</IonLabel>
+            <IonLabel position="floating">Cantidad del producto</IonLabel>
             <IonInput color='dark' required={true} autocomplete='off' type="number" value={dataModall ? dataModall.phone : ''} name='phone' onIonChange={(e: any) => { handleValueChange(e.target.name, Number(e.target.value)) }} />
           </IonItem>
           <IonGrid>
-            <IonLabel >Nombre completo</IonLabel>
+            <IonLabel >descripcion</IonLabel>
             <IonRow>
               <IonCol>
                 <IonItem>
                   <IonIcon color='primary' icon={personOutline} slot="start" />
-                  <IonLabel position="floating">Nombre</IonLabel>
+                  <IonLabel position="floating">estado</IonLabel>
                   <IonInput color='dark' required={true} autocomplete='off' type="text" value={dataModall ? dataModall.firstName : ''} name='firstName' onIonChange={(e: any) => { handleValueChange(e.target.name, e.target.value) }} />
                 </IonItem>
               </IonCol>

@@ -5,6 +5,7 @@ import HomeProviderContainer from '../components/HomeProviderContainer';
 import FloatingButtonsMenuContainer from '../components/FloatingButtonsMenuContainer';
 import { RefresherEventDetail } from '@ionic/core';
 import { Storages } from '../hooks/Storage';
+import HomeUserContainer from '../components/HomeUserContainer';
 
 export class Home extends React.Component<{ history: any },
 {
@@ -60,7 +61,7 @@ export class Home extends React.Component<{ history: any },
         ?(<HomeAdminPageContainer history={history} ></HomeAdminPageContainer>)
     :this.state.currentUser.roles.includes('ROLE_PROVIDER_ACCESS') 
         ?(<HomeProviderContainer history={history} currentUser={this.state.currentUser} ></HomeProviderContainer>)
-        :<IonCard><IonText><h1>Hola User</h1></IonText></IonCard>):null}
+        :<HomeUserContainer history={history} currentUser={this.state.currentUser}></HomeUserContainer>):null}
       <IonRefresher slot="fixed" onIonRefresh={this.doRefresh}>
         <IonRefresherContent color='primary'
           pullingIcon="arrow-dropdown"

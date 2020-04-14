@@ -2,7 +2,7 @@ import { BASEURL, APIVERSION } from "../config";
 import { Storages } from "./Storage";
 import Axios from "axios";
 
-export async function HttpRequest(pathurl:string,method:any,data:any='',authorization:boolean=false,headers:any='') {
+export async function HttpRequest(pathurl:string,method:any,data:any='',authorization:boolean=false,headers:any='',addQuery:any=null) {
   let jsonheader={'Content-Type': 'application/json','Access-Control-Allow-Origin': '*',}
   if(authorization){
   const { getObject } = await Storages();
@@ -19,12 +19,15 @@ export async function HttpRequest(pathurl:string,method:any,data:any='',authoriz
     
     let url = `${BASEURL}${APIVERSION}${pathurl}`;
 
-    const options = {
+    let options = {
       url: url,
       method: method,
       headers: {...jsonheader,...headers},
       data: JSON.stringify(data),
     };
+    if(addQuery!=null){
+      options={...options,...{query:  addQuery }}
+    }
     if(method==='GET'){
       delete options.data;
      }
