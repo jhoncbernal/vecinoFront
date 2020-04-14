@@ -1,4 +1,18 @@
-export const BASEURL:string ="https://vecinoo.herokuapp.com";// "http://localhost:4000";
-export const APIVERSION:string ="/v1/api";// process.env.APIVERSION;
-export const MONGO_URI = process.env.MONGO_URI;
-export const APPLICATION_NAME = process.env.APPLICATION_NAME;
+const dev = {
+  API_VERSION: "/v1/api",
+  BASE_URL: "http://localhost:4000",
+  FILE_UPLOAD_IMAGE_CONTEXT: "/file/images/upload"
+};
+
+const prod = {
+  API_VERSION: "/v1/api",
+  BASE_URL: "https://vecinoo.herokuapp.com",
+  FILE_UPLOAD_IMAGE_CONTEXT: "/file/images/upload"
+};
+
+const config = process.env.REACT_APP_STAGE === "prod" ? prod : dev;
+
+export default {
+  APPLICATION_NAME: "Vecino",
+  ...config
+};
