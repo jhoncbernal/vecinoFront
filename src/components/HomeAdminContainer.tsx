@@ -1,15 +1,12 @@
 import React, { useCallback, useState, useEffect } from "react";
 import {
-  IonContent,
-  IonImg,
   IonCard,
   IonProgressBar,
   IonAlert,
   IonToolbar,
   IonSegment,
   IonSegmentButton,
-  IonIcon,
-  IonTitle
+  IonIcon
 } from "@ionic/react";
 import { HttpRequest } from "../hooks/HttpRequest";
 import ListContainer from "./User/ListContainer";
@@ -22,22 +19,12 @@ import {
   barChartSharp
 } from "ionicons/icons";
 
-//import Pusher from 'pusher-js';
 import ChartsContainer from "./Dashboard/ChartsContainer";
 import config from "../config";
 
 interface ContainerProps {
   history: any;
 }
-/* Pusher.logToConsole = true;
-var pusher = new Pusher('37e1cd4cd2b7c28cfa9e', {
-  cluster: 'us2',
-  forceTLS: true
-});
-var channel = pusher.subscribe('my-channel');
-channel.bind('my-event', function(data: any) {
-  console.log(JSON.stringify(data))
-}); */
 const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
   const [hiddenBar, setHiddenBar] = useState(false);
   const [loadData, setloadData] = useState(false);
@@ -45,7 +32,6 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
   const [message, setMessage] = useState("");
   const [usersArray, setUsersArray] = useState<any>([{}]);
   const [vehiclesArray, setVehiclesArray] = useState<any>([{}]);
-  const [currentUser, setCurrentUser] = useState<any>({});
   const [segmentValue, setSegmentValue] = useState<any>("user");
   const httpRequest = useCallback(async () => {
     try {
@@ -79,7 +65,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
             err.message = "sus credenciales vencieron";
             throw err;
           } else {
-            setCurrentUser(user.obj);
+            //setCurrentUser(user.obj);
           }
           setloadData(true);
         })
@@ -114,99 +100,83 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
 
   return (
     <>
-      <IonContent class="bg-image">
-        <IonTitle>
-          {" "}
-          <IonImg class="img" src={"/assets/img/IconLogo.png"} />
-        </IonTitle>
-        {currentUser.firstName ? (
-          <IonTitle color="primary">{`${currentUser.firstName}`}</IonTitle>
+      <IonCard class="card-login">
+        <IonToolbar>
+          <IonSegment
+            onIonChange={e => {
+              setSegmentValue(e.detail.value);
+            }}
+            value={segmentValue}
+          >
+            <IonSegmentButton value="dashboard">
+              <IonIcon
+                class="icons-segment"
+                size="medium"
+                icon={barChartSharp}
+              />
+            </IonSegmentButton>
+            <IonSegmentButton value="user">
+              <IonIcon class="icons-segment" size="medium" icon={peopleSharp} />
+            </IonSegmentButton>
+            <IonSegmentButton value="Cars">
+              <IonIcon
+                class="icons-segment"
+                size="medium"
+                icon={carSportSharp}
+              />
+            </IonSegmentButton>
+            <IonSegmentButton value="Motorcycles">
+              <IonIcon
+                class="icons-segment"
+                size="medium"
+                src={"assets/icons/motorcycleSharp.svg"}
+              />
+            </IonSegmentButton>
+            <IonSegmentButton value="Bikes">
+              <IonIcon
+                class="icons-segment"
+                size="medium"
+                icon={bicycleSharp}
+              />
+            </IonSegmentButton>
+          </IonSegment>
+        </IonToolbar>
+        {segmentValue ? (
+          <>
+            {segmentValue === "user" && hiddenBar ? (
+              <ListContainer
+                loaddata={loadData}
+                inputs={usersArray}
+              ></ListContainer>
+            ) : segmentValue === "dashboard" ? (
+              <ChartsContainer></ChartsContainer>
+            ) : (
+              <ParkingListContainer
+                history={history}
+                parkingType={segmentValue}
+                loaddata={loadData}
+                inputs={vehiclesArray}
+              ></ParkingListContainer>
+            )}
+          </>
         ) : (
           <></>
         )}
+        <IonProgressBar
+          hidden={hiddenBar}
+          type="indeterminate"
+        ></IonProgressBar>
+        <br />
+      </IonCard>
 
-        <IonCard class="card-login">
-          <IonToolbar>
-            <IonSegment
-              onIonChange={e => {
-                setSegmentValue(e.detail.value);
-              }}
-              value={segmentValue}
-            >
-              <IonSegmentButton value="dashboard">
-                <IonIcon
-                  class="icons-segment"
-                  size="medium"
-                  icon={barChartSharp}
-                />
-              </IonSegmentButton>
-              <IonSegmentButton value="user">
-                <IonIcon
-                  class="icons-segment"
-                  size="medium"
-                  icon={peopleSharp}
-                />
-              </IonSegmentButton>
-              <IonSegmentButton value="Cars">
-                <IonIcon
-                  class="icons-segment"
-                  size="medium"
-                  icon={carSportSharp}
-                />
-              </IonSegmentButton>
-              <IonSegmentButton value="Motorcycles">
-                <IonIcon
-                  class="icons-segment"
-                  size="medium"
-                  src={"assets/icons/motorcycleSharp.svg"}
-                />
-              </IonSegmentButton>
-              <IonSegmentButton value="Bikes">
-                <IonIcon
-                  class="icons-segment"
-                  size="medium"
-                  icon={bicycleSharp}
-                />
-              </IonSegmentButton>
-            </IonSegment>
-          </IonToolbar>
-          {segmentValue ? (
-            <>
-              {segmentValue === "user" && hiddenBar ? (
-                <ListContainer
-                  loaddata={loadData}
-                  inputs={usersArray}
-                ></ListContainer>
-              ) : segmentValue === "dashboard" ? (
-                <ChartsContainer></ChartsContainer>
-              ) : (
-                <ParkingListContainer
-                  history={history}
-                  parkingType={segmentValue}
-                  loaddata={loadData}
-                  inputs={vehiclesArray}
-                ></ParkingListContainer>
-              )}
-            </>
-          ) : (
-            <></>
-          )}
-          <IonProgressBar
-            hidden={hiddenBar}
-            type="indeterminate"
-          ></IonProgressBar>
-          <br />
-        </IonCard>
-
-        <IonAlert
-          isOpen={showAlert1}
-          onDidDismiss={() => setShowAlert1(true)}
-          header={"Advertencia"}
-          subHeader={"se produjo un error debido a que:"}
-          message={message}
-          buttons={["OK"]}
-        />
-      </IonContent>
+      <IonAlert
+        isOpen={showAlert1}
+        onDidDismiss={() => setShowAlert1(true)}
+        header={"Advertencia"}
+        subHeader={"se produjo un error debido a que:"}
+        message={message}
+        buttons={["OK"]}
+      />
     </>
   );
 };

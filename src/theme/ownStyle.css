@@ -69,3 +69,12 @@ margin-top: 4%;
 .icon-avatar{
   font-size: 80px;
 }
+.productImage{
+  min-width: 5rem;    
+  min-height: 5rem;
+  
+}
+.productImage img {
+  max-width: 5rem;    
+  min-width: 5rem;
+}

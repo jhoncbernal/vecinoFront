@@ -52,10 +52,7 @@ const CreateContainer: React.FC<ContainerProps> = ({ parkingType }) => {
             let pos = {
               posnumber: `${index}`,
               available: true,
-              vehicletype: `"${parkingType.substring(
-                0,
-                parkingType.length - 1
-              )}"`
+              vehicletype: `${parkingType.substring(0, parkingType.length - 1)}`
             };
             positions.push(pos);
           }
