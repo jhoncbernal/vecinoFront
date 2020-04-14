@@ -2,7 +2,7 @@ import React, { FC, useState } from "react";
 import { IonCard, IonCardContent, IonImg, IonSpinner } from "@ionic/react";
 import style from "./style.module.css";
 import { Storages } from "../../../hooks/Storage";
-import { BASEURL, APIVERSION } from "../../../config";
+import config from "../../../config";
 import Axios from "axios";
 interface componentData {
   [id: string]: any;
@@ -33,7 +33,7 @@ const UploadComponent: FC<componentData> = props => {
       "Access-Control-Allow-Origin": "*",
       encType: "multipart/form-data"
     };
-    let url = `${BASEURL}${APIVERSION}/file/images/upload`;
+    let url = `${config.BASE_URL}${config.API_VERSION}${config.FileUploadImageContext}`;
     const data = new FormData();
     data.append("image", file);
     await Axios.post(url, data, { headers: header })
