@@ -33,7 +33,7 @@ const UploadComponent: FC<componentData> = props => {
       "Access-Control-Allow-Origin": "*",
       encType: "multipart/form-data"
     };
-    let url = `${config.BASE_URL}${config.API_VERSION}${config.FILE_UPLOAD_IMAGE_CONTEXT}`;
+    let url = `${config.BASE_URL}${config.API_VERSION}${config.FileUploadImageContext}`;
     const data = new FormData();
     data.append("image", file);
     await Axios.post(url, data, { headers: header })

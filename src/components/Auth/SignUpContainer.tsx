@@ -1,5 +1,4 @@
-import React, { FormEvent } from 'react';
-
+import React, { FormEvent } from "react";
 
 import {
   IonContent,
@@ -20,69 +19,82 @@ import {
   IonSelect,
   IonSelectOption
 } from "@ionic/react";
-import { mailOpenOutline, personOutline, homeOutline, bookOutline, keyOutline, cardOutline, phonePortraitOutline, arrowBackOutline } from 'ionicons/icons';
-import { HttpRequest } from '../../hooks/HttpRequest';
+import {
+  mailOpenOutline,
+  personOutline,
+  homeOutline,
+  bookOutline,
+  keyOutline,
+  cardOutline,
+  phonePortraitOutline,
+  arrowBackOutline
+} from "ionicons/icons";
+import { HttpRequest } from "../../hooks/HttpRequest";
+import config from "../../config";
 
-export class SignUpPage extends React.Component<{},
+export class SignUpPage extends React.Component<
+  {},
   {
-    username: string,
-    email: string
-    password: string,
-    confirmpassword: string,
-    phone: number | string,
-    firstName: string,
-    lastName: string,
-    blockNumber: number | string,
-    homeNumber: number | string,
-    documentId: number | string,
-    uniquecode: string,
-    neighborhoods: Array<any>,
-    showToast1: boolean,
-    loginMessage: string,
-    hiddenbar: boolean,
-  }> {
-
+    username: string;
+    email: string;
+    password: string;
+    confirmpassword: string;
+    phone: number | string;
+    firstName: string;
+    lastName: string;
+    blockNumber: number | string;
+    homeNumber: number | string;
+    documentId: number | string;
+    uniquecode: string;
+    neighborhoods: Array<any>;
+    showToast1: boolean;
+    loginMessage: string;
+    hiddenbar: boolean;
+  }
+> {
   constructor(props: any, private storage: Storage) {
     super(props);
     this.state = {
-      username: '',
-      email: '',
-      password: '',
-      confirmpassword: '',
-      phone: '',
-      firstName: '',
-      lastName: '',
-      blockNumber: '',
-      homeNumber: '',
-      documentId: '',
-      uniquecode: '',
-      neighborhoods: [''],
+      username: "",
+      email: "",
+      password: "",
+      confirmpassword: "",
+      phone: "",
+      firstName: "",
+      lastName: "",
+      blockNumber: "",
+      homeNumber: "",
+      documentId: "",
+      uniquecode: "",
+      neighborhoods: [""],
       showToast1: false,
-      loginMessage: '',
-      hiddenbar: true,
-    }
+      loginMessage: "",
+      hiddenbar: true
+    };
     this.getAllNeighborhoodNames();
   }
   async getAllNeighborhoodNames() {
-    let pathurl = `/admin/names/1`;
-    await HttpRequest(pathurl, 'GET', '')
+    let pathurl = `${config.AllNeighborhoodsContext}`;
+    await HttpRequest(pathurl, "GET", "")
       .then((response: any) => {
-        console.log('ok')
-        this.setState({ 'neighborhoods': response })
+        console.log("ok");
+        this.setState({ neighborhoods: response });
       })
-      .catch(error => console.error('Error:', error));
+      .catch(error => console.error("Error:", error));
   }
   async handleSubmit(e: FormEvent) {
     e.preventDefault();
 
     try {
       if (this.state.password !== this.state.confirmpassword) {
-        this.setState({ 'loginMessage': 'la confirmacion de contraseña no coincide' })
-        this.setState({ 'showToast1': true })
+        this.setState({
+          loginMessage: "la confirmacion de contraseña no coincide"
+        });
+        this.setState({ showToast1: true });
       } else {
-        let pathurl = `/auth/signup`;
+        let pathurl = `${config.AuthSignUp}`;
         let data = {
-          roles: ['ROLE_USER_ACCESS'],
+          roles: ["ROLE_USER_ACCESS"],
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
@@ -92,135 +104,269 @@ export class SignUpPage extends React.Component<{},
           blockNumber: this.state.blockNumber,
           homeNumber: this.state.homeNumber,
           documentId: this.state.documentId,
-          uniquecode: this.state.uniquecode,
+          uniquecode: this.state.uniquecode
         };
-        this.setState({ 'hiddenbar': false })
+        this.setState({ hiddenbar: false });
         console.log(data);
-        await HttpRequest(pathurl, 'POST', data)
+        await HttpRequest(pathurl, "POST", data)
           .then((response: any) => {
-            this.setState({ 'hiddenbar': true })
+            this.setState({ hiddenbar: true });
             if (response.emailResult) {
-              console.log('ok')
+              console.log("ok");
               this.setState({
-                'loginMessage': 'se envio un correo de verificacion de cuenta a ' +
+                loginMessage:
+                  "se envio un correo de verificacion de cuenta a " +
                   response.emailResult.email.result.accepted[0]
-              })
+              });
             } else {
-              this.setState({ 'loginMessage': response.message })
+              this.setState({ loginMessage: response.message });
               console.error(response.message);
             }
-            this.setState({ 'showToast1': true })
+            this.setState({ showToast1: true });
           })
-          .catch(error => console.error('Error:', error));
+          .catch(error => console.error("Error:", error));
       }
     } catch (e) {
       console.error(e);
     }
   }
 
-
-
   render() {
-
     return (
       <>
         <IonContent class="bg-image">
-          <IonItem >
-            <IonImg class='img' src={'/assets/img/IconLogo.png'} />
+          <IonItem>
+            <IonImg class="img" src={"/assets/img/IconLogo.png"} />
           </IonItem>
           <form onSubmit={e => this.handleSubmit(e)} action="post">
             <IonCard class="card-login">
               <IonItem>
-                <IonIcon color='primary' icon={personOutline} slot="start" />
+                <IonIcon color="primary" icon={personOutline} slot="start" />
                 <IonLabel position="floating">Nombre de usuario</IonLabel>
-                <IonInput color='dark' required={true} autocomplete='on' type="text" value={this.state.username} onInput={(e: any) => this.setState({ 'username': e.target.value })} />
+                <IonInput
+                  color="dark"
+                  required={true}
+                  autocomplete="on"
+                  type="text"
+                  value={this.state.username}
+                  onInput={(e: any) =>
+                    this.setState({ username: e.target.value })
+                  }
+                />
               </IonItem>
               <IonItem>
-                <IonIcon color='primary' icon={mailOpenOutline} slot="start" />
+                <IonIcon color="primary" icon={mailOpenOutline} slot="start" />
                 <IonLabel position="floating">Email</IonLabel>
-                <IonInput color='dark' required={true} autocomplete='on' type="email" value={this.state.email} onInput={(email: any) => this.setState({ 'email': email.target.value })} />
+                <IonInput
+                  color="dark"
+                  required={true}
+                  autocomplete="on"
+                  type="email"
+                  value={this.state.email}
+                  onInput={(email: any) =>
+                    this.setState({ email: email.target.value })
+                  }
+                />
               </IonItem>
               <IonItem>
-                <IonIcon color='primary' icon={phonePortraitOutline} slot="start" />
+                <IonIcon
+                  color="primary"
+                  icon={phonePortraitOutline}
+                  slot="start"
+                />
                 <IonLabel position="floating">Telefono</IonLabel>
-                <IonInput color='dark' required={true} autocomplete='on' type="number" value={this.state.phone} onInput={(phone: any) => this.setState({ 'phone': phone.target.value })} />
+                <IonInput
+                  color="dark"
+                  required={true}
+                  autocomplete="on"
+                  type="number"
+                  value={this.state.phone}
+                  onInput={(phone: any) =>
+                    this.setState({ phone: phone.target.value })
+                  }
+                />
               </IonItem>
               <IonGrid>
-                <IonLabel >Nombre completo</IonLabel>
+                <IonLabel>Nombre completo</IonLabel>
                 <IonRow>
                   <IonCol>
                     <IonItem>
-                      <IonIcon color='primary' icon={personOutline} slot="start" />
+                      <IonIcon
+                        color="primary"
+                        icon={personOutline}
+                        slot="start"
+                      />
                       <IonLabel position="floating">Nombre</IonLabel>
-                      <IonInput color='dark' required={true} autocomplete='on' type="text" value={this.state.firstName} onInput={(e: any) => this.setState({ 'firstName': e.target.value })} />
+                      <IonInput
+                        color="dark"
+                        required={true}
+                        autocomplete="on"
+                        type="text"
+                        value={this.state.firstName}
+                        onInput={(e: any) =>
+                          this.setState({ firstName: e.target.value })
+                        }
+                      />
                     </IonItem>
                   </IonCol>
                   <IonCol>
                     <IonItem>
-                      <IonIcon color='primary' icon={personOutline} slot="start" />
+                      <IonIcon
+                        color="primary"
+                        icon={personOutline}
+                        slot="start"
+                      />
                       <IonLabel position="floating">Apellido</IonLabel>
-                      <IonInput color='dark' required={true} autocomplete='on' type="text" value={this.state.lastName} onInput={(e: any) => this.setState({ 'lastName': e.target.value })} />
+                      <IonInput
+                        color="dark"
+                        required={true}
+                        autocomplete="on"
+                        type="text"
+                        value={this.state.lastName}
+                        onInput={(e: any) =>
+                          this.setState({ lastName: e.target.value })
+                        }
+                      />
                     </IonItem>
                   </IonCol>
                 </IonRow>
               </IonGrid>
               <IonGrid>
-                <IonLabel >Info de recidencia</IonLabel>
+                <IonLabel>Info de recidencia</IonLabel>
                 <IonRow>
                   <IonCol>
                     <IonItem>
-                      <IonIcon color='primary' icon={homeOutline} slot="start" />
+                      <IonIcon
+                        color="primary"
+                        icon={homeOutline}
+                        slot="start"
+                      />
                       <IonLabel position="floating">Torre</IonLabel>
-                      <IonInput color='dark' required={true} autocomplete='on' type="number" value={this.state.blockNumber} onInput={(e: any) => this.setState({ 'blockNumber': e.target.value })} />
+                      <IonInput
+                        color="dark"
+                        required={true}
+                        autocomplete="on"
+                        type="number"
+                        value={this.state.blockNumber}
+                        onInput={(e: any) =>
+                          this.setState({ blockNumber: e.target.value })
+                        }
+                      />
                     </IonItem>
                   </IonCol>
                   <IonCol>
                     <IonItem>
-                      <IonIcon color='primary' icon={homeOutline} slot="start" />
+                      <IonIcon
+                        color="primary"
+                        icon={homeOutline}
+                        slot="start"
+                      />
                       <IonLabel position="floating">Apartamento</IonLabel>
-                      <IonInput color='dark' required={true} autocomplete='on' type="number" value={this.state.homeNumber} onInput={(e: any) => this.setState({ 'homeNumber': e.target.value })} />
+                      <IonInput
+                        color="dark"
+                        required={true}
+                        autocomplete="on"
+                        type="number"
+                        value={this.state.homeNumber}
+                        onInput={(e: any) =>
+                          this.setState({ homeNumber: e.target.value })
+                        }
+                      />
                     </IonItem>
                   </IonCol>
                 </IonRow>
               </IonGrid>
               <IonItem>
-                <IonIcon color='primary' icon={cardOutline} slot="start" />
-                <IonLabel position="floating">Numero de identificación</IonLabel>
-                <IonInput color='dark' required={true} autocomplete='on' type="number" value={this.state.documentId} onInput={(e: any) => this.setState({ 'documentId': e.target.value })} />
+                <IonIcon color="primary" icon={cardOutline} slot="start" />
+                <IonLabel position="floating">
+                  Numero de identificación
+                </IonLabel>
+                <IonInput
+                  color="dark"
+                  required={true}
+                  autocomplete="on"
+                  type="number"
+                  value={this.state.documentId}
+                  onInput={(e: any) =>
+                    this.setState({ documentId: e.target.value })
+                  }
+                />
               </IonItem>
               <IonItem>
-                <IonIcon color='primary' icon={bookOutline} slot="start" />
+                <IonIcon color="primary" icon={bookOutline} slot="start" />
                 <IonLabel>Conjunto</IonLabel>
-                <IonSelect interface="popover" color='dark' placeholder={'Seleccione un conjunto'} onIonChange={(e: any) => this.setState({ 'uniquecode': e.target.value })}>
+                <IonSelect
+                  interface="popover"
+                  color="dark"
+                  placeholder={"Seleccione un conjunto"}
+                  onIonChange={(e: any) =>
+                    this.setState({ uniquecode: e.target.value })
+                  }
+                >
                   {this.state.neighborhoods.map((neighborhood, index) => (
-                    <IonSelectOption key={index} value={neighborhood.uniquecode}>
+                    <IonSelectOption
+                      key={index}
+                      value={neighborhood.uniquecode}
+                    >
                       {neighborhood.firstName}
                     </IonSelectOption>
                   ))}
                 </IonSelect>
               </IonItem>
               <IonItem>
-                <IonIcon color='primary' icon={keyOutline} slot="start" />
+                <IonIcon color="primary" icon={keyOutline} slot="start" />
                 <IonLabel position="floating">Contraseña</IonLabel>
-                <IonInput color='dark' required={true} minlength={8} maxlength={18} name='password' type="password" value={this.state.password} onInput={(password: any) => this.setState({ 'password': password.target.value })} />
+                <IonInput
+                  color="dark"
+                  required={true}
+                  minlength={8}
+                  maxlength={18}
+                  name="password"
+                  type="password"
+                  value={this.state.password}
+                  onInput={(password: any) =>
+                    this.setState({ password: password.target.value })
+                  }
+                />
               </IonItem>
               <IonItem>
-                <IonIcon color='primary' icon={keyOutline} slot="start" />
+                <IonIcon color="primary" icon={keyOutline} slot="start" />
                 <IonLabel position="floating">Confirmar contraseña</IonLabel>
-                <IonInput color='dark' required={true} minlength={8} maxlength={18} name='password' type="password" value={this.state.confirmpassword} onInput={(confirmpassword: any) => this.setState({ 'confirmpassword': confirmpassword.target.value })} />
+                <IonInput
+                  color="dark"
+                  required={true}
+                  minlength={8}
+                  maxlength={18}
+                  name="password"
+                  type="password"
+                  value={this.state.confirmpassword}
+                  onInput={(confirmpassword: any) =>
+                    this.setState({
+                      confirmpassword: confirmpassword.target.value
+                    })
+                  }
+                />
               </IonItem>
-              <IonProgressBar hidden={this.state.hiddenbar} type="indeterminate"></IonProgressBar><br />
+              <IonProgressBar
+                hidden={this.state.hiddenbar}
+                type="indeterminate"
+              ></IonProgressBar>
+              <br />
             </IonCard>
-            <IonButton class='btn-login' type="submit">Registrarse</IonButton>
+            <IonButton class="btn-login" type="submit">
+              Registrarse
+            </IonButton>
           </form>
           <IonToast
             isOpen={this.state.showToast1}
-            onDidDismiss={() => this.setState({ 'showToast1': false })}
+            onDidDismiss={() => this.setState({ showToast1: false })}
             message={this.state.loginMessage}
             duration={3000}
           />
           <IonFab vertical="bottom" horizontal="start" slot="fixed">
-            <IonFabButton routerLink="/login"><IonIcon icon={arrowBackOutline} /></IonFabButton>
+            <IonFabButton routerLink="/login">
+              <IonIcon icon={arrowBackOutline} />
+            </IonFabButton>
           </IonFab>
         </IonContent>
       </>

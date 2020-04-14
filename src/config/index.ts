@@ -1,13 +1,27 @@
 const dev = {
   API_VERSION: "/v1/api",
-  BASE_URL: "http://localhost:4000",
-  FILE_UPLOAD_IMAGE_CONTEXT: "/file/images/upload"
+  BASE_URL: "https://vecinoo.herokuapp.com",
+  AdminContext: "admin",
+  AllNeighborhoodsContext: "/admin/names/1",
+  AuthSignUp: "/auth/signup",
+  FileUploadImageContext: "/file/images/upload",
+  LoginContext: "/auth/signin",
+  ParkingSpaceContext: "/parkingspace",
+  RecoveryPasswordContext: "/auth/recover",
+  UserContext: "/user"
 };
 
 const prod = {
   API_VERSION: "/v1/api",
   BASE_URL: "https://vecinoo.herokuapp.com",
-  FILE_UPLOAD_IMAGE_CONTEXT: "/file/images/upload"
+  AdminContext: "admin",
+  AllNeighborhoodsContext: "/admin/names/1",
+  AuthSignUp: "/auth/signup",
+  FileUploadImageContext: "/file/images/upload",
+  LoginContext: "/auth/signin",
+  ParkingSpaceContext: "/parkingspace",
+  RecoveryPasswordContext: "/auth/recover",
+  UserContext: "/user"
 };
 
 const config = process.env.REACT_APP_STAGE === "prod" ? prod : dev;
