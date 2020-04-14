@@ -1,6 +1,7 @@
 import React from 'react';
-import { IonPage, IonContent, IonRefresherContent, IonRefresher, IonTitle, IonImg } from '@ionic/react';
+import { IonPage, IonContent, IonRefresherContent, IonRefresher, IonTitle, IonImg, IonCard, IonText } from '@ionic/react';
 import HomeAdminPageContainer from '../components/HomeAdminContainer';
+import HomeProviderContainer from '../components/HomeProviderContainer';
 import FloatingButtonsMenuContainer from '../components/FloatingButtonsMenuContainer';
 import { RefresherEventDetail } from '@ionic/core';
 import { Storages } from '../hooks/Storage';
@@ -54,9 +55,12 @@ export class Home extends React.Component<{ history: any },
           ? <IonTitle color='primary'>{`${this.state.currentUser.firstName}`}</IonTitle>
           : <></>}
       <FloatingButtonsMenuContainer history={history}></FloatingButtonsMenuContainer>
-      {this.state.currentUser.firstName
-        ?<HomeAdminPageContainer history={history} ></HomeAdminPageContainer>
-        :null}
+    {this.state.currentUser.roles?(
+    this.state.currentUser.roles.includes('ROLE_ADMINISTRATION_ACCESS')
+        ?(<HomeAdminPageContainer history={history} ></HomeAdminPageContainer>)
+    :this.state.currentUser.roles.includes('ROLE_PROVIDER_ACCESS') 
+        ?(<HomeProviderContainer history={history} currentUser={this.state.currentUser} ></HomeProviderContainer>)
+        :<IonCard><IonText><h1>Hola User</h1></IonText></IonCard>):null}
       <IonRefresher slot="fixed" onIonRefresh={this.doRefresh}>
         <IonRefresherContent color='primary'
           pullingIcon="arrow-dropdown"
