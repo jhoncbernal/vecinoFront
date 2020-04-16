@@ -16,11 +16,13 @@ import {
   carSportSharp,
   bicycleSharp,
   peopleSharp,
-  barChartSharp
+  barChartSharp,
+  stopCircle
 } from "ionicons/icons";
 
 import ChartsContainer from "./Dashboard/ChartsContainer";
 import config from "../config";
+import CreateComponent from "./Product/CreateComponent";
 
 interface ContainerProps {
   history: any;
@@ -139,6 +141,9 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
                 icon={bicycleSharp}
               />
             </IonSegmentButton>
+            <IonSegmentButton value="Product">
+              <IonIcon icon={stopCircle}></IonIcon>
+            </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
         {segmentValue ? (
@@ -150,18 +155,20 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
               ></ListContainer>
             ) : segmentValue === "dashboard" ? (
               <ChartsContainer></ChartsContainer>
+            ) : segmentValue === "Bikes" ? (
+              <ParkingListContainer
+                history={history}
+                parkingType={segmentValue}
+                loaddata={loadData}
+                inputs={vehiclesArray}
+              ></ParkingListContainer>
             ) : (
-                  <ParkingListContainer
-                    history={history}
-                    parkingType={segmentValue}
-                    loaddata={loadData}
-                    inputs={vehiclesArray}
-                  ></ParkingListContainer>
-                )}
+              <CreateComponent></CreateComponent>
+            )}
           </>
         ) : (
-            <></>
-          )}
+          <></>
+        )}
         <IonProgressBar
           hidden={hiddenBar}
           type="indeterminate"

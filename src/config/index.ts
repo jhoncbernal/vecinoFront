@@ -8,7 +8,8 @@ const dev = {
   LoginContext: "/auth/signin",
   ParkingSpaceContext: "/parkingspace",
   RecoveryPasswordContext: "/auth/recover",
-  UserContext: "/user"
+  UserContext: "/user",
+  ProductContext: "/product"
 };
 
 const prod = {
@@ -21,7 +22,8 @@ const prod = {
   LoginContext: "/auth/signin",
   ParkingSpaceContext: "/parkingspace",
   RecoveryPasswordContext: "/auth/recover",
-  UserContext: "/user"
+  UserContext: "/user",
+  ProductContext: "/product"
 };
 
 const config = process.env.REACT_APP_STAGE === "prod" ? prod : dev;

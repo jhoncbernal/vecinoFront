@@ -1,6 +1,6 @@
 .select-file {
   height: 120px;
-  width: 120px;
+  width: 100%;
   border: 3px solid #3880ff;
   padding: 3px;
   border-radius: 10px;
@@ -12,9 +12,9 @@
   z-index: 1;
 }
 .select-file ion-img {
-  top: 1.5em;
-  left: 24px;
-  width: 8%;
+  top: 11px;
+  left: 0;
+  height: 83%;
   filter: blur(2px);
   z-index: 0;
   position: absolute;
