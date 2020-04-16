@@ -1,6 +1,6 @@
 const dev = {
   API_VERSION: "/v1/api",
-  BASE_URL: "https://vecinoo.herokuapp.com",
+  BASE_URL: "http://localhost:4000",
   AdminContext: "admin",
   AllNeighborhoodsContext: "/admin/names/1",
   AuthSignUp: "/auth/signup",
