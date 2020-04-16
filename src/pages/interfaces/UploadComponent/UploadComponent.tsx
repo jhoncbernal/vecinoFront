@@ -7,13 +7,18 @@ import Axios from "axios";
 interface componentData {
   [id: string]: any;
 }
-const UploadComponent: FC<componentData> = props => {
-  const [urlImage, setUrlImage] = useState<string>("assets/icon/icon.png");
+const UploadComponent: FC<componentData> = ({
+  output,
+  srcInitial = "assets/icon/icon.png"
+}) => {
+  const [urlImage, setUrlImage] = useState<string>(
+    srcInitial.length > 0 ? srcInitial : "assets/icon/icon.png"
+  );
   let [inputElement, setInputElement] = useState();
-  let [spinnerLoading, setSpinnerLoading] = useState<boolean>(true);
+  let [spinnerLoading, setSpinnerLoading] = useState<boolean>(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSpinnerLoading(false);
+    setSpinnerLoading(true);
     let file = event.target.files![0];
     const filePendingUrl = URL.createObjectURL(file);
     setUrlImage(filePendingUrl);
@@ -39,8 +44,10 @@ const UploadComponent: FC<componentData> = props => {
     await Axios.post(url, data, { headers: header })
       .then((response: any) => {
         if (response.status === 200) {
-          props.output(response.data.Location);
-          setSpinnerLoading(true);
+          if (output) {
+            output(response.data);
+          }
+          setSpinnerLoading(false);
         } else {
           console.error(response);
         }
@@ -74,21 +81,17 @@ const UploadComponent: FC<componentData> = props => {
     );
   };
   return (
-    <IonCard hidden={false}>
-      <IonCardContent>
-        <form>
-          <input
-            type="file"
-            className={style["hide-input"]}
-            ref={input => setInputElement(input)}
-            onChange={e => {
-              handleChange(e);
-            }}
-          ></input>
-          {spinnerLoading ? imageLoaded() : loadingImage()}
-        </form>
-      </IonCardContent>
-    </IonCard>
+    <form>
+      <input
+        type="file"
+        className={style["hide-input"]}
+        ref={input => setInputElement(input)}
+        onChange={e => {
+          handleChange(e);
+        }}
+      ></input>
+      {spinnerLoading ? loadingImage() : imageLoaded()}
+    </form>
   );
 };
 
