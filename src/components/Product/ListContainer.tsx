@@ -18,7 +18,6 @@ import {
   IonButton,
   IonSlides,
   IonSlide,
-  IonContent,
   IonBadge,
   IonToolbar,
   IonTitle,
@@ -180,7 +179,7 @@ const ListContainer: React.FC<ContainerProps> = ({
               let cards: Array<any> = [];
               return (<div key={index}>
                 <IonTitle>{category}</IonTitle>
-                {data[category].map((input: any, index: string | number | undefined) => {
+                {data[category].map((input: any, index:  number) => {
 
                   if (!input.productName) {
                     return (

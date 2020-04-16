@@ -99,7 +99,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({ history,currentUser }
           </IonToolbar>
           {segmentValue
             ? <>{
-            segmentValue==='product' && hiddenBar ? (<ListContainer loaddata={loadData} inputs={productsArray} currentUser={currentUser}></ListContainer>)
+            segmentValue==='product' && hiddenBar ? (<ListContainer loaddata={loadData} inputs={productsArray} currentUser={currentUser} provider={currentUser}></ListContainer>)
             :segmentValue==='dashboard'?(<ChartsContainer ></ChartsContainer>)
             :null
           }</>

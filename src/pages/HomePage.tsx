@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonPage, IonContent, IonRefresherContent, IonRefresher, IonTitle, IonImg, IonCard, IonText } from '@ionic/react';
+import { IonPage, IonContent, IonRefresherContent, IonRefresher, IonTitle, IonImg } from '@ionic/react';
 import HomeAdminPageContainer from '../components/HomeAdminContainer';
 import HomeProviderContainer from '../components/HomeProviderContainer';
 import FloatingButtonsMenuContainer from '../components/FloatingButtonsMenuContainer';
