@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonPage, IonContent, IonRefresherContent, IonRefresher, IonTitle, IonImg } from '@ionic/react';
+import { IonPage, IonContent, IonRefresherContent, IonRefresher, IonTitle, IonImg, IonToolbar, IonText } from '@ionic/react';
 import HomeAdminPageContainer from '../components/HomeAdminContainer';
 import HomeProviderContainer from '../components/HomeProviderContainer';
 import FloatingButtonsMenuContainer from '../components/FloatingButtonsMenuContainer';
@@ -50,11 +50,16 @@ export class Home extends React.Component<{ history: any },
     
     return (
        <IonPage>
+         <br/><br/>
       <IonContent  class="bg-image">
-      <IonTitle> <IonImg class='img' src={'/assets/img/IconLogo.png'} /></IonTitle>
+        <IonToolbar>
+      <IonTitle> 
+        <IonImg class='img' src={'/assets/img/IconLogo.png'} />
         {this.state.currentUser.firstName
-          ? <IonTitle color='primary'>{`${this.state.currentUser.firstName}`}</IonTitle>
+          ? <IonText color='primary'>{`${this.state.currentUser.firstName}`}</IonText>
           : <></>}
+          </IonTitle>
+          </IonToolbar>
       <FloatingButtonsMenuContainer history={history}></FloatingButtonsMenuContainer>
     {this.state.currentUser.roles?(
     this.state.currentUser.roles.includes('ROLE_ADMINISTRATION_ACCESS')

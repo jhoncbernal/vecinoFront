@@ -97,4 +97,7 @@ ion-content {
   --ion-color-shade: var(--ion-color-white-shade);
   --ion-color-tint: var(--ion-color-white-tint);
 }
+ion-toolbar{
+  --background: transparent;
+}
 
