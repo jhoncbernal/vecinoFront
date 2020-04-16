@@ -26,7 +26,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({ history, currentUser 
         console.log(user.current._id);
         let pathurl;
         if (segmentValue === 'product') {
-          pathurl = `/product?providerId=${user.current._id}`;
+          pathurl = `/product?providerId=${user.current._id}&pageSize=10`;
         } else {
           pathurl = `/parkingspace/${segmentValue}`;
         }

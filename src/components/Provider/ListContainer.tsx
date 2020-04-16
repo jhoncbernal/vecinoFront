@@ -77,7 +77,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                 </IonCardHeader>
                 <IonCardContent
                   onClick={async () => {
-                    let pathurl = `/product?providerId=${input._id}`;
+                    let pathurl = `/product?providerId=${input._id}&pageSize=10`;
                     console.log(pathurl);
                     await HttpRequest(pathurl, "GET", "", true).then(
                       async (resultado: any) => {
@@ -90,7 +90,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                 >
                   <IonItem>
                     <IonThumbnail class="productImage" slot="start">
-                      <IonImg src={input ? input.urlImage : null} />
+                      <IonImg src={input.urlImage ? input.urlImage : "https://vecino.s3.amazonaws.com/1587059420099.jpeg"} />
                     </IonThumbnail>
                     <IonLabel>
                       <h1>{input ? input.category : ""}</h1>
