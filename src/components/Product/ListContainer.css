@@ -1,0 +1,15 @@
+.cardSlide{
+    background: transparent !important;
+    margin-left: 1%;
+    margin-right: 1%;
+    height: 25rem;
+}
+.cardSlideImage{
+    height: 8rem;
+}
+.cardSlideText{
+    height: 10rem;
+}
+ .cardSlideBtn{
+    margin: auto;
+}

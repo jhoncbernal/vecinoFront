@@ -1,34 +1,38 @@
-
-ion-label{
-  color:#8c8c8c!important;
+ion-label {
+  color: #8c8c8c !important;
   font-weight: bolder;
   line-height: 22px;
 }
 ion-item {
- --background: transparent;
+  --background: transparent;
 }
-ion-content{
-  color:#000000d4!important;
- --background: url('/assets/svgs/backgroundVecino.svg')  no-repeat cover fixed;
-  background: url('/assets/svgs/backgroundVecino.svg') no-repeat fixed; 
+ion-content {
+  color: #000000d4 !important;
+  --background: url("/assets/svgs/backgroundVecino.svg") no-repeat cover fixed;
+  background: url("/assets/svgs/backgroundVecino.svg") no-repeat fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
 }
 
-
 .bg-image {
-  background-color: inherit!important;
+  background-color: inherit !important;
   background-size: cover;
 }
 
-.card-login{
-  background: transparent!important;
- width: 80%;
- margin: auto;
-margin-top: 4%;
+.card-center {
+  background: transparent !important;
+  width: 75%;
+  margin: auto;
+  margin-top: 4%;
 }
-.btn-login{
+.card-login {
+  background: transparent !important;
+  width: 75%;
+  margin: auto;
+  margin-top: 4%;
+}
+.btn-login {
   margin-top: 1.5%;
   margin-left: auto;
   margin-right: auto;
@@ -36,45 +40,43 @@ margin-top: 4%;
   width: 200px;
   height: 50px;
 }
-#btn-auth{  
-  margin-top: 0.5%;  
+#btn-auth {
+  margin-top: 0.5%;
   margin-right: auto;
   margin-left: 10%;
   display: block !important;
   width: 310px;
   height: 50px;
- }
- .btn-auth{
-  --color:#4c8dff;
+}
+.btn-auth {
+  --color: #4c8dff;
   --border-width: none;
-  --background : transparent!important;
-  --box-shadow:none;
-  --color-hover:#92949c;
-  --background-activated-opacity:transparent!important;
-  --background-activated:transparent!important;
-  
- }
- #btn-rememberme{
+  --background: transparent !important;
+  --box-shadow: none;
+  --color-hover: #92949c;
+  --background-activated-opacity: transparent !important;
+  --background-activated: transparent !important;
+}
+#btn-rememberme {
   margin-left: auto;
   display: block !important;
   width: 230px;
   height: 50px;
- }
-.img{
+}
+.img {
   margin-top: 10px;
   margin-bottom: 5px;
   width: 120px;
-  height:100%;
+  height: 100%;
 }
-.icon-avatar{
+.icon-avatar {
   font-size: 80px;
 }
-.productImage{
-  min-width: 5rem;    
+.productImage {
+  min-width: 5rem;
   min-height: 5rem;
-  
 }
 .productImage img {
-  max-width: 5rem;    
+  max-width: 5rem;
   min-width: 5rem;
 }
