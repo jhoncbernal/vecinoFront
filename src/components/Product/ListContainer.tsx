@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { useState, useCallback, useEffect } from "react";
 import {
   IonItem,
@@ -197,7 +198,9 @@ const ListContainer: React.FC<ContainerProps> = ({
             let cards: Array<any> = [];
             return (
               <div key={index}>
-                <IonTitle>{category}</IonTitle>
+                <IonToolbar>
+                  <IonTitle>{category}</IonTitle>
+                </IonToolbar>
                 {data[category].map((input: any, index: number) => {
                   if (!input.productName) {
                     return (
@@ -264,7 +267,8 @@ const ListContainer: React.FC<ContainerProps> = ({
                                         <h2 color="dark">
                                           Precio de Oferta:{" "}
                                           <strong>
-                                            $ {input.promotionPrice.toLocaleString()}
+                                            ${" "}
+                                            {input.promotionPrice.toLocaleString()}
                                           </strong>
                                         </h2>
                                       </IonText>
@@ -434,7 +438,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                 {Object.keys(shopingCart).map((_id) => {
                   return inputs.map((input) => {
                     if (input._id === _id) {
-                      billAmount = shopingCart[_id] * input.price + billAmount;
+                      billAmount = shopingCart[_id] * (!input.promotionPrice? input.price:input.promotionPrice) + billAmount;
                       return (
                         <IonItem key={input._id}>
                           <IonThumbnail class="cartImages">
@@ -446,7 +450,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                             </IonText>
                             <IonText color="primary">
                               <p>
-                                <strong>${input.price.toLocaleString()}</strong>
+                                <strong>${!input.promotionPrice? input.price.toLocaleString():input.promotionPrice.toLocaleString()}</strong>
                               </p>
                             </IonText>
                           </IonLabel>
@@ -494,18 +498,14 @@ const ListContainer: React.FC<ContainerProps> = ({
                     }
                   });
                 })}
-               
               </IonList>
-              
             </IonContent>
             <IonFooter>
-                  <IonToolbar>
-                 
-                    <IonTitle>SubTotal: ${billAmount.toLocaleString()}</IonTitle>
-                    <IonButton expand="full">Finalizar compra </IonButton>
-                  </IonToolbar>
-                </IonFooter>
-           
+              <IonToolbar>
+                <IonTitle>SubTotal: ${billAmount.toLocaleString()}</IonTitle>
+                <IonButton expand="full">Finalizar compra </IonButton>
+              </IonToolbar>
+            </IonFooter>
           </IonModal>
         </>
       );
