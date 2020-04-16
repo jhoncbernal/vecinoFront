@@ -97,8 +97,8 @@ const ListContainer: React.FC<ContainerProps> = ({
                     </IonLabel>
                   </IonItem>
                 </IonCardContent>
-                <IonModal
-                  backdropDismiss={false}
+                <IonModal 
+                onDidDismiss={(e) => setShowModal(false)}
                   isOpen={showModal}
                   animated={true}
                 >
