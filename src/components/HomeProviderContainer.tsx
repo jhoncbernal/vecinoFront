@@ -25,7 +25,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
   currentUser
 }) => {
   const [hiddenBar, setHiddenBar] = useState(false);
-  const [loadData, setloadData] = useState(false);
+  const [loadData, setLoadData] = useState(false);
   const user: any = useRef<any>(currentUser);
   const [showAlert1, setShowAlert1] = useState(false);
   const [message, setMessage] = useState("");
@@ -57,12 +57,12 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
           }
           setHiddenBar(true);
 
-          setloadData(true);
+          setLoadData(true);
         })
         .catch(error => {
           if (error.message.includes("404")) {
             setHiddenBar(true);
-            setloadData(true);
+            setLoadData(true);
           } else {
             throw error;
           }
@@ -82,7 +82,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
 
   useEffect(() => {
     setHiddenBar(false);
-    setloadData(false);
+    setLoadData(false);
     setProductsArray([{}]);
     httpRequest();
   }, [httpRequest, segmentValue]);
@@ -117,10 +117,15 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
           <>
             {segmentValue === "product" && hiddenBar ? (
               <ListContainer
-                loaddata={loadData}
+                loadData={loadData}
                 inputs={productsArray}
                 currentUser={currentUser}
                 provider={currentUser}
+                refreshData={(reset: boolean) => {
+                  if (reset) {
+                    httpRequest();
+                  }
+                }}
               ></ListContainer>
             ) : segmentValue === "dashboard" ? (
               <ChartsContainer></ChartsContainer>
