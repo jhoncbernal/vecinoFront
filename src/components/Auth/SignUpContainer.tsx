@@ -51,7 +51,7 @@ export class SignUpPage extends React.Component<
     loginMessage: string;
     hiddenbar: boolean;
   }
-> {
+  > {
   constructor(props: any, private storage: Storage) {
     super(props);
     this.state = {
@@ -139,7 +139,7 @@ export class SignUpPage extends React.Component<
             <IonImg class="img" src={"/assets/img/IconLogo.png"} />
           </IonItem>
           <form onSubmit={e => this.handleSubmit(e)} action="post">
-            <IonCard class="card-login">
+            <IonCard class="card-center">
               <IonItem>
                 <IonIcon color="primary" icon={personOutline} slot="start" />
                 <IonLabel position="floating">Nombre de usuario</IonLabel>

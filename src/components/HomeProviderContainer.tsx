@@ -3,19 +3,19 @@ import { IonCard, IonProgressBar, IonAlert, IonToolbar, IonSegment, IonSegmentBu
 import { HttpRequest } from '../hooks/HttpRequest';
 import ListContainer from './Product/ListContainer';
 import { Storages } from '../hooks/Storage';
-import {  barChartSharp, pricetagsSharp } from 'ionicons/icons';
+import { barChartSharp, pricetagsSharp } from 'ionicons/icons';
 
 import ChartsContainer from './Dashboard/ChartsContainer';
 
 interface ContainerProps {
   history: any;
-  currentUser:any;
+  currentUser: any;
 }
 
-const HomeProviderContainer: React.FC<ContainerProps> = ({ history,currentUser }) => {
+const HomeProviderContainer: React.FC<ContainerProps> = ({ history, currentUser }) => {
   const [hiddenBar, setHiddenBar] = useState(false);
   const [loadData, setloadData] = useState(false);
-  const user:any = useRef<any>(currentUser);
+  const user: any = useRef<any>(currentUser);
   const [showAlert1, setShowAlert1] = useState(false);
   const [message, setMessage] = useState('');
   const [productsArray, setProductsArray] = useState<any>([{}]);
@@ -46,7 +46,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({ history,currentUser }
               setProductsArray(resultado);
             }
             setHiddenBar(true);
-            
+
             setloadData(true);
           })
           .catch(error => {
@@ -80,41 +80,41 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({ history,currentUser }
     setProductsArray([{}]);
     httpRequest();
   }, [httpRequest, segmentValue])
- 
+
   return (
     <>
-       <IonCard class="card-login">
-          <IonToolbar>
-            <IonSegment onIonChange={(e) => {
-              setSegmentValue(e.detail.value);
-            }
-            }  value={segmentValue}>
-              <IonSegmentButton value="dashboard" >
-                <IonIcon class='icons-segment' size='medium' icon={barChartSharp} />
-              </IonSegmentButton>
-              <IonSegmentButton value="product" >
-                <IonIcon class='icons-segment' size='medium' icon={pricetagsSharp} />
-              </IonSegmentButton>
-            </IonSegment>
-          </IonToolbar>
-          {segmentValue
-            ? <>{
-            segmentValue==='product' && hiddenBar ? (<ListContainer loaddata={loadData} inputs={productsArray} currentUser={currentUser} provider={currentUser}></ListContainer>)
-            :segmentValue==='dashboard'?(<ChartsContainer ></ChartsContainer>)
-            :null
+      <IonCard class="card-center">
+        <IonToolbar>
+          <IonSegment onIonChange={(e) => {
+            setSegmentValue(e.detail.value);
+          }
+          } value={segmentValue}>
+            <IonSegmentButton value="dashboard" >
+              <IonIcon class='icons-segment' size='medium' icon={barChartSharp} />
+            </IonSegmentButton>
+            <IonSegmentButton value="product" >
+              <IonIcon class='icons-segment' size='medium' icon={pricetagsSharp} />
+            </IonSegmentButton>
+          </IonSegment>
+        </IonToolbar>
+        {segmentValue
+          ? <>{
+            segmentValue === 'product' && hiddenBar ? (<ListContainer loaddata={loadData} inputs={productsArray} currentUser={currentUser} provider={currentUser}></ListContainer>)
+              : segmentValue === 'dashboard' ? (<ChartsContainer ></ChartsContainer>)
+                : null
           }</>
-            : <></>}
-          <IonProgressBar hidden={hiddenBar} type="indeterminate"></IonProgressBar><br />
-        </IonCard>
+          : <></>}
+        <IonProgressBar hidden={hiddenBar} type="indeterminate"></IonProgressBar><br />
+      </IonCard>
 
-        <IonAlert
-          isOpen={showAlert1}
-          onDidDismiss={() => setShowAlert1(true)}
-          header={'Advertencia'}
-          subHeader={'se produjo un error debido a que:'}
-          message={message}
-          buttons={['OK']}
-        />
+      <IonAlert
+        isOpen={showAlert1}
+        onDidDismiss={() => setShowAlert1(true)}
+        header={'Advertencia'}
+        subHeader={'se produjo un error debido a que:'}
+        message={message}
+        buttons={['OK']}
+      />
     </>
   );
 };

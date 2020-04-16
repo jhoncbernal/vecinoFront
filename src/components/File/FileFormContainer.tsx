@@ -26,7 +26,7 @@ export class FileFormPage extends React.Component<
     message: string;
     hiddenbar: boolean;
   }
-> {
+  > {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -101,7 +101,7 @@ export class FileFormPage extends React.Component<
             <IonImg class="img" src={"/assets/img/IconLogo.png"} />
           </IonItem>
           <form onSubmit={e => this.handleSubmit(e)} action="post">
-            <IonCard class="card-login">
+            <IonCard class="card-center">
               <IonCardHeader>
                 <h3> Actualizar cartera</h3>
               </IonCardHeader>

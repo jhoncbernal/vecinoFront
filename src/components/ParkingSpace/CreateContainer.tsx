@@ -116,7 +116,7 @@ const CreateContainer: React.FC<ContainerProps> = ({ parkingType }) => {
           }}
           action="post"
         >
-          <IonCard class="card-login">
+          <IonCard class="card-center">
             <IonItem>
               <IonIcon
                 color="primary"

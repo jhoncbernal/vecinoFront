@@ -106,7 +106,7 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
           }}
           action="post"
         >
-          <IonCard class="card-login">
+          <IonCard class="card-center">
             <IonItem>
               <IonIcon color="primary" icon={personOutline} slot="start" />
               <IonLabel>Placa:</IonLabel>
@@ -208,11 +208,11 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
               LIBERAR
             </IonButton>
           ) : (
-            <IonButton color="danger" class="btn-login" type="submit">
-              <IonIcon icon={logOutOutline} slot="start" />
-              OCUPAR
+              <IonButton color="danger" class="btn-login" type="submit">
+                <IonIcon icon={logOutOutline} slot="start" />
+                OCUPAR
             </IonButton>
-          )}
+            )}
         </form>
         <IonAlert
           isOpen={showAlert}

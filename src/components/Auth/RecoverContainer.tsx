@@ -26,7 +26,7 @@ export class RecoverContainer extends React.Component<
     loginMessage: string;
     hiddenbar: boolean;
   }
-> {
+  > {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -74,7 +74,7 @@ export class RecoverContainer extends React.Component<
           </IonItem>
 
           <form onSubmit={e => this.handleSubmit(e)} action="post">
-            <IonCard class="card-login">
+            <IonCard class="card-center">
               <IonItem>
                 <IonIcon color="primary" icon={personOutline} slot="start" />
                 <IonLabel position="floating">Username o Email</IonLabel>

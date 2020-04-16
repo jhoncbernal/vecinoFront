@@ -79,7 +79,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
       <form onSubmit={e => {
         handleSubmit(e)
       }} action="post">
-        <IonCard class="card-login">
+        <IonCard class="card-center">
           <IonItem>
             <IonIcon color='primary' icon={personOutline} slot="start" />
             <IonLabel position="floating">Nombre del producto</IonLabel>

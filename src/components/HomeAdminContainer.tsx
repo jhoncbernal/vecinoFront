@@ -100,7 +100,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
 
   return (
     <>
-      <IonCard class="card-login">
+      <IonCard class="card-center">
         <IonToolbar>
           <IonSegment
             onIonChange={e => {
@@ -151,17 +151,17 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
             ) : segmentValue === "dashboard" ? (
               <ChartsContainer></ChartsContainer>
             ) : (
-              <ParkingListContainer
-                history={history}
-                parkingType={segmentValue}
-                loaddata={loadData}
-                inputs={vehiclesArray}
-              ></ParkingListContainer>
-            )}
+                  <ParkingListContainer
+                    history={history}
+                    parkingType={segmentValue}
+                    loaddata={loadData}
+                    inputs={vehiclesArray}
+                  ></ParkingListContainer>
+                )}
           </>
         ) : (
-          <></>
-        )}
+            <></>
+          )}
         <IonProgressBar
           hidden={hiddenBar}
           type="indeterminate"
