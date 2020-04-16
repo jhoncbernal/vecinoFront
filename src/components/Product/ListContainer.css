@@ -13,3 +13,24 @@
  .cardSlideBtn{
     margin: auto;
 }
+.cartImages{
+    height: 3.5rem;
+    width: 3.5rem;
+    margin-right: 2%;
+    padding-right: 2%;
+}
+.cartBtn{
+    width: 2.9rem;
+    height: 2rem;
+}
+.cartBtnContainer{
+    text-align: right!important;
+}
+
+    .md #modal {
+        --max-width: 22rem !important;
+        --max-height: 26rem !important;
+    }
+.cartItem{
+    background: transparent !important;
+}
