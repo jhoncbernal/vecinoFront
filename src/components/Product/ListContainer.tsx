@@ -31,6 +31,7 @@ import {
 import { addSharp, removeSharp, cart, addCircle } from "ionicons/icons";
 import "./ListContainer.css";
 import CreateComponent from "./CreateComponent";
+import { pushFirebase } from "../../config/firebase";
 interface ContainerProps {
   [id: string]: any;
 }
@@ -66,6 +67,7 @@ const ListContainer: React.FC<ContainerProps> = ({
     setShowModal(true);
     setDataModal(newProduct);
   };
+
   const handleSearch = useCallback(
     async (e: any) => {
       try {
@@ -93,7 +95,6 @@ const ListContainer: React.FC<ContainerProps> = ({
             return itemData.indexOf(textData) > -1;
           });
         }
-        console.log("newData", newData);
         const groupByType = groupBy("productType");
         setData(groupByType(newData));
         setFlagRefresh(true);
@@ -416,12 +417,12 @@ const ListContainer: React.FC<ContainerProps> = ({
                   if (index === data[category].length - 1) {
                     var chunk_size = 2;
                     var groups = cards
-                      .map(function(e, i) {
+                      .map(function (e, i) {
                         return i % chunk_size === 0
                           ? cards.slice(i, i + chunk_size)
                           : null;
                       })
-                      .filter(function(e) {
+                      .filter(function (e) {
                         return e;
                       });
                     return (
@@ -532,7 +533,14 @@ const ListContainer: React.FC<ContainerProps> = ({
             <IonFooter>
               <IonToolbar>
                 <IonTitle>SubTotal: ${billAmount.toLocaleString()}</IonTitle>
-                <IonButton expand="full">Finalizar compra </IonButton>
+                <IonButton
+                  onClick={() => {
+                    pushFirebase(currentUser, provider._id, shoppingCart);
+                  }}
+                  expand="full"
+                >
+                  Finalizar compra{" "}
+                </IonButton>
               </IonToolbar>
             </IonFooter>
           </IonModal>

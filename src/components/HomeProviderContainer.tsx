@@ -14,6 +14,7 @@ import { Storages } from "../hooks/Storage";
 import { barChartSharp, pricetagsSharp } from "ionicons/icons";
 
 import ChartsContainer from "./Dashboard/ChartsContainer";
+import config from "../config";
 
 interface ContainerProps {
   history: any;
@@ -31,16 +32,16 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
   const [message, setMessage] = useState("");
   const [productsArray, setProductsArray] = useState<any>([{}]);
   const [segmentValue, setSegmentValue] = useState<any>("product");
+
   const httpRequest = useCallback(async () => {
     try {
       console.log(user.current._id);
       let pathurl;
       if (segmentValue === "product") {
-        pathurl = `/product?pageSize=100&providerId=${user.current._id}`;
+        pathurl = `/${config.ProductContext}?pageSize=100&providerId=${user.current._id}`;
       } else {
-        pathurl = `/parkingspace/${segmentValue}`;
+        pathurl = `/${config.ParkingSpaceContext}/${segmentValue}`;
       }
-      console.log(pathurl);
       await HttpRequest(pathurl, "GET", "", true)
         .then(async (resultado: any) => {
           try {
