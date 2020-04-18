@@ -52,7 +52,7 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
     async (e: any) => {
       try {
         e.preventDefault();
-        let pathurl = `${config.ParkingSpaceContext}/positions/${dataModal.vehicletype}s/${dataModal.posnumber}`;
+        let pathUrl = `${config.ParkingSpaceContext}/positions/${dataModal.vehicletype}s/${dataModal.posnumber}`;
         let data;
         if (dataModal.available === "false") {
           data = {};
@@ -64,7 +64,7 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
           setMessage("No se modifico ningun campo");
         } else {
           setShowProgressBar(true);
-          await HttpRequest(pathurl, "PATCH", data, true)
+          await HttpRequest(pathUrl, "PATCH", data, true)
             .then(async (response: any) => {
               setMessage("Actualizacion Exitosa");
               setbodyChange(false);
