@@ -6,6 +6,7 @@ import { FileFormPage } from './File/FileFormContainer';
 import UpdateUser from './User/UpdateContainer';
 
 import BestListContainer from './User/BestListContainer';
+import { updateToken } from '../hooks/UpdateToken';
 interface ContainerProps {
   history: any;
 }
@@ -69,9 +70,11 @@ const FloatingButtonsMenu: React.FC<ContainerProps> = ({ history }) => {
               text: 'Confirmar',
               handler: async () => {
                 try {
+                  updateToken('');
                   const { removeItem } = await Storages();
                   await removeItem('token');
                   await removeItem('user');
+                  await removeItem('fireToken');
                   history.push(
                     '/login'
                   )
