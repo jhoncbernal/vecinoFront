@@ -32,6 +32,7 @@ import { addSharp, removeSharp, cart, addCircle } from "ionicons/icons";
 import "./ListContainer.css";
 import CreateComponent from "./CreateComponent";
 import config from "../../config";
+import { pushFirebase } from "../../config/firebase";
 interface ContainerProps {
   [id: string]: any;
 }
@@ -67,6 +68,7 @@ const ListContainer: React.FC<ContainerProps> = ({
     setShowModal(true);
     setDataModal(newProduct);
   };
+
   const handleSearch = useCallback(
     async (e: any) => {
       try {
@@ -540,7 +542,14 @@ const ListContainer: React.FC<ContainerProps> = ({
             <IonFooter>
               <IonToolbar>
                 <IonTitle>SubTotal: ${billAmount.toLocaleString()}</IonTitle>
-                <IonButton expand="full">Finalizar compra </IonButton>
+                <IonButton
+                  onClick={() => {
+                    pushFirebase(currentUser, provider._id, shoppingCart);
+                  }}
+                  expand="full"
+                >
+                  Finalizar compra{" "}
+                </IonButton>
               </IonToolbar>
             </IonFooter>
           </IonModal>
