@@ -9,7 +9,9 @@ const dev = {
   ParkingSpaceContext: "/parkingspace",
   RecoveryPasswordContext: "/auth/recover",
   UserContext: "/user",
-  ProductContext: "/product"
+  ProductContext: "/product",
+  RolProviderAccess: "ROLE_PROVIDER_ACCESS",
+  RolUserAccess: "ROLE_USER_ACCESS"
 };
 
 const prod = {
@@ -23,7 +25,9 @@ const prod = {
   ParkingSpaceContext: "/parkingspace",
   RecoveryPasswordContext: "/auth/recover",
   UserContext: "/user",
-  ProductContext: "/product"
+  ProductContext: "/product",
+  RolProviderAccess: "ROLE_PROVIDER_ACCESS",
+  RolUserAccess: "ROLE_USER_ACCESS"
 };
 
 const config = process.env.REACT_APP_STAGE === "prod" ? prod : dev;
