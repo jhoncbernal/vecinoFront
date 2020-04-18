@@ -31,6 +31,7 @@ import {
 import { addSharp, removeSharp, cart, addCircle } from "ionicons/icons";
 import "./ListContainer.css";
 import CreateComponent from "./CreateComponent";
+import config from "../../config";
 import { pushFirebase } from "../../config/firebase";
 interface ContainerProps {
   [id: string]: any;
@@ -126,7 +127,6 @@ const ListContainer: React.FC<ContainerProps> = ({
           productCart[`${property}`] = shoppingCart[`${property}`] - 1;
           if (productCart[`${property}`] === 0) {
             delete pendingShopingCar[`${property}`];
-            console.log("delete", pendingShopingCar);
             setShoppingCart(pendingShopingCar);
           } else {
             setShoppingCart((prevState: any) => ({
@@ -165,6 +165,22 @@ const ListContainer: React.FC<ContainerProps> = ({
   const slideOpts = {
     initialSlide: 1,
     speed: 400
+  };
+
+  const renderAddButton = () => {
+    if (currentUser.roles.includes(config.RolProviderAccess)) {
+      return (
+        <IonButton
+          expand="full"
+          onClick={() => {
+            addNewProduct();
+          }}
+        >
+          <IonIcon icon={addCircle}></IonIcon>
+          Agregar nuevo producto
+        </IonButton>
+      );
+    }
   };
 
   try {
@@ -206,16 +222,7 @@ const ListContainer: React.FC<ContainerProps> = ({
             showCancelButton="always"
             hidden={!loadData}
           ></IonSearchbar>
-          <IonButton
-            expand="full"
-            onClick={() => {
-              addNewProduct();
-            }}
-          >
-            <IonIcon icon={addCircle}></IonIcon>
-            Agregar nuevo producto
-          </IonButton>
-
+          {renderAddButton()}
           {Object.keys(data).map((category: any, index) => {
             if (!data[category].length) {
               return (
@@ -265,7 +272,9 @@ const ListContainer: React.FC<ContainerProps> = ({
                         onClick={() => {
                           if (currentUser) {
                             if (
-                              currentUser.roles.includes("ROLE_PROVIDER_ACCESS")
+                              currentUser.roles.includes(
+                                config.RolProviderAccess
+                              )
                             ) {
                               setShowModal(true);
                               setDataModal(input);
@@ -315,7 +324,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                             <IonCol
                               hidden={
                                 currentUser.roles.includes(
-                                  "ROLE_PROVIDER_ACCESS"
+                                  config.RolProviderAccess
                                 )
                                   ? false
                                   : true
@@ -351,7 +360,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                       </IonModal>
                       <IonItem
                         hidden={
-                          currentUser.roles.includes("ROLE_USER_ACCESS")
+                          currentUser.roles.includes(config.RolUserAccess)
                             ? false
                             : true
                         }
