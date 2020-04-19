@@ -6,24 +6,25 @@ import {
   IonToolbar,
   IonSegment,
   IonSegmentButton,
-  IonIcon,
+  IonIcon
 } from "@ionic/react";
 import { HttpRequest } from "../hooks/HttpRequest";
 import ListContainer from "./Product/ListContainer";
 import { Storages } from "../hooks/Storage";
-import { barChartSharp, pricetagsSharp } from "ionicons/icons";
+import { barChartSharp, pricetagsSharp, pricetag } from "ionicons/icons";
 
 import ChartsContainer from "./Dashboard/ChartsContainer";
 import config from "../config";
+import PendingShoppingContainer from "./Provider/PendingShoppingContainer";
 
 interface ContainerProps {
-  history: any;
-  currentUser: any;
+  [id: string]: any;
 }
 
 const HomeProviderContainer: React.FC<ContainerProps> = ({
   history,
   currentUser,
+  handlerDataSide
 }) => {
   const [hiddenBar, setHiddenBar] = useState(false);
   const [loadData, setLoadData] = useState(false);
@@ -35,12 +36,14 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
 
   const httpRequest = useCallback(async () => {
     try {
-      console.log(user.current._id);
       let pathUrl;
       if (segmentValue === "product") {
         pathUrl = `/${config.ProductContext}?pageSize=100&providerId=${user.current._id}`;
       } else {
         pathUrl = `/${config.ParkingSpaceContext}/${segmentValue}`;
+      }
+      if (segmentValue === "pendingShop") {
+        return;
       }
       await HttpRequest(pathUrl, "GET", "", true)
         .then(async (resultado: any) => {
@@ -60,7 +63,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
 
           setLoadData(true);
         })
-        .catch((error) => {
+        .catch(error => {
           if (error.message.includes("404")) {
             setHiddenBar(true);
             setLoadData(true);
@@ -88,12 +91,16 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
     httpRequest();
   }, [httpRequest, segmentValue]);
 
+  const handlerDataSideContainer = (data: any) => {
+    handlerDataSide(data);
+  };
+
   return (
     <>
       <IonCard class="card-center">
         <IonToolbar>
           <IonSegment
-            onIonChange={(e) => {
+            onIonChange={e => {
               setSegmentValue(e.detail.value);
             }}
             value={segmentValue}
@@ -111,6 +118,9 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
                 size="medium"
                 icon={pricetagsSharp}
               />
+            </IonSegmentButton>
+            <IonSegmentButton value="pendingShop">
+              <IonIcon class="icons-segment" size="medium" icon={pricetag} />
             </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
@@ -130,7 +140,11 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
               ></ListContainer>
             ) : segmentValue === "dashboard" ? (
               <ChartsContainer></ChartsContainer>
-            ) : null}
+            ) : (
+              <PendingShoppingContainer
+                dataTrigger={handlerDataSideContainer}
+              ></PendingShoppingContainer>
+            )}
           </>
         ) : (
           <></>
