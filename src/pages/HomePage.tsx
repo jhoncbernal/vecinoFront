@@ -43,7 +43,6 @@ export class Home extends React.Component<
         throw err;
       } else {
         this.setState({ currentUser: user.obj });
-        console.log(this.state.currentUser);
       }
     } catch (e) {
       console.error(e);

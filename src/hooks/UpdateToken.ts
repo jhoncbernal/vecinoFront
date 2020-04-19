@@ -7,8 +7,6 @@ export async function updateToken(fireToken: string) {
     const { setObject, getObject, removeItem } = Storages();
     await setObject("fireToken", fireToken);
     const user: any = await getObject("user");
-    const fire: any = await getObject("fireToken");
-    console.log("fire", fire, "user", user);
     let pathUrl = `${config.UserContext}/${user.obj._id}`;
     let data = { fireToken: fireToken };
     await HttpRequest(pathUrl, "PATCH", data)
