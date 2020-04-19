@@ -22,11 +22,7 @@ import {
   IonBadge,
   IonToolbar,
   IonTitle,
-  IonList,
-  IonThumbnail,
   IonContent,
-  IonListHeader,
-  IonFooter,
 } from "@ionic/react";
 import { addSharp, removeSharp, cart, addCircle } from "ionicons/icons";
 import "./ListContainer.css";
