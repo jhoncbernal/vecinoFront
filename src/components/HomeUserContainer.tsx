@@ -6,7 +6,7 @@ import {
   IonToolbar,
   IonSegment,
   IonSegmentButton,
-  IonIcon
+  IonIcon,
 } from "@ionic/react";
 import { HttpRequest } from "../hooks/HttpRequest";
 import ListContainer from "./Provider/ListContainer";
@@ -14,6 +14,7 @@ import { Storages } from "../hooks/Storage";
 import { barChartSharp, pricetagsSharp } from "ionicons/icons";
 
 import ChartsContainer from "./Dashboard/ChartsContainer";
+import config from "../config";
 
 interface ContainerProps {
   history: any;
@@ -22,7 +23,7 @@ interface ContainerProps {
 
 const HomeUserContainer: React.FC<ContainerProps> = ({
   history,
-  currentUser
+  currentUser,
 }) => {
   const [hiddenBar, setHiddenBar] = useState(false);
   const [loadData, setLoadData] = useState(false);
@@ -35,14 +36,14 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
   const httpRequest = useCallback(async () => {
     try {
       console.log(user.current._id);
-      let pathurl;
+      let pathUrl;
       if (segmentValue === "provider") {
-        pathurl = `/provider/names/1`;
+        pathUrl = `${config.ProviderContext}/names/1`;
       } else {
-        pathurl = ""; //`/parkingspace/${segmentValue}`;
+        pathUrl = ""; //`/parkingspace/${segmentValue}`;
       }
-      console.log(pathurl);
-      await HttpRequest(pathurl, "GET", "", true)
+      console.log(pathUrl);
+      await HttpRequest(pathUrl, "GET", "", true)
         .then(async (resultado: any) => {
           try {
             if (resultado.status) {
@@ -60,7 +61,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
 
           setLoadData(true);
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.message.includes("404")) {
             setHiddenBar(true);
             setLoadData(true);
@@ -93,7 +94,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
       <IonCard class="card-center">
         <IonToolbar>
           <IonSegment
-            onIonChange={e => {
+            onIonChange={(e) => {
               setSegmentValue(e.detail.value);
             }}
             value={segmentValue}

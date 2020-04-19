@@ -10,6 +10,7 @@ const dev = {
   RecoveryPasswordContext: "/auth/recover",
   UserContext: "/user",
   ProductContext: "/product",
+  ProviderContext: "/provider",
   RolProviderAccess: "ROLE_PROVIDER_ACCESS",
   RolUserAccess: "ROLE_USER_ACCESS"
 };
@@ -26,6 +27,7 @@ const prod = {
   RecoveryPasswordContext: "/auth/recover",
   UserContext: "/user",
   ProductContext: "/product",
+  ProviderContext: "/provider",
   RolProviderAccess: "ROLE_PROVIDER_ACCESS",
   RolUserAccess: "ROLE_USER_ACCESS"
 };

@@ -6,7 +6,7 @@ import {
   IonToolbar,
   IonSegment,
   IonSegmentButton,
-  IonIcon
+  IonIcon,
 } from "@ionic/react";
 import { HttpRequest } from "../hooks/HttpRequest";
 import ListContainer from "./Product/ListContainer";
@@ -23,7 +23,7 @@ interface ContainerProps {
 
 const HomeProviderContainer: React.FC<ContainerProps> = ({
   history,
-  currentUser
+  currentUser,
 }) => {
   const [hiddenBar, setHiddenBar] = useState(false);
   const [loadData, setLoadData] = useState(false);
@@ -36,13 +36,13 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
   const httpRequest = useCallback(async () => {
     try {
       console.log(user.current._id);
-      let pathurl;
+      let pathUrl;
       if (segmentValue === "product") {
-        pathurl = `/${config.ProductContext}?pageSize=100&providerId=${user.current._id}`;
+        pathUrl = `/${config.ProductContext}?pageSize=100&providerId=${user.current._id}`;
       } else {
-        pathurl = `/${config.ParkingSpaceContext}/${segmentValue}`;
+        pathUrl = `/${config.ParkingSpaceContext}/${segmentValue}`;
       }
-      await HttpRequest(pathurl, "GET", "", true)
+      await HttpRequest(pathUrl, "GET", "", true)
         .then(async (resultado: any) => {
           try {
             if (resultado.status) {
@@ -60,7 +60,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
 
           setLoadData(true);
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.message.includes("404")) {
             setHiddenBar(true);
             setLoadData(true);
@@ -93,7 +93,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
       <IonCard class="card-center">
         <IonToolbar>
           <IonSegment
-            onIonChange={e => {
+            onIonChange={(e) => {
               setSegmentValue(e.detail.value);
             }}
             value={segmentValue}

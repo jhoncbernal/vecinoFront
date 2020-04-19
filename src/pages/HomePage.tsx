@@ -8,11 +8,7 @@ import {
   IonImg,
   IonToolbar,
   IonText,
-  IonButtons,
   IonButton,
-  IonInput,
-  IonList,
-  IonItem
 } from "@ionic/react";
 import HomeAdminPageContainer from "../components/HomeAdminContainer";
 import HomeProviderContainer from "../components/HomeProviderContainer";
@@ -20,29 +16,18 @@ import FloatingButtonsMenuContainer from "../components/FloatingButtonsMenuConta
 import { RefresherEventDetail } from "@ionic/core";
 import { Storages } from "../hooks/Storage";
 import HomeUserContainer from "../components/HomeUserContainer";
-import {
-  Plugins,
-  PushNotification,
-  PushNotificationToken,
-  PushNotificationActionPerformed
-} from "@capacitor/core";
 
-const { PushNotifications } = Plugins;
-const notifications = [
-  { id: "id", title: "Test Push", body: "This is my first push notification" }
-];
+
 export class Home extends React.Component<
   { history: any },
   {
     currentUser: any;
-    notification: { id: string; title: string; body: string }[];
   }
 > {
   constructor(props: any) {
     super(props);
     this.state = {
-      currentUser: "",
-      notification: notifications
+      currentUser: ""
     };
     this.preValues();
   }
@@ -51,6 +36,7 @@ export class Home extends React.Component<
     try {
       const { getObject } = await Storages();
       const user: any = await getObject("user");
+      
       if (!user) {
         const err = new Error();
         err.message = "sus credenciales vencieron";
@@ -62,56 +48,7 @@ export class Home extends React.Component<
       console.error(e);
     }
   }
-  push() {
-    // Register with Apple / Google to receive push via APNS/FCM
-    PushNotifications.register();
-
-    // On succcess, we should be able to receive notifications
-    PushNotifications.addListener(
-      "registration",
-      (token: PushNotificationToken) => {
-        alert("Push registration success, token: " + token.value);
-      }
-    );
-
-    // Some issue with your setup and push will not work
-    PushNotifications.addListener("registrationError", (error: any) => {
-      alert("Error on registration: " + JSON.stringify(error));
-    });
-
-    // Show us the notification paylo ad if the app is open on our device
-    PushNotifications.addListener(
-      "pushNotificationReceived",
-      (notification: PushNotification) => {
-        let notif = this.state.notification;
-        notif.push({
-          id: notification.id,
-          title: notification.title as string,
-          body: notification.body as string
-        });
-        this.setState({
-          notification: notif
-        });
-      }
-    );
-
-    // Method called when tapping on a notification
-    PushNotifications.addListener(
-      "pushNotificationActionPerformed",
-      (notification: PushNotificationActionPerformed) => {
-        let notif = this.state.notification;
-        notif.push({
-          id: notification.notification.data.id,
-          title: notification.notification.data.title,
-          body: notification.notification.data.body
-        });
-        this.setState({
-          notification: notif
-        });
-        console.log("notif, ", notification);
-      }
-    );
-  }
+  
 
   doRefresh(event: CustomEvent<RefresherEventDetail>) {
     console.log("Begin async operation");
@@ -125,7 +62,6 @@ export class Home extends React.Component<
 
   render() {
     const { history } = this.props;
-    const { notification } = this.state;
 
     return (
       <IonPage>
@@ -133,17 +69,15 @@ export class Home extends React.Component<
         <br />
         <IonContent class="bg-image">
           <IonButton
-            onClick={() => {
-              this.push();
+            onClick={async() => {
+              const { getObject } = await Storages();
+              const fire: any = await getObject("fireToken");
+              alert('entro'+JSON.stringify(fire))
             }}
           >
             Register push
           </IonButton>
-          <IonList>
-            {notification.map(noty => {
-              return <IonItem>{noty.title}</IonItem>;
-            })}
-          </IonList>
+
           <IonToolbar>
             <IonTitle>
               <IonImg class="img" src={"/assets/img/IconLogo.png"} />

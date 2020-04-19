@@ -57,7 +57,7 @@ const CreateContainer: React.FC<ContainerProps> = ({ parkingType }) => {
             positions.push(pos);
           }
 
-          let pathurl = `${config.ParkingSpaceContext}`;
+          let pathUrl = `${config.ParkingSpaceContext}`;
           let data = {
             parkingname: parkingType,
             enabled: true,
@@ -80,7 +80,7 @@ const CreateContainer: React.FC<ContainerProps> = ({ parkingType }) => {
             setMessage("Debe seleccionar el tipo de parqueadero");
           } else {
             setShowProgressBar(true);
-            await HttpRequest(pathurl, "POST", data, true)
+            await HttpRequest(pathUrl, "POST", data, true)
               .then(async (response: any) => {
                 setMessage("Se creo Exitosamente el parqueadero");
               })

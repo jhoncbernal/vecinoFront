@@ -27,6 +27,7 @@ import {
 } from "ionicons/icons";
 import { HttpRequest } from "../../hooks/HttpRequest";
 import { Storages } from "../../hooks/Storage";
+import config from "../../config";
 
 interface ContainerProps {
   dataModal: any;
@@ -57,11 +58,11 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
         const { setObject } = Storages();
         console.log(bodyChange);
         e.preventDefault();
-        let pathurl = `/admin/${dataModal._id}`;
+        let pathUrl = `${config.AdminContext}/${dataModal._id}`;
         if (dataModal.roles.includes("ROLE_USER_ACCESS")) {
-          pathurl = `/user/${dataModal._id}`;
+          pathUrl = `${config.UserContext}/${dataModal._id}`;
         } else {
-          pathurl = `/admin/${dataModal._id}`;
+          pathUrl = `${config.AdminContext}/${dataModal._id}`;
         }
         let data = body;
         console.log(data);
@@ -69,7 +70,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
           setMessage("No se modifico ningun campo");
         } else {
           setShowProgressBar(true);
-          await HttpRequest(pathurl, "PATCH", data, true)
+          await HttpRequest(pathUrl, "PATCH", data, true)
             .then(async (response: any) => {
               setMessage("Actualizacion Exitosa");
               setbodyChange(false);

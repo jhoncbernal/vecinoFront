@@ -6,7 +6,7 @@ import {
   IonToolbar,
   IonSegment,
   IonSegmentButton,
-  IonIcon
+  IonIcon,
 } from "@ionic/react";
 import { HttpRequest } from "../hooks/HttpRequest";
 import ListContainer from "./User/ListContainer";
@@ -17,7 +17,7 @@ import {
   bicycleSharp,
   peopleSharp,
   barChartSharp,
-  stopCircle
+  stopCircle,
 } from "ionicons/icons";
 
 import ChartsContainer from "./Dashboard/ChartsContainer";
@@ -37,13 +37,13 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
   const [segmentValue, setSegmentValue] = useState<any>("user");
   const httpRequest = useCallback(async () => {
     try {
-      let pathurl;
+      let pathUrl;
       if (segmentValue === "user") {
-        pathurl = `${config.UserContext}`;
+        pathUrl = `${config.UserContext}`;
       } else {
-        pathurl = `${config.ParkingSpaceContext}/${segmentValue}`;
+        pathUrl = `${config.ParkingSpaceContext}/${segmentValue}`;
       }
-      await HttpRequest(pathurl, "GET", "", true)
+      await HttpRequest(pathUrl, "GET", "", true)
         .then(async (resultado: any) => {
           try {
             if (resultado.status) {
@@ -71,7 +71,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
           }
           setloadData(true);
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.message.includes("404")) {
             setHiddenBar(true);
             setloadData(true);
@@ -105,7 +105,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
       <IonCard class="card-center">
         <IonToolbar>
           <IonSegment
-            onIonChange={e => {
+            onIonChange={(e) => {
               setSegmentValue(e.detail.value);
             }}
             value={segmentValue}

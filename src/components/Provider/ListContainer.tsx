@@ -19,6 +19,7 @@ import {
 import { arrowBackOutline } from "ionicons/icons";
 import ListContainerProduct from "../Product/ListContainer";
 import { HttpRequest } from "../../hooks/HttpRequest";
+import config from "../../config";
 interface ContainerProps {
   loaddata: boolean;
   inputs: Array<any>;
@@ -77,9 +78,9 @@ const ListContainer: React.FC<ContainerProps> = ({
                 </IonCardHeader>
                 <IonCardContent
                   onClick={async () => {
-                    let pathurl = `/product?providerId=${input._id}&pageSize=10`;
-                    console.log(pathurl);
-                    await HttpRequest(pathurl, "GET", "", true).then(
+                    let pathUrl = `/${config.ProductContext}?providerId=${input._id}&pageSize=100`;
+                    console.log(pathUrl);
+                    await HttpRequest(pathUrl, "GET", "", true).then(
                       async (resultado: any) => {
                         setProductsArray(resultado);
                         setloadData(true);

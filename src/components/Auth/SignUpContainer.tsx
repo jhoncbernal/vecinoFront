@@ -17,7 +17,7 @@ import {
   IonFab,
   IonFabButton,
   IonSelect,
-  IonSelectOption
+  IonSelectOption,
 } from "@ionic/react";
 import {
   mailOpenOutline,
@@ -27,7 +27,7 @@ import {
   keyOutline,
   cardOutline,
   phonePortraitOutline,
-  arrowBackOutline
+  arrowBackOutline,
 } from "ionicons/icons";
 import { HttpRequest } from "../../hooks/HttpRequest";
 import config from "../../config";
@@ -51,7 +51,7 @@ export class SignUpPage extends React.Component<
     loginMessage: string;
     hiddenbar: boolean;
   }
-  > {
+> {
   constructor(props: any, private storage: Storage) {
     super(props);
     this.state = {
@@ -69,18 +69,18 @@ export class SignUpPage extends React.Component<
       neighborhoods: [""],
       showToast1: false,
       loginMessage: "",
-      hiddenbar: true
+      hiddenbar: true,
     };
     this.getAllNeighborhoodNames();
   }
   async getAllNeighborhoodNames() {
-    let pathurl = `${config.AllNeighborhoodsContext}`;
-    await HttpRequest(pathurl, "GET", "")
+    let pathUrl = `${config.AllNeighborhoodsContext}`;
+    await HttpRequest(pathUrl, "GET", "")
       .then((response: any) => {
         console.log("ok");
         this.setState({ neighborhoods: response });
       })
-      .catch(error => console.error("Error:", error));
+      .catch((error) => console.error("Error:", error));
   }
   async handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -88,11 +88,11 @@ export class SignUpPage extends React.Component<
     try {
       if (this.state.password !== this.state.confirmpassword) {
         this.setState({
-          loginMessage: "la confirmacion de contraseña no coincide"
+          loginMessage: "la confirmacion de contraseña no coincide",
         });
         this.setState({ showToast1: true });
       } else {
-        let pathurl = `${config.AuthSignUp}`;
+        let pathUrl = `${config.AuthSignUp}`;
         let data = {
           roles: ["ROLE_USER_ACCESS"],
           username: this.state.username,
@@ -104,11 +104,11 @@ export class SignUpPage extends React.Component<
           blockNumber: this.state.blockNumber,
           homeNumber: this.state.homeNumber,
           documentId: this.state.documentId,
-          uniquecode: this.state.uniquecode
+          uniquecode: this.state.uniquecode,
         };
         this.setState({ hiddenbar: false });
         console.log(data);
-        await HttpRequest(pathurl, "POST", data)
+        await HttpRequest(pathUrl, "POST", data)
           .then((response: any) => {
             this.setState({ hiddenbar: true });
             if (response.emailResult) {
@@ -116,7 +116,7 @@ export class SignUpPage extends React.Component<
               this.setState({
                 loginMessage:
                   "se envio un correo de verificacion de cuenta a " +
-                  response.emailResult.email.result.accepted[0]
+                  response.emailResult.email.result.accepted[0],
               });
             } else {
               this.setState({ loginMessage: response.message });
@@ -124,7 +124,7 @@ export class SignUpPage extends React.Component<
             }
             this.setState({ showToast1: true });
           })
-          .catch(error => console.error("Error:", error));
+          .catch((error) => console.error("Error:", error));
       }
     } catch (e) {
       console.error(e);
@@ -138,7 +138,7 @@ export class SignUpPage extends React.Component<
           <IonItem>
             <IonImg class="img" src={"/assets/img/IconLogo.png"} />
           </IonItem>
-          <form onSubmit={e => this.handleSubmit(e)} action="post">
+          <form onSubmit={(e) => this.handleSubmit(e)} action="post">
             <IonCard class="card-center">
               <IonItem>
                 <IonIcon color="primary" icon={personOutline} slot="start" />
@@ -342,7 +342,7 @@ export class SignUpPage extends React.Component<
                   value={this.state.confirmpassword}
                   onInput={(confirmpassword: any) =>
                     this.setState({
-                      confirmpassword: confirmpassword.target.value
+                      confirmpassword: confirmpassword.target.value,
                     })
                   }
                 />

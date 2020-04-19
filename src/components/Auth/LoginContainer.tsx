@@ -12,11 +12,23 @@ import {
   IonToast,
   IonProgressBar,
   IonImg,
-  IonToggle
+  IonToggle,
 } from "@ionic/react";
 import { personOutline, keyOutline, bulbOutline } from "ionicons/icons";
 import { HttpRequest } from "../../hooks/HttpRequest";
+import  {updateToken}  from "../../hooks/UpdateToken";
 import config from "../../config";
+import {
+  Plugins,
+  PushNotification,
+  PushNotificationToken,
+  PushNotificationActionPerformed,
+} from "@capacitor/core";
+
+const { PushNotifications } = Plugins;
+const notifications = [
+  { id: "id", title: "Test Push", body: "This is my first push notification" },
+];
 export class LoginPage extends React.Component<
   { history: any },
   {
@@ -26,8 +38,9 @@ export class LoginPage extends React.Component<
     showToast1: boolean;
     loginMessage: string;
     hiddenbar: boolean;
+    notification: { id: string; title: string; body: string }[];
   }
-  > {
+> {
   constructor(props: any, private storage: Storage) {
     super(props);
 
@@ -37,7 +50,8 @@ export class LoginPage extends React.Component<
       checked: false,
       showToast1: false,
       loginMessage: "",
-      hiddenbar: true
+      hiddenbar: true,
+      notification: notifications,
     };
     this.preValues();
   }
@@ -60,17 +74,22 @@ export class LoginPage extends React.Component<
 
     try {
       const { setObject, removeItem } = Storages();
-      let pathurl = `${config.LoginContext}`;
+      let pathUrl = `${config.LoginContext}`;
       let data = { email: this.state.email, password: this.state.password };
       this.setState({ hiddenbar: false });
-      await HttpRequest(pathurl, "POST", data)
+      await HttpRequest(pathUrl, "POST", data)
         .then(async (resultado: any) => {
+          try {
+            await this.push();
+          } catch (e) {
+            console.error("Login: push", e);
+          }
           await setObject("user", resultado.user);
           await setObject("token", resultado.token);
           if (this.state.checked) {
             let rememberme = {
               checked: this.state.checked,
-              username: this.state.email
+              username: this.state.email,
             };
             await setObject("rememberme", rememberme);
           } else {
@@ -82,9 +101,9 @@ export class LoginPage extends React.Component<
 
           this.props.history.push("/home");
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
-          this.setState({ loginMessage: error.ErrorMessage });
+          this.setState({ loginMessage: error.message });
         });
       this.setState({ hiddenbar: true });
       this.setState({ showToast1: true });
@@ -94,6 +113,60 @@ export class LoginPage extends React.Component<
     }
   }
 
+  async push() {
+    try {
+      // Register with Apple / Google to receive push via APNS/FCM
+      PushNotifications.register();
+
+      // On succcess, we should be able to receive notifications
+      PushNotifications.addListener(
+        "registration",
+        async (token: PushNotificationToken) => {
+          updateToken(token.value);
+        }
+      );
+
+      // Some issue with your setup and push will not work
+      PushNotifications.addListener("registrationError", (error: any) => {
+        alert("Error on registration: " + JSON.stringify(error));
+      });
+
+      // Show us the notification paylo ad if the app is open on our device
+      PushNotifications.addListener(
+        "pushNotificationReceived",
+        (notification: PushNotification) => {
+          let notif = this.state.notification;
+          notif.push({
+            id: notification.id,
+            title: notification.title as string,
+            body: notification.body as string,
+          });
+          this.setState({
+            notification: notif,
+          });
+        }
+      );
+
+      // Method called when tapping on a notification
+      PushNotifications.addListener(
+        "pushNotificationActionPerformed",
+        (notification: PushNotificationActionPerformed) => {
+          let notif = this.state.notification;
+          notif.push({
+            id: notification.notification.data.id,
+            title: notification.notification.data.title,
+            body: notification.notification.data.body,
+          });
+          this.setState({
+            notification: notif,
+          });
+          console.log("notif, ", notification);
+        }
+      );
+    } catch (e) {
+      console.error(e);
+    }
+  }
   render() {
     return (
       <>
@@ -102,7 +175,7 @@ export class LoginPage extends React.Component<
             <IonImg class="img" src={"/assets/img/IconLogo.png"} />
           </IonItem>
 
-          <form onSubmit={e => this.handleSubmit(e)} action="post">
+          <form onSubmit={(e) => this.handleSubmit(e)} action="post">
             <IonCard class="card-center">
               <IonItem>
                 <IonIcon color="primary" icon={personOutline} slot="start" />
@@ -141,7 +214,7 @@ export class LoginPage extends React.Component<
                 <IonLabel>Recordar usuario:</IonLabel>
                 <IonToggle
                   checked={this.state.checked}
-                  onIonChange={e =>
+                  onIonChange={(e) =>
                     this.setState({ checked: e.detail.checked })
                   }
                 />
