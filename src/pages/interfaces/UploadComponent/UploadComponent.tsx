@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { IonCard, IonCardContent, IonImg, IonSpinner } from "@ionic/react";
+import { IonImg, IonSpinner } from "@ionic/react";
 import style from "./style.module.css";
 import { Storages } from "../../../hooks/Storage";
 import config from "../../../config";

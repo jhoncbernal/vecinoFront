@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, FormEvent } from "react";
+import React, { FC, useState, FormEvent } from "react";
 import UploadComponent from "../../../pages/interfaces/UploadComponent";
 import style from "./style.module.css";
 import {
@@ -30,81 +30,17 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
     "Pollo",
     "Pescado"
   ];
-  const [validator, setValidator] = useState<{ [id: string]: any }>({
-    enabled: true,
-    keyImage: true,
-    measureType: true,
-    price: true,
-    productName: true,
-    productType: true,
-    provider: true,
-    totalAmount: true,
-    urlImag: true
-  });
   const measureType = ["Lb", "Kg", "Und"];
-  const [body, setBody] = useState<{ [id: string]: any }>({});
+  const body: { [id: string]: any } = {};
   const [dataToast, setDataToast] = useState({ show: false, message: "" });
 
   const handleValueChange = (key: string, value: any) => {
     body[key] = value;
   };
 
-  useEffect(() => {
-    validateData();
-  }, []);
-
-  const closeModal = () => {
-    const resp = { hasChanges: false };
-    action(resp);
-  };
-
-  const validateData = () => {
-    const validateCreate = [
-      "enabled",
-      "keyImage",
-      "measureType",
-      "price",
-      "productName",
-      "productType",
-      "provider",
-      "totalAmount",
-      "urlImage",
-      "totalAmount"
-    ];
-    let result = true;
-    if (Object.keys(body).length === 0) {
-      result = false;
-    }
-
-    if (!!product._id) {
-      validateCreate.forEach(attribute => {
-        if (body[attribute]) {
-          if (body[attribute] && body[attribute].length == 0) {
-            result = false;
-          } else {
-          }
-        } else if (!product[attribute]) {
-          result = false;
-        }
-      });
-    } else {
-      validateCreate.forEach((attribute: string) => {
-        if (body[attribute]) {
-          if (body[attribute].length == 0) {
-            result = false;
-          }
-        } else {
-          result = false;
-        }
-      });
-    }
-    return result;
-  };
-
   const submitData = async (e: FormEvent) => {
     e.preventDefault();
     const method = product._id ? "PATCH" : "POST";
-    console.log("medhotd", method);
     const pathUrl = product._id
       ? `${config.ProductContext}/${product._id}`
       : `${config.ProductContext}`;
@@ -228,7 +164,7 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
                 ></IonInput>
-                <label>Precio en promoción {validator["productName"]}</label>
+                <label>Precio en promoción </label>
                 <IonInput
                   required={true}
                   value={product.promotionPrice}
