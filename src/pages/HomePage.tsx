@@ -7,8 +7,7 @@ import {
   IonTitle,
   IonImg,
   IonToolbar,
-  IonText,
-  IonButton,
+  IonText
 } from "@ionic/react";
 import HomeAdminPageContainer from "../components/HomeAdminContainer";
 import HomeProviderContainer from "../components/HomeProviderContainer";
@@ -16,27 +15,31 @@ import FloatingButtonsMenuContainer from "../components/FloatingButtonsMenuConta
 import { RefresherEventDetail } from "@ionic/core";
 import { Storages } from "../hooks/Storage";
 import HomeUserContainer from "../components/HomeUserContainer";
-
+import config from "../config";
+import SideMenuCar from "../components/Provider/SideMenuCar";
 
 export class Home extends React.Component<
   { history: any },
   {
     currentUser: any;
+    pendingShoppingCar: any;
   }
 > {
   constructor(props: any) {
     super(props);
     this.state = {
-      currentUser: ""
+      currentUser: "",
+      pendingShoppingCar: {}
     };
     this.preValues();
+    this.handlerDataSide = this.handlerDataSide.bind(this);
   }
 
   async preValues() {
     try {
       const { getObject } = await Storages();
       const user: any = await getObject("user");
-      
+
       if (!user) {
         const err = new Error();
         err.message = "sus credenciales vencieron";
@@ -48,11 +51,19 @@ export class Home extends React.Component<
       console.error(e);
     }
   }
-  
 
+  renderSideMenu(roles: string) {
+    if (roles && roles.includes(config.RolProviderAccess)) {
+      return (
+        <SideMenuCar datSide={this.state.pendingShoppingCar}></SideMenuCar>
+      );
+    }
+  }
+
+  handlerDataSide(data: any) {
+    this.setState({ pendingShoppingCar: data });
+  }
   doRefresh(event: CustomEvent<RefresherEventDetail>) {
-    console.log("Begin async operation");
-
     setTimeout(() => {
       console.log("Async operation has ended");
       this.props.history.go(0);
@@ -68,16 +79,6 @@ export class Home extends React.Component<
         <br />
         <br />
         <IonContent class="bg-image">
-          <IonButton
-            onClick={async() => {
-              const { getObject } = await Storages();
-              const fire: any = await getObject("fireToken");
-              alert('entro'+JSON.stringify(fire))
-            }}
-          >
-            Register push
-          </IonButton>
-
           <IonToolbar>
             <IonTitle>
               <IonImg class="img" src={"/assets/img/IconLogo.png"} />
@@ -92,18 +93,17 @@ export class Home extends React.Component<
             history={history}
           ></FloatingButtonsMenuContainer>
           {this.state.currentUser.roles ? (
-            this.state.currentUser.roles.includes(
-              "ROLE_ADMINISTRATION_ACCESS"
-            ) ? (
+            this.state.currentUser.roles.includes(config.RolAdminAccess) ? (
               <HomeAdminPageContainer
                 history={history}
               ></HomeAdminPageContainer>
             ) : this.state.currentUser.roles.includes(
-                "ROLE_PROVIDER_ACCESS"
+                config.RolProviderAccess
               ) ? (
               <HomeProviderContainer
                 history={history}
                 currentUser={this.state.currentUser}
+                handlerDataSide={this.handlerDataSide}
               ></HomeProviderContainer>
             ) : (
               <HomeUserContainer
@@ -112,6 +112,7 @@ export class Home extends React.Component<
               ></HomeUserContainer>
             )
           ) : null}
+          {this.renderSideMenu(this.state.currentUser.roles)}
           <IonRefresher slot="fixed" onIonRefresh={this.doRefresh}>
             <IonRefresherContent
               color="primary"

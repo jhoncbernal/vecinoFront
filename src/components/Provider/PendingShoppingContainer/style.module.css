@@ -1,0 +1,13 @@
+.title-header {
+  text-transform: uppercase;
+  text-align: center;
+  padding: 12px 0;
+}
+
+.price-label {
+  position: absolute;
+  right: 1em;
+  top: 25%;
+  font-weight: 600;
+  font-size: 1.3em;
+}

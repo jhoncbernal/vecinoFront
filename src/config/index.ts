@@ -10,9 +10,11 @@ const dev = {
   RecoveryPasswordContext: "/auth/recover",
   UserContext: "/user",
   ProductContext: "/product",
+  BillsContext: "/bill",
   ProviderContext: "/provider",
   RolProviderAccess: "ROLE_PROVIDER_ACCESS",
-  RolUserAccess: "ROLE_USER_ACCESS"
+  RolUserAccess: "ROLE_USER_ACCESS",
+  RolAdminAccess: "ROLE_ADMINISTRATION_ACCESS"
 };
 
 const prod = {
@@ -27,9 +29,11 @@ const prod = {
   RecoveryPasswordContext: "/auth/recover",
   UserContext: "/user",
   ProductContext: "/product",
+  BillsContext: "/bill",
   ProviderContext: "/provider",
   RolProviderAccess: "ROLE_PROVIDER_ACCESS",
-  RolUserAccess: "ROLE_USER_ACCESS"
+  RolUserAccess: "ROLE_USER_ACCESS",
+  RolAdminAccess: "ROLE_ADMINISTRATION_ACCESS"
 };
 
 const config = process.env.REACT_APP_STAGE === "prod" ? prod : dev;
