@@ -1,6 +1,4 @@
 import firebase from "firebase";
-import { Storages } from "../hooks/Storage";
-import { async } from "q";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -23,5 +21,7 @@ const pushFirebase = (user: any, id: string, data: any) => {
 const refUser = (user: any) => {
   return fire_db.ref("cart").child(user._id);
 };
-
-export { fire_auth, fire_db, pushFirebase, refUser };
+const refUserCar = (user: any, provider: any) => {
+  return fire_db.ref("cart").child(user._id).child(provider._id);
+};
+export { fire_auth, fire_db, pushFirebase, refUser,refUserCar };

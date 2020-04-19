@@ -26,13 +26,14 @@ import {
   IonThumbnail,
   IonContent,
   IonListHeader,
-  IonFooter
+  IonFooter,
 } from "@ionic/react";
 import { addSharp, removeSharp, cart, addCircle } from "ionicons/icons";
 import "./ListContainer.css";
 import CreateComponent from "./CreateComponent";
 import config from "../../config";
-import { pushFirebase } from "../../config/firebase";
+import { refUserCar } from "../../config/firebase";
+import ShoppingListContainer from "./shopingCart/ListContainer";
 interface ContainerProps {
   [id: string]: any;
 }
@@ -42,9 +43,8 @@ const ListContainer: React.FC<ContainerProps> = ({
   inputs,
   currentUser,
   provider,
-  refreshData
+  refreshData,
 }) => {
-  let billAmount = 0;
   let productCart: any = {};
   const [searchText, setSearchText] = useState("");
   const [data, setData] = useState<Array<any>>([{}]);
@@ -63,12 +63,14 @@ const ListContainer: React.FC<ContainerProps> = ({
       productType: "",
       provider: "",
       totalAmount: 0,
-      urlImage: ""
+      urlImage: "",
     };
     setShowModal(true);
     setDataModal(newProduct);
   };
-
+  function handleShoppingCart(data: any) {
+    setShoppingCart(data);
+  }
   const handleSearch = useCallback(
     async (e: any) => {
       try {
@@ -121,7 +123,7 @@ const ListContainer: React.FC<ContainerProps> = ({
           productCart[`${property}`] = shoppingCart[`${property}`] + 1;
           setShoppingCart((prevState: any) => ({
             ...prevState,
-            ...productCart
+            ...productCart,
           }));
         } else if (operation === "Less" && shoppingCart[`${property}`] > 0) {
           productCart[`${property}`] = shoppingCart[`${property}`] - 1;
@@ -131,14 +133,14 @@ const ListContainer: React.FC<ContainerProps> = ({
           } else {
             setShoppingCart((prevState: any) => ({
               ...prevState,
-              ...productCart
+              ...productCart,
             }));
           }
         } else if (operation !== "Less") {
           productCart[`${property}`] = 1;
           setShoppingCart((prevState: any) => ({
             ...prevState,
-            ...productCart
+            ...productCart,
           }));
         }
       } catch (e) {
@@ -161,10 +163,17 @@ const ListContainer: React.FC<ContainerProps> = ({
   useEffect(() => {
     const groupByType = groupBy("productType");
     setData(groupByType(inputs));
-  }, [inputs]);
+    let fireProductCart: any = {};
+    refUserCar(currentUser, provider).on("value", (snapshot: any) => {
+      snapshot.forEach((snap: any) => {
+        fireProductCart[snap.key] = snap.val();
+      });
+      setShoppingCart(fireProductCart);
+    });
+  }, [currentUser, inputs, provider]);
   const slideOpts = {
     initialSlide: 1,
-    speed: 400
+    speed: 400,
   };
 
   const renderAddButton = () => {
@@ -197,7 +206,13 @@ const ListContainer: React.FC<ContainerProps> = ({
             vertical="top"
             horizontal="end"
             slot="fixed"
-            hidden={Object.keys(shoppingCart).length ? false : true}
+            hidden={
+              shoppingCart
+                ? Object.keys(shoppingCart).length
+                  ? false
+                  : true
+                : true
+            }
           >
             <IonFabButton
               ion-menu-toggle={showPopover}
@@ -216,7 +231,7 @@ const ListContainer: React.FC<ContainerProps> = ({
           <IonSearchbar
             animated={true}
             value={searchText}
-            onIonChange={e => {
+            onIonChange={(e) => {
               handleSearch(e);
             }}
             showCancelButton="always"
@@ -348,7 +363,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                       </IonCardContent>
                       <IonModal
                         isOpen={showModal}
-                        onDidDismiss={e => setShowModal(false)}
+                        onDidDismiss={(e) => setShowModal(false)}
                         animated={true}
                       >
                         <IonContent>
@@ -449,109 +464,16 @@ const ListContainer: React.FC<ContainerProps> = ({
           <IonModal
             isOpen={showPopover}
             swipeToClose={true}
-            onDidDismiss={e => setShowPopover(false)}
+            onDidDismiss={(e) => setShowPopover(false)}
             animated={true}
             id={"modal"}
           >
-            <IonContent>
-              <IonToolbar color="primary">
-                <IonTitle>Carro de Compras</IonTitle>
-              </IonToolbar>
-              <IonList class="cartItem">
-                <IonListHeader>
-                  <IonTitle color="primary">
-                    {" "}
-                    {provider.firstName.toUpperCase()}
-                  </IonTitle>
-                </IonListHeader>
-                {Object.keys(shoppingCart).map(_id => {
-                  return inputs.map((input: Product) => {
-                    if (input._id === _id) {
-                      billAmount =
-                        shoppingCart[_id] *
-                          (!input.promotionPrice
-                            ? input.price
-                            : input.promotionPrice) +
-                        billAmount;
-                      return (
-                        <IonItem key={input._id}>
-                          <IonThumbnail class="cartImages">
-                            <IonImg src={input.urlImage}></IonImg>
-                          </IonThumbnail>
-                          <IonLabel item-left>
-                            <IonText color={"dark"}>
-                              <p>{input.productName}</p>
-                            </IonText>
-                            <IonText color="primary">
-                              <p>
-                                <strong>
-                                  $
-                                  {!input.promotionPrice
-                                    ? input.price.toLocaleString()
-                                    : input.promotionPrice.toLocaleString()}
-                                </strong>
-                              </p>
-                            </IonText>
-                          </IonLabel>
-                          <IonLabel item-right text-right>
-                            <IonButton
-                              color={"white"}
-                              class="cartBtn"
-                              size="small"
-                              fill="outline"
-                              onClick={() => {
-                                handleProductCart(input._id!, "Less");
-                              }}
-                            >
-                              <IonIcon
-                                size={"large"}
-                                color={"primary"}
-                                slot="icon-only"
-                                icon={removeSharp}
-                              />
-                            </IonButton>
-                            <IonButton color={"white"} fill="outline">
-                              <IonText color={"primary"}>
-                                {shoppingCart[_id] ? shoppingCart[_id] : null}
-                              </IonText>
-                            </IonButton>
-                            <IonButton
-                              color={"white"}
-                              class="cartBtn"
-                              size="small"
-                              fill="outline"
-                              onClick={() => {
-                                handleProductCart(input._id!, "Add");
-                              }}
-                            >
-                              <IonIcon
-                                size={"large"}
-                                color={"primary"}
-                                slot="icon-only"
-                                icon={addSharp}
-                              />
-                            </IonButton>
-                          </IonLabel>
-                        </IonItem>
-                      );
-                    }
-                  });
-                })}
-              </IonList>
-            </IonContent>
-            <IonFooter>
-              <IonToolbar>
-                <IonTitle>SubTotal: ${billAmount.toLocaleString()}</IonTitle>
-                <IonButton
-                  onClick={() => {
-                    pushFirebase(currentUser, provider._id, shoppingCart);
-                  }}
-                  expand="full"
-                >
-                  Finalizar compra{" "}
-                </IonButton>
-              </IonToolbar>
-            </IonFooter>
+            <ShoppingListContainer
+              provider={provider}
+              oldShoppingCart={shoppingCart}
+              currentUser={currentUser}
+              changeShoppingCart={handleShoppingCart}
+            ></ShoppingListContainer>
           </IonModal>
         </>
       );
