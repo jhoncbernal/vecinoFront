@@ -86,7 +86,9 @@ const ListContainer: React.FC<ContainerProps> = ({
                         setloadData(true);
                         setShowModal(true);
                       }
-                    );
+                    ).catch((err)=>{
+                      console.error(err);
+                    });
                   }}
                 >
                   <IonItem>

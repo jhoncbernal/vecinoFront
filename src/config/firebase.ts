@@ -21,9 +21,7 @@ const pushFirebase = (user: any, id: string, data: any) => {
 const refUser = (user: any) => {
   return fire_db.ref("cart").child(user._id);
 };
-
 const refUserCar = (user: any, provider: any) => {
   return fire_db.ref("cart").child(user._id).child(provider._id);
 };
-
-export { fire_auth, fire_db, pushFirebase, refUser, refUserCar };
+export { fire_auth, fire_db, pushFirebase, refUser,refUserCar };
