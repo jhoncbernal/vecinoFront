@@ -12,5 +12,6 @@ export interface ShoppingOrder {
   products: [
     ShoppingProduct
   ],
-  total: string;
+  salvings:number;
+  total: number;
 }
