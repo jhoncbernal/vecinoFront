@@ -49,7 +49,7 @@ export async function HttpRequest(
             throw err;
           }
         })
-        .catch((error: any) => {
+        .catch(async (error: any) => {
           // Error 😨
           let errorMessage;
           if (error.response) {
@@ -62,6 +62,12 @@ export async function HttpRequest(
               errorMessage = error.response.data.message;
             } else {
               errorMessage = error.Error;
+            }
+            if(errorMessage.includes('token')){
+              const { removeItem } = Storages();
+                  await removeItem('token');
+                  await removeItem('user');
+                  await removeItem('fireToken');
             }
             const err = new Error();
             err.message = errorMessage;

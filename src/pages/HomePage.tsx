@@ -7,7 +7,8 @@ import {
   IonTitle,
   IonImg,
   IonToolbar,
-  IonText
+  IonText,
+  IonAlert,
 } from "@ionic/react";
 import HomeAdminPageContainer from "../components/HomeAdminContainer";
 import HomeProviderContainer from "../components/HomeProviderContainer";
@@ -23,13 +24,20 @@ export class Home extends React.Component<
   {
     currentUser: any;
     pendingShoppingCar: any;
+    showAlert: boolean;
+    errorMessage: string;
+    thishistory: any;
   }
 > {
   constructor(props: any) {
     super(props);
+    const { history } = this.props;
     this.state = {
       currentUser: "",
-      pendingShoppingCar: {}
+      pendingShoppingCar: {},
+      showAlert:false,
+      errorMessage: "",
+      thishistory: history,
     };
     this.preValues();
     this.handlerDataSide = this.handlerDataSide.bind(this);
@@ -41,12 +49,25 @@ export class Home extends React.Component<
       const user: any = await getObject("user");
 
       if (!user) {
-        const err = new Error();
-        err.message = "sus credenciales vencieron";
-        throw err;
+      
+        let message = "sus credenciales vencieron";
+        this.setState({'errorMessage':message});
+        this.setState({'showAlert':true});
+        this.state.thishistory.push("/login");
       } else {
         this.setState({ currentUser: user.obj });
       }
+    } catch (e) {
+      
+      console.error(e);
+    }
+  }
+  async doRefresh(event: CustomEvent<RefresherEventDetail>) {
+    try {
+      setTimeout(() => {
+        console.log("Async operation has ended");
+        event.detail.complete();
+      }, 2000);
     } catch (e) {
       console.error(e);
     }
@@ -62,13 +83,6 @@ export class Home extends React.Component<
 
   handlerDataSide(data: any) {
     this.setState({ pendingShoppingCar: data });
-  }
-  doRefresh(event: CustomEvent<RefresherEventDetail>) {
-    setTimeout(() => {
-      console.log("Async operation has ended");
-      this.props.history.go(0);
-      event.detail.complete();
-    }, 2000);
   }
 
   render() {
@@ -123,6 +137,14 @@ export class Home extends React.Component<
             ></IonRefresherContent>
           </IonRefresher>
         </IonContent>
+        <IonAlert
+          isOpen={this.state.showAlert}
+          onDidDismiss={() => this.setState({'showAlert':false})}
+          header={"Advertencia"}
+          subHeader={"se produjo un error debido a que:"}
+          message={this.state.errorMessage}
+          buttons={["OK"]}
+        />
       </IonPage>
     );
   }
