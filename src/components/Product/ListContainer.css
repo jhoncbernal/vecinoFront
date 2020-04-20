@@ -28,7 +28,7 @@
 }
 
     .md #modal {
-        --max-width: 22rem !important;
+        --max-width: 25rem !important;
         --max-height: 26rem !important;
     }
 .cartItem{

@@ -6,9 +6,6 @@ import {
   IonLabel,
   IonCard,
   IonCardContent,
-  IonRow,
-  IonGrid,
-  IonCol,
   IonSearchbar,
   IonText,
   IonModal,
@@ -24,7 +21,12 @@ import {
   IonTitle,
   IonContent,
 } from "@ionic/react";
-import { addSharp, removeSharp, cart, addCircle } from "ionicons/icons";
+import {
+  addSharp,
+  removeSharp,
+  cart,
+  addCircle
+} from "ionicons/icons";
 import "./ListContainer.css";
 import CreateComponent from "./CreateComponent";
 import config from "../../config";
@@ -293,69 +295,59 @@ const ListContainer: React.FC<ContainerProps> = ({
                           }
                         }}
                       >
-                        <IonGrid>
-                          <IonRow>
-                            <IonCol>
-                              <IonItem>
-                                <IonText color={"dark"}>
-                                  <h2>
+                        <IonItem class="ion-padding-start">
+                          <IonText color={"dark"}>
+                            <h2>
+                              <strong>
+                                {!input.promotionPrice ? (
+                                  input.price.toLocaleString()
+                                ) : input.promotionPrice ? (
+                                  <s>{input.price.toLocaleString()}</s>
+                                ) : (
+                                  ""
+                                )}
+                              </strong>
+                            </h2>
+                            {input ? (
+                              input.promotionPrice ? (
+                                <IonText>
+                                  <h2 color="dark">
+                                    Precio de Oferta:{" "}
                                     <strong>
-                                      {!input.promotionPrice ? (
-                                        input.price.toLocaleString()
-                                      ) : input.promotionPrice ? (
-                                        <s>{input.price.toLocaleString()}</s>
-                                      ) : (
-                                        ""
-                                      )}
+                                      {input.promotionPrice.toLocaleString()}
                                     </strong>
                                   </h2>
-                                  {input ? (
-                                    input.promotionPrice ? (
-                                      <IonText>
-                                        <h2 color="dark">
-                                          Precio de Oferta:{" "}
-                                          <strong>
-                                            {input.promotionPrice.toLocaleString()}
-                                          </strong>
-                                        </h2>
-                                      </IonText>
-                                    ) : null
-                                  ) : null}
-                                  <IonLabel>
-                                    <h3>
-                                      {input ? input.productType : ""}{" "}
-                                      {input ? input.productName : ""}{" "}
-                                    </h3>
-                                    <p>{`1 (${input.measureType})`}</p>
-                                  </IonLabel>
-                                  <p>{input ? input.features : ""}</p>
                                 </IonText>
-                              </IonItem>
-                            </IonCol>
-                            <IonCol
-                              hidden={
-                                currentUser.roles.includes(
-                                  config.RolProviderAccess
-                                )
-                                  ? false
-                                  : true
-                              }
-                            >
-                              <IonItem>
-                                <IonLabel>
-                                  <h2> </h2>
-                                  <h2>{`Total:    ${input.totalAmount}${input.measureType}`}</h2>
-                                  <h3>{`Estado: ${
-                                    input.enabled
-                                      ? "Habilitado"
-                                      : "Inhabilitado"
-                                  }`}</h3>
-                                  <p>{`Codigo de Producto:  ${input.code}`}</p>
-                                </IonLabel>
-                              </IonItem>
-                            </IonCol>
-                          </IonRow>
-                        </IonGrid>
+                              ) : null
+                            ) : null}
+                            <IonLabel>
+                              <h3>
+                                {input ? input.productType : ""}{" "}
+                                {input ? input.productName : ""}{" "}
+                              </h3>
+                              <p>{`1 (${input.measureType})`}</p>
+                            </IonLabel>
+                            <p>{input ? input.features : ""}</p>
+                          </IonText>
+                        </IonItem>
+
+                        <IonItem
+                          class="ion-padding-start"
+                          hidden={
+                            currentUser.roles.includes(config.RolProviderAccess)
+                              ? false
+                              : true
+                          }
+                        >
+                          <IonLabel>
+                            <h2> </h2>
+                            <h2>{`Total:    ${input.totalAmount}${input.measureType}`}</h2>
+                            <h3>{`Estado: ${
+                              input.enabled ? "Habilitado" : "Inhabilitado"
+                            }`}</h3>
+                            <p>{`Codigo de Producto:  ${input.code}`}</p>
+                          </IonLabel>
+                        </IonItem>
                       </IonCardContent>
                       <IonModal
                         isOpen={showModal}
@@ -369,16 +361,17 @@ const ListContainer: React.FC<ContainerProps> = ({
                           ></CreateComponent>
                         </IonContent>
                       </IonModal>
-                      <IonItem
+                      <div
                         hidden={
                           currentUser.roles.includes(config.RolUserAccess)
                             ? false
                             : true
                         }
-                        class="cardSlideBtn  text-center"
                       >
                         {!shoppingCart[`${input._id}`] ? (
                           <IonButton
+                            class="ion-float-left	ion-margin-bottom"
+                            size={"small"}
                             disabled={input.totalAmount !== 0 ? false : true}
                             fill="outline"
                             color="primary"
@@ -398,7 +391,8 @@ const ListContainer: React.FC<ContainerProps> = ({
                         ) : (
                           <>
                             <IonButton
-                              size="small"
+                              class="ion-float-left	ion-margin-bottom"
+                              size={"small"}
                               fill="outline"
                               onClick={() => {
                                 handleProductCart(input._id, "Less");
@@ -406,15 +400,23 @@ const ListContainer: React.FC<ContainerProps> = ({
                             >
                               <IonIcon slot="icon-only" icon={removeSharp} />
                             </IonButton>
-                            <IonText>
-                              <strong>{`${
-                                shoppingCart[`${input._id}`]
-                                  ? shoppingCart[`${input._id}`]
-                                  : ""
-                              }`}</strong>
-                            </IonText>
                             <IonButton
-                              size="small"
+                              color={"white"}
+                              size={"small"}
+                              class="ion-float-left ion-margin-bottom"
+                              fill="outline"
+                            >
+                              <IonText color={"primary"}>
+                                <strong>{`${
+                                  shoppingCart[`${input._id}`]
+                                    ? shoppingCart[`${input._id}`]
+                                    : ""
+                                }`}</strong>
+                              </IonText>
+                            </IonButton>
+                            <IonButton
+                              class="ion-float-left	ion-margin-bottom"
+                              size={"small"}
                               fill="outline"
                               onClick={() => {
                                 if (
@@ -429,7 +431,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                             </IonButton>
                           </>
                         )}
-                      </IonItem>
+                      </div>
                     </IonCard>
                   );
 
