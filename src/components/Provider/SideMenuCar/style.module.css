@@ -10,3 +10,17 @@
   font-weight: 600;
   font-size: 20px;
 }
+
+.text-edit {
+  text-align: center;
+  font-size: 2.5rem;
+}
+
+.btn-flat {
+  position: relative;
+  right: -10px;
+}
+
+ion-header {
+  text-align: center;
+}

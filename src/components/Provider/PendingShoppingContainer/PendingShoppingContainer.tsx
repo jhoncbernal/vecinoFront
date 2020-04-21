@@ -15,7 +15,10 @@ import { menuController } from "@ionic/core";
 import config from "../../../config";
 import { HttpRequest } from "../../../hooks/HttpRequest";
 
-const PendingShoppingContainer: FC<componentData> = ({ dataTrigger }) => {
+const PendingShoppingContainer: FC<componentData> = ({
+  dataTrigger,
+  hideLoadBar
+}) => {
   const states: { [id: string]: any } = {
     start: "gray",
     prepare: "purple",
@@ -29,6 +32,7 @@ const PendingShoppingContainer: FC<componentData> = ({ dataTrigger }) => {
     HttpRequest(pathUrl, "GET", "", true)
       .then(response => {
         setBills(response);
+        hideLoadBar(true);
       })
       .catch(e => {
         console.error(e);

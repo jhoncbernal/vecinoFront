@@ -141,6 +141,9 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
             ) : (
               <PendingShoppingContainer
                 dataTrigger={handlerDataSideContainer}
+                hideLoadBar={(response: boolean) => {
+                  setHiddenBar(response);
+                }}
               ></PendingShoppingContainer>
             )}
           </>
