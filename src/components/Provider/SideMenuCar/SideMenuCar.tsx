@@ -225,95 +225,6 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
     );
   };
 
-  const renderEdit = () => {
-    render(
-      <IonPopover
-        isOpen={showPopOverEdit.open}
-        event={showPopOverEdit.event}
-        onDidDismiss={() => {
-          setShowPopOverEdit({ open: false, event: undefined });
-        }}
-      >
-        <IonTitle style={{ textAlign: "center" }}>
-          {showPopOverEdit.item ? showPopOverEdit.item.productName : ""}
-        </IonTitle>
-        <IonContent>
-          <IonGrid>
-            <IonRow>
-              <IonCol>
-                <IonFabButton
-                  color="primary"
-                  onClick={() => {
-                    if (
-                      showPopOverEdit.item &&
-                      showPopOverEdit.item.quantity! > 1
-                    ) {
-                      showPopOverEdit.item.quantity! -= 1;
-                      setShowPopOverEdit({
-                        open: true,
-                        event: undefined,
-                        item: showPopOverEdit.item,
-                        indexItem: showPopOverEdit.indexItem
-                      });
-                    }
-                  }}
-                >
-                  <IonIcon icon={remove} />
-                </IonFabButton>
-              </IonCol>
-              <IonCol className={style["text-edit"]}>
-                {" "}
-                {showPopOverEdit.item ? showPopOverEdit.item.quantity : ""}
-                <small style={{ fontSize: "20px" }}>
-                  {showPopOverEdit.item ? showPopOverEdit.item.measureType : ""}
-                </small>
-              </IonCol>
-              <IonCol className={style["btn-flat"]}>
-                <IonFabButton
-                  color="primary"
-                  onClick={() => {
-                    if (
-                      showPopOverEdit.item &&
-                      prevProducts[showPopOverEdit.indexItem!].quantity! >
-                        showPopOverEdit.item.quantity!
-                    ) {
-                      showPopOverEdit.item.quantity! += 1;
-                      setShowPopOverEdit({
-                        open: true,
-                        event: undefined,
-                        item: showPopOverEdit.item,
-                        indexItem: showPopOverEdit.indexItem
-                      });
-                    }
-                  }}
-                >
-                  <IonIcon icon={add} />
-                </IonFabButton>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-        </IonContent>
-        <IonFooter>
-          <IonButton
-            expand="full"
-            onClick={() => {
-              dataSide.products[showPopOverEdit.indexItem!] =
-                showPopOverEdit.item;
-              setShowPopOverEdit({ open: false, event: undefined });
-              setBodyChanges({
-                ...bodyChanges,
-                products: dataSide.products,
-                Total: sumFullBill()
-              });
-            }}
-          >
-            Guardar cambio
-          </IonButton>
-        </IonFooter>
-      </IonPopover>
-    );
-  };
-
   const renderPopUpInfo = () => {
     return (
       <IonPopover
@@ -388,8 +299,93 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
             </IonButton>
           )}
         </IonFooter>
-        {renderPopUpInfo()}
-        {renderEdit()}
+        {renderPopUpInfo()}{" "}
+        <IonPopover
+          isOpen={showPopOverEdit.open}
+          event={showPopOverEdit.event}
+          onDidDismiss={() => {
+            setShowPopOverEdit({ open: false, event: undefined });
+          }}
+        >
+          <IonTitle style={{ textAlign: "center" }}>
+            {showPopOverEdit.item ? showPopOverEdit.item.productName : ""}
+          </IonTitle>
+          <IonContent>
+            <IonGrid>
+              <IonRow>
+                <IonCol>
+                  <IonFabButton
+                    color="primary"
+                    onClick={() => {
+                      if (
+                        showPopOverEdit.item &&
+                        showPopOverEdit.item.quantity! > 1
+                      ) {
+                        showPopOverEdit.item.quantity! -= 1;
+                        setShowPopOverEdit({
+                          open: true,
+                          event: undefined,
+                          item: showPopOverEdit.item,
+                          indexItem: showPopOverEdit.indexItem
+                        });
+                      }
+                    }}
+                  >
+                    <IonIcon icon={remove} />
+                  </IonFabButton>
+                </IonCol>
+                <IonCol className={style["text-edit"]}>
+                  {" "}
+                  {showPopOverEdit.item ? showPopOverEdit.item.quantity : ""}
+                  <small style={{ fontSize: "20px" }}>
+                    {showPopOverEdit.item
+                      ? showPopOverEdit.item.measureType
+                      : ""}
+                  </small>
+                </IonCol>
+                <IonCol className={style["btn-flat"]}>
+                  <IonFabButton
+                    color="primary"
+                    onClick={() => {
+                      if (
+                        showPopOverEdit.item &&
+                        prevProducts[showPopOverEdit.indexItem!].quantity! >
+                          showPopOverEdit.item.quantity!
+                      ) {
+                        showPopOverEdit.item.quantity! += 1;
+                        setShowPopOverEdit({
+                          open: true,
+                          event: undefined,
+                          item: showPopOverEdit.item,
+                          indexItem: showPopOverEdit.indexItem
+                        });
+                      }
+                    }}
+                  >
+                    <IonIcon icon={add} />
+                  </IonFabButton>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </IonContent>
+          <IonFooter>
+            <IonButton
+              expand="full"
+              onClick={() => {
+                dataSide.products[showPopOverEdit.indexItem!] =
+                  showPopOverEdit.item;
+                setShowPopOverEdit({ open: false, event: undefined });
+                setBodyChanges({
+                  ...bodyChanges,
+                  products: dataSide.products,
+                  Total: sumFullBill()
+                });
+              }}
+            >
+              Guardar cambio
+            </IonButton>
+          </IonFooter>
+        </IonPopover>
         {renderPopUpOptions()}
         {renderAlert()}
       </IonMenu>
