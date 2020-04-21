@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState } from "react";
 import {
   IonMenu,
   IonHeader,
@@ -28,11 +28,9 @@ import config from "../../../config";
 import {
   add,
   remove,
-  information,
   informationCircleOutline
 } from "ionicons/icons";
 import { deepCopy } from "../../../hooks/DeepCopy";
-import { render } from "@testing-library/react";
 import { menuController } from "@ionic/core";
 
 const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
@@ -90,6 +88,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
   const sumProducts = () => {
     let sum = 0;
     if (dataSide.products) {
+      // eslint-disable-next-line array-callback-return
       dataSide.products.map((product: Product) => {
         sum += product.quantity! * product.price;
       });

@@ -102,7 +102,7 @@ export class LoginPage extends React.Component<
           this.props.history.push("/home");
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
           this.setState({ loginMessage: error.message });
         });
       this.setState({ hiddenbar: true });
@@ -160,7 +160,6 @@ export class LoginPage extends React.Component<
           this.setState({
             notification: notif,
           });
-          console.log("notif, ", notification);
         }
       );
     } catch (e) {

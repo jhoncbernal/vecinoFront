@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   IonContent,
   IonItem,
@@ -21,35 +21,143 @@ import {
   IonItemOption,
 } from "@ionic/react";
 import { cashOutline, trashBinOutline } from "ionicons/icons";
-import { User, Provider, ShoppingOrder } from "../../../entities";
+import {
+  User,
+  Provider,
+  ShoppingOrder,
+  ShoppingProduct,
+  Bill,
+} from "../../../entities";
+import config from "../../../config";
+import { HttpRequest } from "../../../hooks/HttpRequest";
+import {
+  pushProviderFirebase
+} from "../../../config/firebase";
 
 interface ContainerProps {
+  closeModal: any;
   currentUser: User;
   order: ShoppingOrder | undefined;
   provider: Provider;
+  products: ShoppingProduct;
+  clearCart:any;
 }
 
 const ResumeContainer: React.FC<ContainerProps> = ({
+  closeModal,
   currentUser,
   order,
   provider,
+  products,
+  clearCart,
 }) => {
   const today: Date = new Date();
+  const numDayOfWeek: number = today.getDay();
+  const daysOfWeek: Array<string> = [
+    "NoAplica",
+    "lunes",
+    "martes",
+    "miercoles",
+    "jueves",
+    "viernes",
+    "sabado",
+    "domingo",
+  ];
+  const todayschedule: any = provider.schedule.filter((obj) =>
+    obj.days.includes(daysOfWeek[numDayOfWeek])
+  );
+  let tomorrow: string = daysOfWeek[numDayOfWeek + 1];
+  if (daysOfWeek[numDayOfWeek] === "domingo") {
+    tomorrow = "lunes";
+  }
+  const openHour: number = new Date(todayschedule[0].open).getHours() + 5;
+  const closeHour: number = new Date(todayschedule[0].close).getHours() + 5;
+  const flagDeliveryRighNow: boolean =
+    openHour <= today.getHours() && today.getHours() <= closeHour - 1;
   const [paymentMethod, setPaymentMethod] = useState<string>("efectivo");
   const [schedule, setSchedule] = useState<string>();
-  const [cashValue, setCashValue] = useState<number>();
+  const [cashValue, setCashValue] = useState<number>(0);
   const [address, setAddress] = useState<string>(
     currentUser.neighborhood.address
   );
   const [tip, setTip] = useState<string>("1000");
   const [flagExtraCharge, setFlagExtraCharge] = useState<boolean>(false);
-  const [extraCharge, setextraCharge] = useState<number>(
-    provider.deliveryCharge * 3
-  );
   const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertHeader, setAlertHeader] = useState("");
+  const [showAlert2, setShowAlert2] = useState(false);
+
   let total = 0;
+  const deliverySchedule = useCallback(
+    (value) => {
+      setSchedule(value);
+      if (value === "rightNow" && !flagExtraCharge) {
+        setShowAlert(true);
+      }
+    },
+    [flagExtraCharge]
+  );
+  const submitOrder = useCallback(
+    async (order: ShoppingOrder) => {
+      let newTotal = Number(tip) + order.total + provider.deliveryCharge;
+      if (
+        (!cashValue || cashValue < newTotal) &&
+        paymentMethod === "efectivo"
+      ) {
+        setAlertHeader("Verificar");
+        setAlertMessage(
+          `Por favor agrege una cantidad superior de efectivo con el cual va a pagar `
+        );
+      } else if (!schedule) {
+        setAlertHeader("Verificar");
+        setAlertMessage(
+          `Seleccione el horario en el cual el desea que el pedido sea enviado`
+        );
+      } else {
+        let data = {
+          DeliverySchedule: schedule,
+          MethodOfPayment: paymentMethod,
+          products: products,
+          provider: provider._id,
+          flagExtraCharge: flagExtraCharge,
+          tip: Number(tip),
+        };
+        if (address !== currentUser.neighborhood.address) {
+          data = { ...data, ...{ otherAddress: address } };
+        }
+        if (paymentMethod === "efectivo") {
+          data = { ...data, ...{ cashValue: cashValue } };
+        }
+        let pathUrl = `${config.BillsContext}`;
+        
+        await HttpRequest(pathUrl, "POST", data, true)
+          .then(async (response: Bill) => {
+            if (currentUser._id && provider._id) {
+              await pushProviderFirebase(response);
+            }
+            setAlertHeader("Confirmacion de Orden");
+            setAlertMessage(
+              `su orden fue creada con el numero de seguimiento ${response.code}`
+            );
+            clearCart({})
+
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+
+          
+      }
+      setShowAlert2(true);
+    },
+    [address, cashValue, clearCart, currentUser._id, currentUser.neighborhood.address, flagExtraCharge, paymentMethod, products, provider._id, provider.deliveryCharge, schedule, tip]
+  );
+
   if (order) {
     total = Number(tip) + order.total + provider.deliveryCharge;
+  }
+  if(flagExtraCharge){
+    total=total+provider.deliveryExtraCharge; 
   }
   return (
     <IonContent>
@@ -86,22 +194,30 @@ const ResumeContainer: React.FC<ContainerProps> = ({
               value={schedule}
               placeholder="En que horario desea su pedido"
               onIonChange={(e) => {
-                setSchedule(e.detail.value);
-                if (e.detail.value === "rightNow" && !flagExtraCharge) {
-                  setShowAlert(true);
-                } 
+                e.preventDefault();
+                deliverySchedule(e.detail.value);
               }}
             >
-              <IonSelectOption value="Mañana">
-                {today.getHours() <= 8 ? "Hoy" : "Mañana"} de 9 am a 10 am
+              <IonSelectOption>
+                {today.getHours() <= openHour - 1
+                  ? `Hoy de ${openHour}:00  a ${openHour + 1}:00 `
+                  : `${tomorrow} de ${openHour}:00  a ${openHour + 1}:00 `}{" "}
               </IonSelectOption>
-              <IonSelectOption value="Tarde">
-                {today.getHours() <= 12 ? "Hoy" : "Mañana"} de 1 pm a 2 pm{" "}
+              <IonSelectOption>
+                {today.getHours() <= openHour + 4
+                  ? `Hoy de ${openHour + 4}:00  a ${openHour + 5}:00 `
+                  : `${tomorrow} de ${openHour + 4}:00  a ${
+                      openHour + 5
+                    }:00 `}{" "}
               </IonSelectOption>
-              <IonSelectOption value="Noche">
-                {today.getHours() <= 16 ? "Hoy" : "Mañana"} de 5 pm a 6 pm{" "}
+              <IonSelectOption>
+                {today.getHours() <= closeHour - 1
+                  ? `Hoy de ${closeHour - 1}:00  a ${closeHour}:00 `
+                  : `${tomorrow} de ${closeHour - 1}:00  a ${closeHour}:00 `}
               </IonSelectOption>
-              <IonSelectOption value="rightNow">Ahora mismo</IonSelectOption>
+              {flagDeliveryRighNow ? (
+                <IonSelectOption value="rightNow">Ahora mismo</IonSelectOption>
+              ) : null}
             </IonSelect>
           </IonItemSliding>
         </IonItemGroup>
@@ -112,6 +228,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             value={paymentMethod}
             placeholder="Select One"
             onIonChange={(e) => {
+              paymentMethod !== "efectivo"?setCashValue(0):
               setPaymentMethod(e.detail.value);
             }}
           >
@@ -157,7 +274,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
         <IonItem>
           <IonLabel class="ion-align-items-start">Productos:</IonLabel>
           <IonLabel class="ion-align-items-end ion-text-end">
-            ${order ? order.total.toLocaleString() : null}
+            ${order ? (order.total + order.salvings).toLocaleString() : null}
           </IonLabel>
         </IonItem>
         <IonItem>
@@ -182,23 +299,29 @@ const ResumeContainer: React.FC<ContainerProps> = ({
           </IonLabel>
         </IonItem>
         {flagExtraCharge ? (
-   <IonItemSliding >
+          <IonItemSliding>
             <IonItem>
               <IonLabel class=" ion-text-start">
                 <IonText>Cargo Extra:</IonText>
               </IonLabel>
               <IonLabel class=" ion-text-end">
-                ${extraCharge.toLocaleString()}
+                ${provider.deliveryExtraCharge.toLocaleString()}
               </IonLabel>
-              <IonItemOptions onIonSwipe={() => {setFlagExtraCharge(false);
-              setAddress(currentUser.neighborhood.address);
-              if(schedule==='rightNow'){
-                setSchedule('');
-              }}} >
-              <IonItemOption slot={"end"} expandable={true} color={'danger'} >Eliminar<IonIcon src={trashBinOutline} slot="start" ></IonIcon></IonItemOption>
-            </IonItemOptions>
+              <IonItemOptions
+                onIonSwipe={() => {
+                  setFlagExtraCharge(false);
+                  setAddress(currentUser.neighborhood.address);
+                  if (schedule === "rightNow") {
+                    setSchedule("");
+                  }
+                }}
+              >
+                <IonItemOption slot={"end"} expandable={true} color={"danger"}>
+                  Eliminar<IonIcon src={trashBinOutline} slot="start"></IonIcon>
+                </IonItemOption>
+              </IonItemOptions>
             </IonItem>
-            </IonItemSliding>
+          </IonItemSliding>
         ) : null}
       </div>
       <IonFooter>
@@ -207,14 +330,23 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             <IonTitle class=" ion-text-start">Total:</IonTitle>
             <IonTitle class=" ion-text-end">${total.toLocaleString()}</IonTitle>
           </IonItem>
-          <IonButton expand="full">Finalizar compra </IonButton>
+          <IonButton
+            onClick={() => {
+              if (order) {
+                submitOrder(order);
+              }
+            }}
+            expand="full"
+          >
+            Finalizar compra{" "}
+          </IonButton>
         </IonToolbar>
       </IonFooter>
       <IonAlert
         isOpen={showAlert}
         onDidDismiss={() => setShowAlert(false)}
         header={"Cargo extra"}
-        message={`Esta operacion tiene un cargo extra de ${extraCharge} ¿Desea continuar?`}
+        message={`Esta operacion tiene un cargo extra de ${provider.deliveryExtraCharge} ¿Desea continuar?`}
         buttons={[
           {
             text: "Cancelar",
@@ -223,6 +355,9 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             handler: () => {
               try {
                 setFlagExtraCharge(false);
+                if (schedule === "rightNow") {
+                  setSchedule("");
+                }
               } catch (e) {
                 console.error("ResumeContainer.handler: " + e);
               }
@@ -232,18 +367,34 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             text: "Confirmar",
             handler: async () => {
               try {
-                setextraCharge(3500);
                 setFlagExtraCharge(true);
-                if(schedule!=='rightNow'){
-                  setSchedule('');
+                if (schedule !== "rightNow") {
+                  setSchedule("");
                 }
-              
               } catch (e) {
                 console.error("ResumeContainer.handler: " + e);
               }
             },
           },
         ]}
+      />
+      <IonAlert
+        isOpen={showAlert2}
+        onDidDismiss={() => {alertMessage.includes("seguimiento")?closeModal(false):setShowAlert2(false)}}
+        header={alertHeader}
+        message={alertMessage}
+        buttons={alertMessage.includes("seguimiento")?
+        ([{
+          text: "Ok",
+          handler: async () => {
+            try {
+              closeModal(false);
+            } catch (e) {
+              console.error("ResumeContainer.handler: " + e);
+            }
+          },
+        }])
+        :["OK"]}
       />
     </IonContent>
   );

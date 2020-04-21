@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, useRef } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import {
   IonCard,
   IonProgressBar,
@@ -27,7 +27,6 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
 }) => {
   const [hiddenBar, setHiddenBar] = useState(false);
   const [loadData, setLoadData] = useState(false);
-  const user: any = useRef<any>(currentUser);
   const [showAlert1, setShowAlert1] = useState(false);
   const [message, setMessage] = useState("");
   const [productsArray, setProductsArray] = useState<any>([{}]);
@@ -35,14 +34,12 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
 
   const httpRequest = useCallback(async () => {
     try {
-      console.log(user.current._id);
       let pathUrl;
       if (segmentValue === "provider") {
         pathUrl = `${config.ProviderContext}/names/1`;
       } else {
         pathUrl = ""; //`/parkingspace/${segmentValue}`;
       }
-      console.log(pathUrl);
       await HttpRequest(pathUrl, "GET", "", true)
         .then(async (resultado: any) => {
           try {
@@ -53,7 +50,6 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
           } catch (e) {
             console.error(e);
           }
-          console.log(resultado);
           if (Array.isArray(resultado)) {
             setProductsArray(resultado);
           }
@@ -70,7 +66,6 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
           }
         });
     } catch (e) {
-      console.log(e.message);
       const { removeItem } = await Storages();
       await removeItem("token");
       await removeItem("user");

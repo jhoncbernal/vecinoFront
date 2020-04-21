@@ -60,13 +60,11 @@ export class FileFormPage extends React.Component<
       await axios
         .post(url, data, { headers: header })
         .then((response: any) => {
-          console.log(response);
           if (response.status === 200) {
             this.setState({ message: "Cartera actualizada" });
             this.setState({ hiddenbar: true });
             this.setState({ showToast1: true });
           } else {
-            console.log(response);
             const err = new Error();
             err.message =
               "sin conexion con el servidor " + response.ErrorMessage;

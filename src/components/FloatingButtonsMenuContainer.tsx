@@ -42,7 +42,6 @@ const FloatingButtonsMenu: React.FC<ContainerProps> = ({ history }) => {
                 setFabButtonValue('config');
                 setShowModal(true);
                 setdataModal(user.obj);
-                console.log(user.obj)
               } catch (e) { console.error(e) }
             }} color='primary'><IonIcon icon={buildSharp} /></IonFabButton>
             <IonFabButton color='primary'><IonIcon icon={cardSharp} onClick={() => {
@@ -61,10 +60,7 @@ const FloatingButtonsMenu: React.FC<ContainerProps> = ({ history }) => {
             {
               text: 'Cancelar',
               role: 'cancel',
-              cssClass: 'secondary',
-              handler: () => {
-                console.log('Confirm Cancel');
-              }
+              cssClass: 'secondary'
             },
             {
               text: 'Confirmar',

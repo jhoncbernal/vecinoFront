@@ -35,13 +35,14 @@ const PendingShoppingContainer: FC<componentData> = ({
         hideLoadBar(true);
       })
       .catch(e => {
-        console.log(e);
+        console.error(e);
       });
   };
   useEffect(() => {
     if (!bills) {
       getData();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bills]);
 
   const handlerSide = (request: any) => {

@@ -79,7 +79,6 @@ const ListContainer: React.FC<ContainerProps> = ({
                 <IonCardContent
                   onClick={async () => {
                     let pathUrl = `/${config.ProductContext}?providerId=${input._id}&pageSize=100`;
-                    console.log(pathUrl);
                     await HttpRequest(pathUrl, "GET", "", true).then(
                       async (resultado: any) => {
                         setProductsArray(resultado);
@@ -137,7 +136,7 @@ const ListContainer: React.FC<ContainerProps> = ({
       );
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
     throw e;
   }
 };

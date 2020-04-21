@@ -77,7 +77,6 @@ export class SignUpPage extends React.Component<
     let pathUrl = `${config.AllNeighborhoodsContext}`;
     await HttpRequest(pathUrl, "GET", "")
       .then((response: any) => {
-        console.log("ok");
         this.setState({ neighborhoods: response });
       })
       .catch((error) => console.error("Error:", error));
@@ -107,12 +106,10 @@ export class SignUpPage extends React.Component<
           uniquecode: this.state.uniquecode,
         };
         this.setState({ hiddenbar: false });
-        console.log(data);
         await HttpRequest(pathUrl, "POST", data)
           .then((response: any) => {
             this.setState({ hiddenbar: true });
             if (response.emailResult) {
-              console.log("ok");
               this.setState({
                 loginMessage:
                   "se envio un correo de verificacion de cuenta a " +

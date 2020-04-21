@@ -17,12 +17,10 @@ import {
   bicycleSharp,
   peopleSharp,
   barChartSharp,
-  stopCircle,
 } from "ionicons/icons";
 
 import ChartsContainer from "./Dashboard/ChartsContainer";
 import config from "../config";
-import CreateComponent from "./Product/CreateComponent";
 
 interface ContainerProps {
   history: any;
@@ -53,7 +51,6 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
           } catch (e) {
             console.error(e);
           }
-          console.log(resultado);
           if (Array.isArray(resultado)) {
             setUsersArray(resultado);
           } else {
@@ -80,7 +77,6 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
           }
         });
     } catch (e) {
-      console.log(e.message);
       const { removeItem } = await Storages();
       await removeItem("token");
       await removeItem("user");
@@ -141,9 +137,6 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
                 icon={bicycleSharp}
               />
             </IonSegmentButton>
-            <IonSegmentButton value="Product">
-              <IonIcon icon={stopCircle}></IonIcon>
-            </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
         {segmentValue ? (
@@ -155,16 +148,28 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
               ></ListContainer>
             ) : segmentValue === "dashboard" ? (
               <ChartsContainer></ChartsContainer>
-            ) : segmentValue === "Bikes" ? (
+            ) : segmentValue === "Cars" ? (
               <ParkingListContainer
                 history={history}
                 parkingType={segmentValue}
                 loaddata={loadData}
                 inputs={vehiclesArray}
               ></ParkingListContainer>
-            ) : (
-              <CreateComponent></CreateComponent>
-            )}
+            ) :  segmentValue === "Motorcycles" ? (
+              <ParkingListContainer
+                history={history}
+                parkingType={segmentValue}
+                loaddata={loadData}
+                inputs={vehiclesArray}
+              ></ParkingListContainer>
+            ): segmentValue === "Bikes" ? (
+              <ParkingListContainer
+                history={history}
+                parkingType={segmentValue}
+                loaddata={loadData}
+                inputs={vehiclesArray}
+              ></ParkingListContainer>
+            ):null}
           </>
         ) : (
           <></>
