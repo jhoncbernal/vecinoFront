@@ -57,11 +57,13 @@ const ListContainer: React.FC<ContainerProps> = ({
       });
   }, []);
   useEffect(() => {
+
+    
     async function fetchData() {
       await pushCartFirebase(currentUser._id, provider._id, shoppingCart);
     }
-    fetchData()
     changeShoppingCart(shoppingCart);
+    fetchData()
     
     getProducts(shoppingCart);
   }, [
@@ -239,6 +241,10 @@ const ListContainer: React.FC<ContainerProps> = ({
               products={shoppingCart}
               closeModal={(response: boolean) => {
                 accionTrigger(response);
+              }}
+              clearCart
+              ={(response: any) => {
+                setShoppingCart(response);
               }}
             ></ResumeContainer>
           ) : null}

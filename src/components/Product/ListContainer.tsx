@@ -453,7 +453,11 @@ const ListContainer: React.FC<ContainerProps> = ({
               provider={provider}
               oldShoppingCart={shoppingCart}
               currentUser={currentUser}
-              changeShoppingCart={handleShoppingCart}
+              changeShoppingCart
+              ={(response: any) => {
+                console.log(response);
+                setShoppingCart(response);
+              }}
               accionTrigger={(response: boolean) => {
                 handleCloseModal(response);
               }}

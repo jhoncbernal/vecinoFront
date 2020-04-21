@@ -41,6 +41,7 @@ interface ContainerProps {
   order: ShoppingOrder | undefined;
   provider: Provider;
   products: ShoppingProduct;
+  clearCart:any;
 }
 
 const ResumeContainer: React.FC<ContainerProps> = ({
@@ -49,6 +50,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
   order,
   provider,
   products,
+  clearCart,
 }) => {
   const today: Date = new Date();
   const numDayOfWeek: number = today.getDay();
@@ -89,7 +91,6 @@ const ResumeContainer: React.FC<ContainerProps> = ({
   let total = 0;
   const deliverySchedule = useCallback(
     (value) => {
-      console.log(value);
       setSchedule(value);
       if (value === "rightNow" && !flagExtraCharge) {
         setShowAlert(true);
@@ -109,13 +110,11 @@ const ResumeContainer: React.FC<ContainerProps> = ({
         setAlertMessage(
           `Por favor agrege una cantidad superior de efectivo con el cual va a pagar `
         );
-        setShowAlert2(true);
       } else if (!schedule) {
         setAlertHeader("Verificar");
         setAlertMessage(
           `Seleccione el horario en el cual el desea que el pedido sea enviado`
         );
-        setShowAlert2(true);
       } else {
         let data = {
           DeliverySchedule: schedule,
@@ -138,23 +137,23 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             console.log(currentUser._id, provider._id);
             if (currentUser._id && provider._id) {
               await pushProviderFirebase(response);
-              await pushCartFirebase(currentUser._id, provider._id, {});
             }
             setAlertHeader("Confirmacion de Orden");
             setAlertMessage(
               `su orden fue creada con el numero de seguimiento ${response.code}`
             );
-            
-            setShowAlert2(true);
-            closeModal(false)
-            console.log(response);
+            clearCart({})
+
           })
           .catch((error) => {
             console.log(error);
           });
+
+          
       }
+      setShowAlert2(true);
     },
-    [address, cashValue, closeModal, currentUser._id, currentUser.neighborhood.address, flagExtraCharge, paymentMethod, products, provider._id, provider.deliveryCharge, schedule, tip]
+    [address, cashValue, currentUser._id, currentUser.neighborhood.address, flagExtraCharge, paymentMethod, products, provider._id, provider.deliveryCharge, schedule, tip]
   );
 
   if (order) {
@@ -384,10 +383,21 @@ const ResumeContainer: React.FC<ContainerProps> = ({
       />
       <IonAlert
         isOpen={showAlert2}
-        onDidDismiss={() => setShowAlert2(false)}
+        onDidDismiss={() => {alertMessage.includes("seguimiento")?closeModal(false):setShowAlert2(false)}}
         header={alertHeader}
         message={alertMessage}
-        buttons={["OK"]}
+        buttons={alertMessage.includes("seguimiento")?
+        ([{
+          text: "Ok",
+          handler: async () => {
+            try {
+              closeModal(false);
+            } catch (e) {
+              console.error("ResumeContainer.handler: " + e);
+            }
+          },
+        }])
+        :["OK"]}
       />
     </IonContent>
   );
