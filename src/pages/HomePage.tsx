@@ -65,7 +65,6 @@ export class Home extends React.Component<
   async doRefresh(event: CustomEvent<RefresherEventDetail>) {
     try {
       setTimeout(() => {
-        console.log("Async operation has ended");
         event.detail.complete();
       }, 2000);
     } catch (e) {

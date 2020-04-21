@@ -101,7 +101,6 @@ const ResumeContainer: React.FC<ContainerProps> = ({
   const submitOrder = useCallback(
     async (order: ShoppingOrder) => {
       let newTotal = Number(tip) + order.total + provider.deliveryCharge;
-      console.log("cash", cashValue, "total", newTotal);
       if (
         (!cashValue || cashValue < newTotal) &&
         paymentMethod === "efectivo"
@@ -134,7 +133,6 @@ const ResumeContainer: React.FC<ContainerProps> = ({
         
         await HttpRequest(pathUrl, "POST", data, true)
           .then(async (response: Bill) => {
-            console.log(currentUser._id, provider._id);
             if (currentUser._id && provider._id) {
               await pushProviderFirebase(response);
             }
@@ -146,7 +144,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
 
           })
           .catch((error) => {
-            console.log(error);
+            console.error(error);
           });
 
           

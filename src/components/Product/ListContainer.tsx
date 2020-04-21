@@ -105,7 +105,6 @@ const ListContainer: React.FC<ContainerProps> = ({
     [inputs, searchText]
   );
   const handleCloseModal = (data: any) => {
-    console.log("data", data);
     if (!data) {
       setShowPopover(data);
     } else {
@@ -455,7 +454,6 @@ const ListContainer: React.FC<ContainerProps> = ({
               currentUser={currentUser}
               changeShoppingCart
               ={(response: any) => {
-                console.log(response);
                 setShoppingCart(response);
               }}
               accionTrigger={(response: boolean) => {

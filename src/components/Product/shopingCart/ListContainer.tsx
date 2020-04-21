@@ -49,11 +49,10 @@ const ListContainer: React.FC<ContainerProps> = ({
     }/productsPrice/1?productsIds=${JSON.stringify(shoppingCart)}`;
     await HttpRequest(pathUrl, "GET", "", true)
       .then(async (response: ShoppingOrder) => {
-        console.log(response);
         setShoppingProducts(response);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   }, []);
   useEffect(() => {

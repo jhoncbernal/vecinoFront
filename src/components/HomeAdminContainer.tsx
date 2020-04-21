@@ -51,7 +51,6 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
           } catch (e) {
             console.error(e);
           }
-          console.log(resultado);
           if (Array.isArray(resultado)) {
             setUsersArray(resultado);
           } else {
@@ -78,7 +77,6 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
           }
         });
     } catch (e) {
-      console.log(e.message);
       const { removeItem } = await Storages();
       await removeItem("token");
       await removeItem("user");

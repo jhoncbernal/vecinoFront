@@ -166,7 +166,7 @@ const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs }) => {
       );
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
     throw e;
   }
 };

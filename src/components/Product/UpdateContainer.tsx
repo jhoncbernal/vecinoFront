@@ -45,7 +45,6 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
       try {
         setbodyChange(true);
         body[property] = value;
-        console.log(body);
       } catch (e) {
         console.error(e);
       }
@@ -56,7 +55,6 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
     async (e: any) => {
       try {
         const { setObject } = Storages();
-        console.log(bodyChange);
         e.preventDefault();
         let pathUrl = `${config.AdminContext}/${dataModal._id}`;
         if (dataModal.roles.includes("ROLE_USER_ACCESS")) {
@@ -65,7 +63,6 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
           pathUrl = `${config.AdminContext}/${dataModal._id}`;
         }
         let data = body;
-        console.log(data);
         if (!bodyChange) {
           setMessage("No se modifico ningun campo");
         } else {

@@ -55,7 +55,6 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
           } catch (e) {
             console.error(e);
           }
-          console.log(resultado);
           if (Array.isArray(resultado)) {
             setProductsArray(resultado);
           }
@@ -72,7 +71,6 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
           }
         });
     } catch (e) {
-      console.log(e.message);
       const { removeItem } = await Storages();
       await removeItem("token");
       await removeItem("user");

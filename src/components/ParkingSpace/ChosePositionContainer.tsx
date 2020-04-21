@@ -59,7 +59,6 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
         } else {
           data = body;
         }
-        console.log(data);
         if (!bodyChange && !(dataModal.available === "false")) {
           setMessage("No se modifico ningun campo");
         } else {
@@ -71,7 +70,7 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal }) => {
               dataModall.current = response.result.positions[0];
             })
             .catch(error => {
-              console.log(error);
+              console.error(error);
               throw error;
             });
         }

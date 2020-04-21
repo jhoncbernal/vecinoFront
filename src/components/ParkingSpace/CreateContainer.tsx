@@ -75,7 +75,6 @@ const CreateContainer: React.FC<ContainerProps> = ({ parkingType }) => {
               { rank: "Domingos", value: `${SuStart} a ${SuEnd}` }
             ]
           };
-          console.log(data);
           if (!data) {
             setMessage("Debe seleccionar el tipo de parqueadero");
           } else {
