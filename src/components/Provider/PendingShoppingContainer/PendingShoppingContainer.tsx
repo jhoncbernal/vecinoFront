@@ -42,6 +42,7 @@ const PendingShoppingContainer: FC<componentData> = ({
     if (!bills) {
       getData();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bills]);
 
   const handlerSide = (request: any) => {
