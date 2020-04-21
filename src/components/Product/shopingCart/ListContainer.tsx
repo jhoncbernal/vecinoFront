@@ -25,6 +25,7 @@ import {
   addSharp,
   cartOutline,
   informationOutline,
+  arrowBack,
 } from "ionicons/icons";
 import { pushCartFirebase } from "../../../config/firebase";
 import ResumeContainer from "../Order/ResumeContainer";
@@ -56,14 +57,12 @@ const ListContainer: React.FC<ContainerProps> = ({
       });
   }, []);
   useEffect(() => {
-
-    
     async function fetchData() {
       await pushCartFirebase(currentUser._id, provider._id, shoppingCart);
     }
     changeShoppingCart(shoppingCart);
-    fetchData()
-    
+    fetchData();
+
     getProducts(shoppingCart);
   }, [
     changeShoppingCart,
@@ -78,10 +77,17 @@ const ListContainer: React.FC<ContainerProps> = ({
       <IonToolbar>
         <IonSegment
           onIonChange={(e) => {
-            setSegmentValue(e.detail.value);
+            if (e.detail.value === "close") {
+              accionTrigger(false);
+            } else {
+              setSegmentValue(e.detail.value);
+            }
           }}
           value={segmentValue}
         >
+          <IonSegmentButton value="close">
+            <IonIcon icon={arrowBack} />
+          </IonSegmentButton>
           <IonSegmentButton value="shoppingCart">
             <IonIcon icon={cartOutline} />
           </IonSegmentButton>
