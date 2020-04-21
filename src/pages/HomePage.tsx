@@ -8,7 +8,7 @@ import {
   IonImg,
   IonToolbar,
   IonText,
-  IonAlert,
+  IonAlert
 } from "@ionic/react";
 import HomeAdminPageContainer from "../components/HomeAdminContainer";
 import HomeProviderContainer from "../components/HomeProviderContainer";
@@ -35,9 +35,9 @@ export class Home extends React.Component<
     this.state = {
       currentUser: "",
       pendingShoppingCar: {},
-      showAlert:false,
+      showAlert: false,
       errorMessage: "",
-      thishistory: history,
+      thishistory: history
     };
     this.preValues();
     this.handlerDataSide = this.handlerDataSide.bind(this);
@@ -49,16 +49,14 @@ export class Home extends React.Component<
       const user: any = await getObject("user");
 
       if (!user) {
-      
         let message = "sus credenciales vencieron";
-        this.setState({'errorMessage':message});
-        this.setState({'showAlert':true});
+        this.setState({ errorMessage: message });
+        this.setState({ showAlert: true });
         this.state.thishistory.push("/login");
       } else {
         this.setState({ currentUser: user.obj });
       }
     } catch (e) {
-      
       console.error(e);
     }
   }
@@ -76,7 +74,7 @@ export class Home extends React.Component<
   renderSideMenu(roles: string) {
     if (roles && roles.includes(config.RolProviderAccess)) {
       return (
-        <SideMenuCar datSide={this.state.pendingShoppingCar}></SideMenuCar>
+        <SideMenuCar dataSide={this.state.pendingShoppingCar}></SideMenuCar>
       );
     }
   }
@@ -126,7 +124,7 @@ export class Home extends React.Component<
               ></HomeUserContainer>
             )
           ) : null}
-          {this.renderSideMenu(this.state.currentUser.roles)}
+          <IonContent id="auxContent"></IonContent>
           <IonRefresher slot="fixed" onIonRefresh={this.doRefresh}>
             <IonRefresherContent
               color="primary"
@@ -139,12 +137,14 @@ export class Home extends React.Component<
         </IonContent>
         <IonAlert
           isOpen={this.state.showAlert}
-          onDidDismiss={() => this.setState({'showAlert':false})}
+          onDidDismiss={() => this.setState({ showAlert: false })}
           header={"Advertencia"}
           subHeader={"se produjo un error debido a que:"}
           message={this.state.errorMessage}
           buttons={["OK"]}
         />
+
+        {this.renderSideMenu(this.state.currentUser.roles)}
       </IonPage>
     );
   }
