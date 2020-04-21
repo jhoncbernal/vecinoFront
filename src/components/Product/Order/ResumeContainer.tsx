@@ -30,8 +30,13 @@ import {
 } from "../../../entities";
 import config from "../../../config";
 import { HttpRequest } from "../../../hooks/HttpRequest";
+import {
+  pushProviderFirebase,
+  pushCartFirebase,
+} from "../../../config/firebase";
 
 interface ContainerProps {
+  closeModal: any;
   currentUser: User;
   order: ShoppingOrder | undefined;
   provider: Provider;
@@ -39,6 +44,7 @@ interface ContainerProps {
 }
 
 const ResumeContainer: React.FC<ContainerProps> = ({
+  closeModal,
   currentUser,
   order,
   provider,
@@ -95,8 +101,10 @@ const ResumeContainer: React.FC<ContainerProps> = ({
     async (order: ShoppingOrder) => {
       let newTotal = Number(tip) + order.total + provider.deliveryCharge;
       console.log("cash", cashValue, "total", newTotal);
-      if ((!cashValue  || (cashValue < newTotal))&& paymentMethod === "efectivo")
-       {
+      if (
+        (!cashValue || cashValue < newTotal) &&
+        paymentMethod === "efectivo"
+      ) {
         setAlertHeader("Verificar");
         setAlertMessage(
           `Por favor agrege una cantidad superior de efectivo con el cual va a pagar `
@@ -112,23 +120,33 @@ const ResumeContainer: React.FC<ContainerProps> = ({
         let data = {
           DeliverySchedule: schedule,
           MethodOfPayment: paymentMethod,
-          cashValue: cashValue,
           products: products,
           provider: provider._id,
           flagExtraCharge: flagExtraCharge,
-          propina: tip,
+          tip: Number(tip),
         };
         if (address !== currentUser.neighborhood.address) {
           data = { ...data, ...{ otherAddress: address } };
         }
+        if (paymentMethod === "efectivo") {
+          data = { ...data, ...{ cashValue: cashValue } };
+        }
         let pathUrl = `${config.BillsContext}`;
+        
         await HttpRequest(pathUrl, "POST", data, true)
           .then(async (response: Bill) => {
+            console.log(currentUser._id, provider._id);
+            if (currentUser._id && provider._id) {
+              await pushProviderFirebase(response);
+              await pushCartFirebase(currentUser._id, provider._id, {});
+            }
             setAlertHeader("Confirmacion de Orden");
-              setAlertMessage(
-                `su orden fue creada con el numero de seguimiento ${response.code}`
-              );
-              setShowAlert2(true);
+            setAlertMessage(
+              `su orden fue creada con el numero de seguimiento ${response.code}`
+            );
+            
+            setShowAlert2(true);
+            closeModal(false)
             console.log(response);
           })
           .catch((error) => {
@@ -136,22 +154,14 @@ const ResumeContainer: React.FC<ContainerProps> = ({
           });
       }
     },
-    [
-      address,
-      cashValue,
-      currentUser.neighborhood.address,
-      flagExtraCharge,
-      paymentMethod,
-      products,
-      provider._id,
-      provider.deliveryCharge,
-      schedule,
-      tip,
-    ]
+    [address, cashValue, closeModal, currentUser._id, currentUser.neighborhood.address, flagExtraCharge, paymentMethod, products, provider._id, provider.deliveryCharge, schedule, tip]
   );
 
   if (order) {
     total = Number(tip) + order.total + provider.deliveryCharge;
+  }
+  if(flagExtraCharge){
+    total=total+provider.deliveryExtraCharge; 
   }
   return (
     <IonContent>
@@ -222,6 +232,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             value={paymentMethod}
             placeholder="Select One"
             onIonChange={(e) => {
+              paymentMethod !== "efectivo"?setCashValue(0):
               setPaymentMethod(e.detail.value);
             }}
           >
@@ -325,7 +336,6 @@ const ResumeContainer: React.FC<ContainerProps> = ({
           </IonItem>
           <IonButton
             onClick={() => {
-              
               if (order) {
                 submitOrder(order);
               }
@@ -377,7 +387,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
         onDidDismiss={() => setShowAlert2(false)}
         header={alertHeader}
         message={alertMessage}
-        buttons={['OK']}
+        buttons={["OK"]}
       />
     </IonContent>
   );

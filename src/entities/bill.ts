@@ -14,6 +14,7 @@ export interface Bill {
   otherAddress: string;
   products: ProductBill;
   user: {
+    _id:string;
     firstName: string;
     phone: number;
     email: string;
@@ -22,6 +23,7 @@ export interface Bill {
     neighborhood: string;
   };
   provider: {
+    _id:string;
     firstName: string;
     documentId: number;
     address: string;
