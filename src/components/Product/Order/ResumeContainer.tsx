@@ -31,8 +31,7 @@ import {
 import config from "../../../config";
 import { HttpRequest } from "../../../hooks/HttpRequest";
 import {
-  pushProviderFirebase,
-  pushCartFirebase,
+  pushProviderFirebase
 } from "../../../config/firebase";
 
 interface ContainerProps {
@@ -151,7 +150,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
       }
       setShowAlert2(true);
     },
-    [address, cashValue, currentUser._id, currentUser.neighborhood.address, flagExtraCharge, paymentMethod, products, provider._id, provider.deliveryCharge, schedule, tip]
+    [address, cashValue, clearCart, currentUser._id, currentUser.neighborhood.address, flagExtraCharge, paymentMethod, products, provider._id, provider.deliveryCharge, schedule, tip]
   );
 
   if (order) {

@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, useRef } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import {
   IonCard,
   IonProgressBar,
@@ -27,7 +27,6 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
 }) => {
   const [hiddenBar, setHiddenBar] = useState(false);
   const [loadData, setLoadData] = useState(false);
-  const user: any = useRef<any>(currentUser);
   const [showAlert1, setShowAlert1] = useState(false);
   const [message, setMessage] = useState("");
   const [productsArray, setProductsArray] = useState<any>([{}]);

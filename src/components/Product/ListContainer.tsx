@@ -62,11 +62,7 @@ const ListContainer: React.FC<ContainerProps> = ({
     setShowModal(true);
     setDataModal(newProduct);
   };
-  function handleShoppingCart(data: any) {
 
-      setShoppingCart(data);
-
-  }
 
   const handleSearch = useCallback(
     async (e: any) => {
