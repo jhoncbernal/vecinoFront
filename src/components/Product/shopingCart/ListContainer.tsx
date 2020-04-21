@@ -198,7 +198,7 @@ const ListContainer: React.FC<ContainerProps> = ({
       </IonFooter>
                   </div>
                   ) : segmentValue === "finishOrder" ? (
-                    <ResumeContainer currentUser={currentUser} provider={provider} order={shoppingProducts}></ResumeContainer>
+                    <ResumeContainer currentUser={currentUser} provider={provider} order={shoppingProducts} products={shoppingCart}></ResumeContainer>
                   ) : null}
                 </IonContent>
               ) : null}

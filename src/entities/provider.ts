@@ -15,6 +15,7 @@ export interface Provider {
   resetPasswordExpires?: string;
   isVerified?: string;
   deliveryCharge: number;
+  deliveryExtraCharge: number;
   schedule: [
     {
       days: Array<string>;
@@ -22,6 +23,7 @@ export interface Provider {
       close: Date;
     }
   ];
+  billType:string;
   createdAt: Date;
   updatedAt: Date;
 }

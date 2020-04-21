@@ -32,6 +32,7 @@ import CreateComponent from "./CreateComponent";
 import config from "../../config";
 import { refUserCar } from "../../config/firebase";
 import ShoppingListContainer from "./shopingCart/ListContainer";
+import { Product } from "../../entities";
 interface ContainerProps {
   [id: string]: any;
 }
@@ -41,7 +42,7 @@ const ListContainer: React.FC<ContainerProps> = ({
   inputs,
   currentUser,
   provider,
-  refreshData,
+  refreshData
 }) => {
   let productCart: any = {};
   const [searchText, setSearchText] = useState("");
@@ -69,6 +70,7 @@ const ListContainer: React.FC<ContainerProps> = ({
   function handleShoppingCart(data: any) {
     setShoppingCart(data);
   }
+
   const handleSearch = useCallback(
     async (e: any) => {
       try {
@@ -489,21 +491,5 @@ const ListContainer: React.FC<ContainerProps> = ({
     throw e;
   }
 };
-interface Product {
-  _id?: string;
-  enabled: boolean;
-  keyImage: string;
-  measureType: "Lb" | "Kg" | "Und" | "notSet";
-  price: number;
-  productName: string;
-  productType: string;
-  provider: string;
-  totalAmount: number;
-  urlImage: string;
-  code?: number;
-  brand?: string;
-  features?: string;
-  promotionPrice?: number;
-}
 
 export default ListContainer;
