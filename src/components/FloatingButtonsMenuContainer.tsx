@@ -28,8 +28,9 @@ import BestListContainer from "./User/BestListContainer";
 import { updateToken } from "../hooks/UpdateToken";
 import config from "../config";
 import { User } from "../entities";
+import * as H from 'history';
 interface ContainerProps {
-  history: any;
+  history: H.History;
   currentUser: User;
 }
 const FloatingButtonsMenu: React.FC<ContainerProps> = ({

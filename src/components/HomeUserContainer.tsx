@@ -15,9 +15,9 @@ import { barChartSharp, pricetagsSharp } from "ionicons/icons";
 
 import ChartsContainer from "./Dashboard/ChartsContainer";
 import config from "../config";
-
+import * as H from 'history';
 interface ContainerProps {
-  history: any;
+  history: H.History;
   currentUser: any;
 }
 

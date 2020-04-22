@@ -18,8 +18,9 @@ import {
 } from "@ionic/react";
 import { documentTextOutline } from "ionicons/icons";
 import axios from "axios";
+import * as H from 'history';
 export class FileFormPage extends React.Component<
-  { history: any },
+  { history: H.History },
   {
     file: any;
     showToast1: boolean;
