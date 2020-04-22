@@ -16,14 +16,29 @@ export interface Provider {
   isVerified?: string;
   deliveryCharge: number;
   deliveryExtraCharge: number;
-  schedule: [
-    {
-      days: Array<string>;
-      open: Date;
-      close: Date;
-    }
-  ];
-  billType:string;
+  schedule: [ProviderSchedule];
+  billType: string;
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface ProviderListItem {
+  _id?: string;
+  firstName: string;
+  uniquecode: string;
+  category: string;
+  deliveryCharge: number;
+  deliveryExtraCharge: number;
+  schedule: [ProviderSchedule];
+  billType: string;
+  urlImage: string;
+}
+
+interface ProviderSchedule
+  {
+    days: Array<string>;
+    open: Date;
+    close: Date;
+  }
+
+  

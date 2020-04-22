@@ -92,7 +92,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                 >
                   <IonItem>
                     <IonThumbnail class="productImage" slot="start">
-                      <IonImg src={input.urlImage ? input.urlImage : "https://vecino.s3.amazonaws.com/1587059420099.jpeg"} />
+                      <IonImg src={input.urlImage ? input.urlImage : null} />
                     </IonThumbnail>
                     <IonLabel>
                       <h1>{input ? input.category : ""}</h1>
