@@ -139,7 +139,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             setAlertMessage(
               `su orden fue creada con el numero de seguimiento ${response.code}`
             );
-            clearCart({})
+            clearCart()
 
           })
           .catch((error) => {

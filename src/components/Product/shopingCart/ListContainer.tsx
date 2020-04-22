@@ -247,9 +247,12 @@ const ListContainer: React.FC<ContainerProps> = ({
               closeModal={(response: boolean) => {
                 accionTrigger(response);
               }}
-              clearCart
-              ={(response: any) => {
-                setShoppingCart(response);
+              clearCart={() => {
+                
+                setShoppingCart(
+                 {}
+                );
+              
               }}
             ></ResumeContainer>
           ) : null}
