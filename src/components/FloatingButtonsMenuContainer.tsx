@@ -1,21 +1,45 @@
-import React, { useState } from 'react';
-import { IonContent, IonFab, IonFabButton, IonIcon, IonModal, IonFabList, IonAlert, IonText, IonCard, IonCardContent, } from '@ionic/react';
-import { menuSharp, buildSharp, carSportSharp, logOutSharp, cardSharp, documentTextSharp, arrowBackOutline } from 'ionicons/icons';
-import { Storages } from '../hooks/Storage'
-import { FileFormPage } from './File/FileFormContainer';
-import UpdateUser from './User/UpdateContainer';
+import React, { useState } from "react";
+import {
+  IonContent,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  IonModal,
+  IonFabList,
+  IonAlert,
+  IonText,
+  IonCard,
+  IonCardContent,
+} from "@ionic/react";
+import {
+  menuSharp,
+  buildSharp,
+  carSportSharp,
+  logOutSharp,
+  cardSharp,
+  documentTextSharp,
+  arrowBackOutline,
+} from "ionicons/icons";
+import { Storages } from "../hooks/Storage";
+import { FileFormPage } from "./File/FileFormContainer";
+import UpdateUser from "./User/UpdateContainer";
 
-import BestListContainer from './User/BestListContainer';
-import { updateToken } from '../hooks/UpdateToken';
+import BestListContainer from "./User/BestListContainer";
+import { updateToken } from "../hooks/UpdateToken";
+import config from "../config";
+import { User } from "../entities";
 interface ContainerProps {
   history: any;
+  currentUser: User;
 }
-const FloatingButtonsMenu: React.FC<ContainerProps> = ({ history }) => {
+const FloatingButtonsMenu: React.FC<ContainerProps> = ({
+  history,
+  currentUser,
+}) => {
   const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [dataModal, setdataModal] = useState();
-  const [fabButtonValue, setFabButtonValue] = useState('');
-
+  const [fabButtonValue, setFabButtonValue] = useState("");
 
   return (
     <>
@@ -25,79 +49,117 @@ const FloatingButtonsMenu: React.FC<ContainerProps> = ({ history }) => {
             <IonIcon icon={menuSharp} />
           </IonFabButton>
           <IonFabList side="bottom">
-            <IonFabButton color='primary' onClick={() => {
-              setFabButtonValue('bestPoints');
-              setShowModal(true);
-            }}><IonIcon icon={carSportSharp} /></IonFabButton>
-            <IonFabButton onClick={() => { setFabButtonValue('document'); setShowModal(true) }} color='primary'><IonIcon icon={documentTextSharp} /></IonFabButton>
-            <IonFabButton onClick={async () => {
-              try {
-                const { getObject } = await Storages();
-                const user: any = await getObject('user');
-                if (!user) {
-                  const err = new Error();
-                  err.message = 'sus credenciales vencieron';
-                  throw err;
-                }
-                setFabButtonValue('config');
-                setShowModal(true);
-                setdataModal(user.obj);
-              } catch (e) { console.error(e) }
-            }} color='primary'><IonIcon icon={buildSharp} /></IonFabButton>
-            <IonFabButton color='primary'><IonIcon icon={cardSharp} onClick={() => {
-              setFabButtonValue('payment');
-              setShowModal(true);
-            }} /></IonFabButton>
-            <IonFabButton color='dark' onClick={() => setShowAlert(true)} ><IonIcon color='primary' icon={logOutSharp} /></IonFabButton>
+            {currentUser.roles ? (
+              currentUser.roles.includes(config.RolAdminAccess) ? (
+                <>
+                  <IonFabButton
+                    color="primary"
+                    onClick={() => {
+                      setFabButtonValue("bestPoints");
+                      setShowModal(true);
+                    }}
+                  >
+                    <IonIcon icon={carSportSharp} />
+                  </IonFabButton>
+                  <IonFabButton
+                    onClick={() => {
+                      setFabButtonValue("document");
+                      setShowModal(true);
+                    }}
+                    color="primary"
+                  >
+                    <IonIcon icon={documentTextSharp} />
+                  </IonFabButton>
+                  <IonFabButton
+                    color="primary"
+                  >
+                    <IonIcon
+                      icon={cardSharp}
+                      onClick={() => {
+                        setFabButtonValue("payment");
+                        setShowModal(true);
+                      }}
+                    />
+                  </IonFabButton>
+                </>
+              ) : null
+            ) : null}
+            <IonFabButton
+                    onClick={() => {
+                      setFabButtonValue("config");
+                      setShowModal(true);
+                      setdataModal(currentUser);
+                    }}
+                    color="primary"
+                  >
+                    <IonIcon icon={buildSharp} />
+                  </IonFabButton>
+            <IonFabButton color="dark" onClick={() => setShowAlert(true)}>
+              <IonIcon color="primary" icon={logOutSharp} />
+            </IonFabButton>
           </IonFabList>
         </IonFab>
         <IonAlert
           isOpen={showAlert}
           onDidDismiss={() => setShowAlert(false)}
-          header={'Cerrar sesión'}
-          message={'¿Esta seguro?'}
+          header={"Cerrar sesión"}
+          message={"¿Esta seguro?"}
           buttons={[
             {
-              text: 'Cancelar',
-              role: 'cancel',
-              cssClass: 'secondary'
+              text: "Cancelar",
+              role: "cancel",
+              cssClass: "secondary",
             },
             {
-              text: 'Confirmar',
+              text: "Confirmar",
               handler: async () => {
                 try {
-                  updateToken('');
+                  updateToken("");
                   const { removeItem } = await Storages();
-                  await removeItem('token');
-                  await removeItem('user');
-                  await removeItem('fireToken');
-                  history.push(
-                    '/login'
-                  )
+                  await removeItem("token");
+                  await removeItem("user");
+                  await removeItem("fireToken");
+                  history.push("/login");
                 } catch (e) {
-                  console.error('HomePage.handler: ' + e)
+                  console.error("HomePage.handler: " + e);
                 }
-              }
-            }
+              },
+            },
           ]}
         />
       </div>
 
-      <IonModal backdropDismiss={false} isOpen={showModal} animated={true}  >
+      <IonModal backdropDismiss={false} isOpen={showModal} animated={true}>
         <IonContent>
-          {fabButtonValue === 'document'
-            ? (<FileFormPage history={history}></FileFormPage>)
-            : fabButtonValue === 'config' ? (<UpdateUser dataModal={dataModal}></UpdateUser>)
-              : fabButtonValue === 'bestPoints' ? (<BestListContainer dataModal={dataModal}></BestListContainer>)
-                : <IonCard disabled  ><IonCardContent><IonText color='primary'><h1>En el futuro aca podra realizar sus pagos de administracion</h1><p>Esperelo muy pronto!</p></IonText></IonCardContent></IonCard>
-          }
-
+          {fabButtonValue === "document" ? (
+            <FileFormPage history={history}></FileFormPage>
+          ) : fabButtonValue === "config" ? (
+            <UpdateUser dataModal={dataModal}></UpdateUser>
+          ) : fabButtonValue === "bestPoints" ? (
+            <BestListContainer dataModal={dataModal}></BestListContainer>
+          ) : fabButtonValue === "payment" ? (
+            <IonCard disabled>
+              <IonCardContent>
+                <IonText color="primary">
+                  <h1>
+                    En el futuro aca podra realizar sus pagos de administracion
+                  </h1>
+                  <p>Esperelo muy pronto!</p>
+                </IonText>
+              </IonCardContent>
+            </IonCard>
+          ) : null}
         </IonContent>
         <IonFab vertical="bottom" horizontal="start" slot="fixed">
-          <IonFabButton onClick={async () => {
-            setShowModal(false); setdataModal(false);
-            history.goForward();
-          }}><IonIcon icon={arrowBackOutline} /></IonFabButton>
+          <IonFabButton
+            onClick={async () => {
+              setShowModal(false);
+              setdataModal(false);
+              history.goForward();
+            }}
+          >
+            <IonIcon icon={arrowBackOutline} />
+          </IonFabButton>
         </IonFab>
       </IonModal>
     </>

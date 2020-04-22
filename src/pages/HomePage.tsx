@@ -102,11 +102,13 @@ export class Home extends React.Component<
           </IonToolbar>
           <FloatingButtonsMenuContainer
             history={history}
+            currentUser={this.state.currentUser}
           ></FloatingButtonsMenuContainer>
           {this.state.currentUser.roles ? (
             this.state.currentUser.roles.includes(config.RolAdminAccess) ? (
               <HomeAdminPageContainer
                 history={history}
+                
               ></HomeAdminPageContainer>
             ) : this.state.currentUser.roles.includes(
                 config.RolProviderAccess
