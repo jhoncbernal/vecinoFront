@@ -11,7 +11,7 @@ import {
 import { HttpRequest } from "../hooks/HttpRequest";
 import ListContainer from "./Product/ListContainer";
 import { Storages } from "../hooks/Storage";
-import { barChartSharp, pricetagsSharp, pricetag } from "ionicons/icons";
+import { barChartSharp, pricetagsSharp, time } from "ionicons/icons";
 
 import ChartsContainer from "./Dashboard/ChartsContainer";
 import config from "../config";
@@ -119,7 +119,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
               />
             </IonSegmentButton>
             <IonSegmentButton value="pendingShop">
-              <IonIcon class="icons-segment" size="medium" icon={pricetag} />
+              <IonIcon class="icons-segment" size="medium" icon={time} />
             </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
@@ -143,6 +143,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
             ) : (
               <PendingShoppingContainer
                 dataTrigger={handlerDataSideContainer}
+                currentUser={currentUser}
                 hideLoadBar={(response: boolean) => {
                   setHiddenBar(response);
                 }}

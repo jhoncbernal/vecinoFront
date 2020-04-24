@@ -137,6 +137,14 @@ ion-toolbar {
   --ion-color-tint: var(--ion-color-purple-tint);
 }
 
+:root {
+  --ion-color-blue-hole: #1e34c0;
+  --ion-color-blue-hole-rgb: 30, 52, 192;
+  --ion-color-blue-hole-contrast: #ffffff;
+  --ion-color-blue-hole-contrast-rgb: 255, 255, 255;
+  --ion-color-blue-hole-shade: #1a2ea9;
+  --ion-color-blue-hole-tint: #3548c6;
+}
 .ion-color-blue-hole {
   --ion-color-base: var(--ion-color-blue-hole);
   --ion-color-base-rgb: var(--ion-color-blue-hole-rgb);
@@ -144,15 +152,6 @@ ion-toolbar {
   --ion-color-contrast-rgb: var(--ion-color-blue-hole-contrast-rgb);
   --ion-color-shade: var(--ion-color-blue-hole-shade);
   --ion-color-tint: var(--ion-color-blue-hole-tint);
-}
-
-:root {
-  --ion-color-blue-hole: #29ad61;
-  --ion-color-blue-hole-rgb: 41, 173, 97;
-  --ion-color-blue-hole-contrast: #ffffff;
-  --ion-color-blue-hole-contrast-rgb: 255, 255, 255;
-  --ion-color-blue-hole-shade: #249855;
-  --ion-color-blue-hole-tint: #3eb571;
 }
 
 :root {

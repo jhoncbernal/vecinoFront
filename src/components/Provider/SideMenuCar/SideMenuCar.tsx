@@ -22,24 +22,24 @@ import {
   IonButtons
 } from "@ionic/react";
 import style from "./style.module.css";
-import { Product } from "../../../entities";
+import { Product, Bill } from "../../../entities";
 import { HttpRequest } from "../../../hooks/HttpRequest";
 import config from "../../../config";
-import {
-  add,
-  remove,
-  informationCircleOutline
-} from "ionicons/icons";
+import { add, remove, informationCircleOutline } from "ionicons/icons";
 import { deepCopy } from "../../../hooks/DeepCopy";
 import { menuController } from "@ionic/core";
+import {
+  pushProviderFirebase,
+  pushStatesUserFirebase
+} from "../../../config/firebase";
 
 const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
   const prevProducts: Product[] = deepCopy(dataSide.products);
   const states: { [id: string]: any } = {
-    start: "gray",
-    prepare: "purple",
-    delivery: "blue-hole",
-    finished: "green-light",
+    start: { color: "gray", next: "prepare" },
+    prepare: { color: "purple", next: "delivery" },
+    delivery: { color: "blue-hole", next: "finished" },
+    finished: { color: "green-light", next: "" },
     cancel: "red-light"
   };
 
@@ -101,15 +101,73 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
     setBodyChanges({ ...bodyChanges, products: dataSide.products });
   };
 
-  const saveChanges = () => {
-    const pathUrl = `${config.BillsContext}/${dataSide._id}`;
-    HttpRequest(pathUrl, "PATCH", bodyChanges, true)
+  const updateFirebase = (bill: Bill) => {
+    pushProviderFirebase({
+      ...bill,
+      Total: sumFullBill(),
+      subTotal: sumProducts()
+    })
       .then(response => {
         menuController.close();
+        setBodyChanges(null);
       })
       .catch(error => {
         console.log("error", error);
       });
+  };
+
+  const updateStateFirebase = (states: any[]) => {
+    pushProviderFirebase({
+      ...dataSide,
+      state: states
+    })
+      .then(response => {
+        pushStatesUserFirebase(dataSide, states);
+        menuController.close();
+        setBodyChanges(null);
+      })
+      .catch(error => {
+        console.log("error", error);
+      });
+  };
+
+  const saveChanges = () => {
+    const pathUrl = `${config.BillsContext}/${dataSide._id}`;
+    HttpRequest(pathUrl, "PATCH", bodyChanges, true)
+      .then(response => {
+        updateFirebase(dataSide);
+      })
+      .catch(error => {
+        console.log("error", error);
+      });
+  };
+
+  const nextState = () => {
+    let mStates: any[] = [];
+    if (dataSide.state === "start") {
+      mStates.push({ state: "start" });
+      mStates.push({
+        state: "prepare",
+        start: new Date().toLocaleString("en-US", {
+          timeZone: "America/Bogota"
+        })
+      });
+    } else {
+      if (dataSide.state) {
+        const actualState =
+          states[dataSide.state[dataSide.state.length - 1].state];
+        mStates = [
+          ...dataSide.state,
+          {
+            state: actualState.next,
+            start: new Date().toLocaleString("en-US", {
+              timeZone: "America/Bogota"
+            })
+          }
+        ];
+      }
+    }
+    updateStateFirebase(mStates);
   };
 
   const renderList = (products: any) => {
@@ -261,11 +319,23 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
     );
   };
 
+  const getColorState = () => {
+    let color = "gray";
+    if (dataSide.state === "start") {
+      return color;
+    } else {
+      if (dataSide.state) {
+        color = states[dataSide.state[dataSide.state.length - 1].state].color;
+        return color;
+      }
+    }
+  };
+
   return (
     <>
       <IonMenu contentId="auxContent" side="end" swipeGesture={false}>
         <IonHeader>
-          <IonToolbar color={states[dataSide.state]}>
+          <IonToolbar color={getColorState()}>
             <IonTitle>Pedido No: {dataSide.code}</IonTitle>
             <IonButtons slot="end">
               <IonButton
@@ -291,7 +361,17 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
             </IonTitle>
           </IonHeader>
           {!bodyChanges ? (
-            <IonButton expand="full">Avanzar</IonButton>
+            <IonButton
+              color="primary"
+              expand="full"
+              onClick={nextState}
+              disabled={
+                dataSide.state &&
+                dataSide.state[dataSide.state.length - 1].state === "finished"
+              }
+            >
+              Avanzar
+            </IonButton>
           ) : (
             <IonButton onClick={saveChanges} color="warning" expand="full">
               Guardar

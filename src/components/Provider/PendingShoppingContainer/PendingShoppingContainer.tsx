@@ -8,25 +8,29 @@ import {
   IonText,
   IonCardContent,
   IonCard,
-  IonCardHeader
+  IonCardHeader,
 } from "@ionic/react";
 import style from "./style.module.css";
 import { menuController } from "@ionic/core";
 import config from "../../../config";
 import { HttpRequest } from "../../../hooks/HttpRequest";
+import { refProviderFirebase } from "../../../config/firebase";
+import { Bill } from "../../../entities";
 
 const PendingShoppingContainer: FC<componentData> = ({
   dataTrigger,
-  hideLoadBar
+  hideLoadBar,
+  currentUser
 }) => {
   const states: { [id: string]: any } = {
-    start: "gray",
-    prepare: "purple",
-    delivery: "blue-hole",
-    finished: "green-light",
+    start: { color: "gray", next: "prepare" },
+    prepare: { color: "purple", next: "delivery" },
+    delivery: { color: "blue-hole", next: "finished" },
+    finished: { color: "green-light", next: "" },
     cancel: "red-light"
   };
   const [bills, setBills] = useState<any[]>();
+
   const getData = () => {
     const pathUrl = `${config.BillsContext}/provider/1`;
     HttpRequest(pathUrl, "GET", "", true)
@@ -38,12 +42,18 @@ const PendingShoppingContainer: FC<componentData> = ({
         console.error(e);
       });
   };
+
   useEffect(() => {
-    if (!bills) {
-      getData();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bills]);
+    refProviderFirebase(currentUser._id).on("value", snapshot => {
+      setBills([]);
+      const pendingData: any[] = [];
+      snapshot.forEach(snap => {
+        pendingData.push(snap.val());
+        hideLoadBar(true);
+      });
+      setBills(pendingData);
+    });
+  }, [currentUser._id, hideLoadBar]);
 
   const handlerSide = (request: any) => {
     dataTrigger(request);
@@ -59,7 +69,7 @@ const PendingShoppingContainer: FC<componentData> = ({
               menuController.open();
             }}
           >
-            <IonCardHeader color={states[bill.state]}>
+            <IonCardHeader color={getColorState(bill)}>
               <IonText>Pedido No: {bill.code}</IonText>
               <IonText className={style["price-label"]}>{bill.Total}</IonText>
             </IonCardHeader>
@@ -75,13 +85,24 @@ const PendingShoppingContainer: FC<componentData> = ({
                 </IonItem>
                 <IonItem>
                   <IonLabel>Cantidad de productos</IonLabel>
-                  <IonText>{bill.products.length}</IonText>
+                  <IonText>{bill.products ? bill.products.length : 0}</IonText>
                 </IonItem>
               </IonList>
             </IonCardContent>
           </IonCard>
         );
       });
+    }
+  };
+  const getColorState = (bill: Bill) => {
+    let color = "gray";
+    if (bill.state === "start") {
+      return color;
+    } else {
+      if (bill.state) {
+        color = states[bill.state[bill.state.length - 1].state].color;
+        return color;
+      }
     }
   };
   return (
