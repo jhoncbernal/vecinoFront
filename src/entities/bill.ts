@@ -9,12 +9,12 @@ export interface Bill {
   cashValue: number;
   change: number;
   enabled: boolean;
-  state: string;
+  state: string | any[];
   code: string;
   otherAddress: string;
   products: ProductBill;
   user: {
-    _id:string;
+    _id: string;
     firstName: string;
     phone: number;
     email: string;
@@ -23,7 +23,7 @@ export interface Bill {
     neighborhood: string;
   };
   provider: {
-    _id:string;
+    _id: string;
     firstName: string;
     documentId: number;
     address: string;
