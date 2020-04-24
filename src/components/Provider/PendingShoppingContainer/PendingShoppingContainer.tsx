@@ -9,7 +9,6 @@ import {
   IonCardContent,
   IonCard,
   IonCardHeader,
-  useIonViewWillEnter
 } from "@ionic/react";
 import style from "./style.module.css";
 import { menuController } from "@ionic/core";
@@ -54,7 +53,7 @@ const PendingShoppingContainer: FC<componentData> = ({
       });
       setBills(pendingData);
     });
-  }, []);
+  }, [currentUser._id, hideLoadBar]);
 
   const handlerSide = (request: any) => {
     dataTrigger(request);
@@ -97,7 +96,7 @@ const PendingShoppingContainer: FC<componentData> = ({
   };
   const getColorState = (bill: Bill) => {
     let color = "gray";
-    if (bill.state == "start") {
+    if (bill.state === "start") {
       return color;
     } else {
       if (bill.state) {

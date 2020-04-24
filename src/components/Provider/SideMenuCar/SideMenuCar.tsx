@@ -144,7 +144,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
 
   const nextState = () => {
     let mStates: any[] = [];
-    if (dataSide.state == "start") {
+    if (dataSide.state === "start") {
       mStates.push({ state: "start" });
       mStates.push({
         state: "prepare",
@@ -321,7 +321,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
 
   const getColorState = () => {
     let color = "gray";
-    if (dataSide.state == "start") {
+    if (dataSide.state === "start") {
       return color;
     } else {
       if (dataSide.state) {
@@ -367,7 +367,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
               onClick={nextState}
               disabled={
                 dataSide.state &&
-                dataSide.state[dataSide.state.length - 1].state == "finished"
+                dataSide.state[dataSide.state.length - 1].state === "finished"
               }
             >
               Avanzar
