@@ -31,6 +31,7 @@ const PendingShoppingContainer: FC<componentData> = ({
   };
   const [bills, setBills] = useState<any[]>();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getData = () => {
     const pathUrl = `${config.BillsContext}/provider/1`;
     HttpRequest(pathUrl, "GET", "", true)

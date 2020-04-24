@@ -14,13 +14,13 @@ import {
   IonFooter,
   IonToolbar,
   IonTitle,
-  IonItemGroup,
   IonItemSliding,
   IonAlert,
   IonItemOptions,
   IonItemOption,
+  IonItemDivider,
 } from "@ionic/react";
-import { cashOutline, trashBinOutline } from "ionicons/icons";
+import { cashOutline, trashBinOutline, mapOutline, walletOutline } from "ionicons/icons";
 import {
   User,
   Provider,
@@ -165,14 +165,22 @@ const ResumeContainer: React.FC<ContainerProps> = ({
   return (
     <IonContent>
       <div>
-        <IonItem>
-          <IonLabel>Direccion:</IonLabel>
+      <IonToolbar color={'white'}>
+                <IonTitle color={'primary'}>
+                  Orden de compra
+                </IonTitle>
+              </IonToolbar>
+        <IonItemDivider>
+          <IonItem lines="none">
+        <IonIcon color="primary" icon={mapOutline} slot="start" />
+          <IonLabel position="floating">Direccion:</IonLabel>
           <IonInput
             disabled={!flagExtraCharge}
             type={"text"}
             value={address}
             onInput={(e: any) => setAddress(e.target.value)}
           ></IonInput>
+          </IonItem>
           <IonButton
             hidden={flagExtraCharge}
             color={"secondary"}
@@ -185,13 +193,12 @@ const ResumeContainer: React.FC<ContainerProps> = ({
           >
             cambiar
           </IonButton>
-        </IonItem>
+        </IonItemDivider>
 
-        <IonItemGroup>
-          <IonItemSliding class="ion-margin-start ion-align-items-start">
-            <IonLabel>Programar envio:</IonLabel>
-          </IonItemSliding>
-          <IonItemSliding class="ion-align-items-end">
+        <IonItemDivider>
+          <IonItem>
+        <IonIcon color="primary" icon={"assets/icons/deliveryTimeOutline.svg"} slot="start" />
+            <IonLabel position="stacked">Programar envio:</IonLabel>
             <IonSelect
               interface="popover"
               value={schedule}
@@ -222,10 +229,12 @@ const ResumeContainer: React.FC<ContainerProps> = ({
                 <IonSelectOption value="rightNow">Ahora mismo</IonSelectOption>
               ) : null}
             </IonSelect>
-          </IonItemSliding>
-        </IonItemGroup>
-        <IonItem>
-          <IonLabel>Metodo de Pago</IonLabel>
+            </IonItem>
+        </IonItemDivider>
+        <IonItemDivider>
+          <IonItem>
+        <IonIcon color="primary" src={walletOutline} slot="start" />
+          <IonLabel position="stacked">Metodo de Pago</IonLabel>
           <IonSelect
             interface="popover"
             value={paymentMethod}
@@ -238,9 +247,11 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             <IonSelectOption value="efectivo">Efectivo</IonSelectOption>
             <IonSelectOption value="tarjeta">Tarjeta</IonSelectOption>
           </IonSelect>
-        </IonItem>
+          </IonItem>
+        </IonItemDivider>
         {paymentMethod === "efectivo" ? (
-          <IonItem>
+          <IonItemDivider>
+             <IonItem>
             <IonIcon color="primary" icon={cashOutline} slot="start" />
             <IonLabel position="floating">
               Efectivo con el cual va a pagar
@@ -253,7 +264,8 @@ const ResumeContainer: React.FC<ContainerProps> = ({
               value={cashValue}
               onInput={(e: any) => setCashValue(e.target.value)}
             />
-          </IonItem>
+             </IonItem>
+          </IonItemDivider>
         ) : null}
         <IonItem>
           <IonText>

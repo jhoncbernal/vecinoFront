@@ -167,7 +167,7 @@ const ListContainer: React.FC<ContainerProps> = ({
         <>
           <IonToolbar color="primary">
             <IonTitle>
-              <h1>{provider.firstName}</h1>
+              <h1>{provider.firstName.toUpperCase()}</h1>
             </IonTitle>
           </IonToolbar>
 

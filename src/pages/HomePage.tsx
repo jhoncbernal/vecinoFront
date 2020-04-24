@@ -110,7 +110,7 @@ export class Home extends React.Component<
             <IonTitle>
               <IonImg class="img" src={"/assets/img/IconLogo.png"} />
               {this.state.currentUser.firstName ? (
-                <IonText color="primary">{`${this.state.currentUser.firstName}`}</IonText>
+                <IonText color="primary">{`${this.state.currentUser.firstName.charAt(0).toUpperCase()+ this.state.currentUser.firstName.slice(1)}`}</IonText>
               ) : (
                 <></>
               )}
