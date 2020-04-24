@@ -49,6 +49,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
             }
           } catch (e) {
             console.error(e);
+            history.go(0);
           }
           if (Array.isArray(resultado)) {
             setProductsArray(resultado);
@@ -114,6 +115,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
           <>
             {segmentValue === "provider" && hiddenBar ? (
               <ListContainer
+              history={history}
                 loaddata={loadData}
                 inputs={productsArray}
                 currentUser={currentUser}

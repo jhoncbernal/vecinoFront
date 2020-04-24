@@ -26,15 +26,18 @@ import {
   cartOutline,
   informationOutline,
   arrowBack,
+  trashBinOutline,
 } from "ionicons/icons";
 import { pushCartFirebase } from "../../../config/firebase";
 import ResumeContainer from "../Order/ResumeContainer";
-
+import * as H from 'history';
 interface ContainerProps {
   [id: string]: any;
+  history:H.History;
 }
 
 const ListContainer: React.FC<ContainerProps> = ({
+  history,
   accionTrigger,
   provider,
   oldShoppingCart,
@@ -54,8 +57,9 @@ const ListContainer: React.FC<ContainerProps> = ({
       })
       .catch((error) => {
         console.error(error);
+        history.go(0);
       });
-  }, []);
+  }, [history]);
   useEffect(() => {
     async function fetchData() {
       await pushCartFirebase(currentUser._id, provider._id, shoppingCart);
@@ -91,7 +95,7 @@ const ListContainer: React.FC<ContainerProps> = ({
           <IonSegmentButton value="shoppingCart">
             <IonIcon icon={cartOutline} />
           </IonSegmentButton>
-          <IonSegmentButton value="finishOrder">
+          <IonSegmentButton value="finishOrder"  disabled={shoppingProducts?shoppingProducts.total>0?false:true:true}>
             <IonIcon icon={informationOutline} />
           </IonSegmentButton>
         </IonSegment>
@@ -122,10 +126,43 @@ const ListContainer: React.FC<ContainerProps> = ({
                           shoppingProduct.price * shoppingProduct.quantity;
                         let percent = Math.round((1 - price / oldprice) * 100);
                         return (
+                          
                           <IonItem key={shoppingProduct._id}>
+                            
                             <IonThumbnail class="ion-align-self-start">
                               <IonImg src={shoppingProduct.urlImage}></IonImg>
                             </IonThumbnail>
+                            {shoppingProduct.quantity===0 ||
+                                  shoppingCart[shoppingProduct._id]===0?
+                                  <>
+                            <IonLabel class="ion-padding-self-start ion-margin-vertical">Producto Agotado</IonLabel>
+                            <IonButton
+                                color={"white"}
+                                class="cartBtn"
+                                size="small"
+                                fill="outline"
+                                onClick={() => {
+                                  let products = handleProducts(
+                                    shoppingProduct._id!,
+                                    "Less",
+                                    shoppingCart
+                                  );
+                                  setShoppingCart((prevState: any) => ({
+                                    ...prevState,
+                                    ...products,
+                                  }));
+                                }}
+                              >
+                                <IonIcon
+                                  size={"large"}
+                                  color={"primary"}
+                                  slot="icon-only"
+                                  icon={trashBinOutline}
+                                />
+                              </IonButton>
+                            </>
+                            :
+                            <>
                             <IonLabel class="ion-align-self-center">
                               <IonText color={"dark"}>
                                 <p>{shoppingProduct.productName}</p>
@@ -154,6 +191,9 @@ const ListContainer: React.FC<ContainerProps> = ({
                                   </IonButton>
                                 </IonLabel>
                               ) : null}
+                              {shoppingCart[shoppingProduct._id]===shoppingProduct.totalAmount?<IonLabel class="ion-align-self-start">
+                                <p>Max (Und) permitidas</p>
+                              </IonLabel>:null}
                             </IonLabel>
                             <IonLabel class="ion-align-self-end ion-margin-vertical">
                               <IonButton
@@ -194,7 +234,8 @@ const ListContainer: React.FC<ContainerProps> = ({
                                 size="small"
                                 fill="outline"
                                 onClick={() => {
-                                  let products = handleProducts(
+                                  if(shoppingCart[shoppingProduct._id]<shoppingProduct.totalAmount){
+                                    let products = handleProducts(
                                     shoppingProduct._id!,
                                     "Add",
                                     shoppingCart
@@ -202,7 +243,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                   setShoppingCart((prevState: any) => ({
                                     ...prevState,
                                     ...products,
-                                  }));
+                                  }));}
                                 }}
                               >
                                 <IonIcon
@@ -213,33 +254,18 @@ const ListContainer: React.FC<ContainerProps> = ({
                                 />
                               </IonButton>
                             </IonLabel>
+                            </>}
                           </IonItem>
                         );
                       }
                     )
                   : null}
               </IonList>
-              <IonFooter>
-                <IonToolbar>
-                  <IonTitle>
-                    SubTotal: $
-                    {shoppingProducts
-                      ? shoppingProducts.total.toLocaleString()
-                      : null}
-                  </IonTitle>
-                  <IonButton
-                    onClick={() => {
-                      setSegmentValue("finishOrder");
-                    }}
-                    expand="full"
-                  >
-                    Finalizar orden
-                  </IonButton>
-                </IonToolbar>
-              </IonFooter>
+           
             </div>
           ) : segmentValue === "finishOrder" ? (
             <ResumeContainer
+            history={history}
               currentUser={currentUser}
               provider={provider}
               order={shoppingProducts}
@@ -248,14 +274,31 @@ const ListContainer: React.FC<ContainerProps> = ({
                 accionTrigger(response);
               }}
               clearCart={() => {
-                
                 setShoppingCart(
                  {}
                 );
-              
               }}
             ></ResumeContainer>
-          ) : null}
+          ) : null}   
+          {segmentValue === "shoppingCart" ?<IonFooter>
+          <IonToolbar>
+            <IonTitle>
+              SubTotal: $
+              {shoppingProducts
+                ? shoppingProducts.total.toLocaleString()
+                : null}
+            </IonTitle>
+            <IonButton
+            disabled={shoppingProducts?shoppingProducts.total>0?false:true:true}
+              onClick={() => {
+                setSegmentValue("finishOrder");
+              }}
+              expand="full"
+            >
+              Finalizar orden
+            </IonButton>
+          </IonToolbar>
+        </IonFooter>:null}
         </IonContent>
       ) : null}
     </>

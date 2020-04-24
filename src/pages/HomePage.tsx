@@ -19,6 +19,7 @@ import HomeUserContainer from "../components/HomeUserContainer";
 import config from "../config";
 import SideMenuCar from "../components/Provider/SideMenuCar";
 import * as H from "history";
+
 export class Home extends React.Component<
   { history: H.History },
   {
@@ -36,7 +37,7 @@ export class Home extends React.Component<
       showAlert: false,
       errorMessage: "",
     };
-    this.preValues();
+   
     this.handlerDataSide = this.handlerDataSide.bind(this);
   }
 
@@ -44,7 +45,7 @@ export class Home extends React.Component<
     try {
       const { history } = this.props;
 
-      const { getObject } = await Storages();
+      const { getObject } =  Storages();
       const user: any = await getObject("user");
 
       if (!user) {
@@ -58,6 +59,9 @@ export class Home extends React.Component<
     } catch (e) {
       console.error(e);
     }
+  }
+  componentDidMount() {
+    this.preValues();
   }
   async doRefresh(event: CustomEvent<RefresherEventDetail>, his: H.History) {
     try {

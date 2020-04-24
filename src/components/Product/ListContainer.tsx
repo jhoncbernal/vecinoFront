@@ -29,11 +29,15 @@ import { refUserCar } from "../../config/firebase";
 import ShoppingListContainer from "./shopingCart/ListContainer";
 import { Product } from "../../entities";
 import handleProducts from "./shopingCart/handleProducts";
+import * as H from 'history';
 interface ContainerProps {
   [id: string]: any;
+  inputs:Array<Product>,
+  history:H.History;
 }
 
 const ListContainer: React.FC<ContainerProps> = ({
+  history,
   loadData,
   inputs,
   currentUser,
@@ -47,8 +51,10 @@ const ListContainer: React.FC<ContainerProps> = ({
   const [shoppingCart, setShoppingCart] = useState<any>({});
   const [flagRefresh, setFlagRefresh] = useState<boolean>(false);
   const [showPopover, setShowPopover] = useState(false);
+
+  var today = new Date().toLocaleString();;
   const addNewProduct = () => {
-    const newProduct: Product = {
+    const newProduct: any = {
       enabled: false,
       keyImage: "",
       measureType: "notSet",
@@ -96,9 +102,10 @@ const ListContainer: React.FC<ContainerProps> = ({
         setFlagRefresh(true);
       } catch (e) {
         console.error(e);
+        history.go(0);
       }
     },
-    [inputs, searchText]
+    [history, inputs, searchText]
   );
   const handleCloseModal = (data: any) => {
     if (!data) {
@@ -197,7 +204,6 @@ const ListContainer: React.FC<ContainerProps> = ({
               handleSearch(e);
             }}
             showCancelButton="always"
-            hidden={!loadData}
           ></IonSearchbar>
           {renderAddButton()}
           {Object.keys(data).map((category: any, index) => {
@@ -214,7 +220,11 @@ const ListContainer: React.FC<ContainerProps> = ({
                 <IonToolbar>
                   <IonTitle>{category}</IonTitle>
                 </IonToolbar>
-                {data[category].map((input: any, index: number) => {
+                {data[category].map((input: Product, index: number) => {
+                  let DatePromotion:string='';
+                  if(input.promotionExpires){
+                    DatePromotion=new Date(input.promotionExpires).toLocaleString();;
+                }
                   if (!input.productName) {
                     return (
                       <IonCard key={index}>
@@ -263,7 +273,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                           <IonText color={"dark"}>
                             <h2>
                               <strong>
-                                {!input.promotionPrice ? (
+                                {!(input.promotionPrice&&  DatePromotion>=today) ? (
                                   input.price.toLocaleString()
                                 ) : input.promotionPrice ? (
                                   <s>{input.price.toLocaleString()}</s>
@@ -273,7 +283,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                               </strong>
                             </h2>
                             {input ? (
-                              input.promotionPrice ? (
+                              (input.promotionPrice&&  DatePromotion>=today) ? (
                                 <IonText>
                                   <h2 color="dark">
                                     Precio de Oferta:{" "}
@@ -345,7 +355,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                   shoppingCart[`${input._id}`] ||
                                 input.totalAmount !== 0
                               ) {
-                                let products = handleProducts(input._id, "Add",shoppingCart);
+                                let products = handleProducts(input._id?input._id:'', "Add",shoppingCart);
                                 setShoppingCart((prevState: any) => ({
                                   ...prevState,
                                   ...products,
@@ -363,7 +373,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                               size={"small"}
                               fill="outline"
                               onClick={() => {
-                                let products = handleProducts(input._id, "Less",shoppingCart);
+                                let products = handleProducts(input._id?input._id:'', "Less",shoppingCart);
                                 setShoppingCart((prevState: any) => ({
                                   ...prevState,
                                   ...products,
@@ -396,7 +406,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                   input.totalAmount >
                                   shoppingCart[`${input._id}`]
                                 ) {
-                                  let products = handleProducts(input._id, "Add",shoppingCart);
+                                  let products = handleProducts(input._id?input._id:'', "Add",shoppingCart);
                                   setShoppingCart((prevState: any) => ({
                                     ...prevState,
                                     ...products,
@@ -445,6 +455,7 @@ const ListContainer: React.FC<ContainerProps> = ({
             id={"modal"}
           >
             <ShoppingListContainer
+            history={history}
               provider={provider}
               oldShoppingCart={shoppingCart}
               currentUser={currentUser}

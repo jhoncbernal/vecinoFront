@@ -13,5 +13,6 @@ export interface Product {
   brand?: string;
   features?: string;
   promotionPrice?: number;
+  promotionExpires:Date;
   quantity?: number;
 }

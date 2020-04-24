@@ -20,13 +20,16 @@ import { arrowBackOutline } from "ionicons/icons";
 import ListContainerProduct from "../Product/ListContainer";
 import { HttpRequest } from "../../hooks/HttpRequest";
 import config from "../../config";
+import * as H from 'history';
 interface ContainerProps {
+  history:H.History;
   loaddata: boolean;
   inputs: Array<any>;
   currentUser: any;
 }
 
 const ListContainer: React.FC<ContainerProps> = ({
+  history,
   loaddata,
   inputs,
   currentUser,
@@ -87,6 +90,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                       }
                     ).catch((err)=>{
                       console.error(err);
+                      history.go(0);
                     });
                   }}
                 >
@@ -106,6 +110,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                 >
                   <IonContent>
                     <ListContainerProduct
+                    history={history}
                       loaddata={loadData}
                       inputs={productsArray}
                       currentUser={currentUser}

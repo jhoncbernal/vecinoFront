@@ -33,8 +33,9 @@ import { HttpRequest } from "../../../hooks/HttpRequest";
 import {
   pushProviderFirebase
 } from "../../../config/firebase";
-
+import * as H from 'history';
 interface ContainerProps {
+  history: H.History;
   closeModal: any;
   currentUser: User;
   order: ShoppingOrder | undefined;
@@ -44,6 +45,7 @@ interface ContainerProps {
 }
 
 const ResumeContainer: React.FC<ContainerProps> = ({
+  history,
   closeModal,
   currentUser,
   order,
@@ -144,6 +146,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
           })
           .catch((error) => {
             console.error(error);
+            throw error;
           });
 
           
@@ -331,6 +334,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             <IonTitle class=" ion-text-end">${total.toLocaleString()}</IonTitle>
           </IonItem>
           <IonButton
+           disabled={order?order.total>0?false:true:true}
             onClick={() => {
               if (order) {
                 submitOrder(order);
@@ -380,7 +384,12 @@ const ResumeContainer: React.FC<ContainerProps> = ({
       />
       <IonAlert
         isOpen={showAlert2}
-        onDidDismiss={() => {alertMessage.includes("seguimiento")?closeModal(false):setShowAlert2(false)}}
+        onDidDismiss={() => {
+          if(alertMessage.includes("seguimiento")){
+            closeModal(false);history.go(0);
+          }
+          setShowAlert2(false)
+        }}
         header={alertHeader}
         message={alertMessage}
         buttons={alertMessage.includes("seguimiento")?
@@ -389,6 +398,8 @@ const ResumeContainer: React.FC<ContainerProps> = ({
           handler: async () => {
             try {
               closeModal(false);
+              setShowAlert2(false)
+              history.go(0);
             } catch (e) {
               console.error("ResumeContainer.handler: " + e);
             }
