@@ -59,9 +59,14 @@ export class RecoverContainer extends React.Component<
           }
           this.setState({ showToast1: true });
         })
-        .catch((error) => console.error("Error:", error));
+        .catch((error) => {
+          throw error;
+        });
     } catch (e) {
-      console.error(e);
+      this.setState({ hiddenbar: true });
+      this.setState({ loginMessage: e.message });
+      this.setState({ showToast1: true });
+      console.error(e.message);
     }
   }
 
@@ -102,6 +107,7 @@ export class RecoverContainer extends React.Component<
           </form>
 
           <IonToast
+          color={'warning'}
             isOpen={this.state.showToast1}
             onDidDismiss={() => this.setState({ showToast1: false })}
             message={this.state.loginMessage}
