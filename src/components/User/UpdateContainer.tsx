@@ -56,11 +56,13 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
       try {
         const { setObject } = Storages();
         e.preventDefault();
-        let pathUrl = `${config.AdminContext}/${dataModal._id}`;
-        if (dataModal.roles.includes("ROLE_USER_ACCESS")) {
+        let pathUrl = ``;
+        if (dataModal.roles.includes(config.RolUserAccess)) {
           pathUrl = `${config.UserContext}/${dataModal._id}`;
-        } else {
+        } else if(dataModal.roles.includes(config.RolAdminAccess)) {
           pathUrl = `${config.AdminContext}/${dataModal._id}`;
+        }else{
+          pathUrl = `${config.ProviderContext}/${dataModal._id}`;
         }
         let data = body;
         if (!bodyChange) {

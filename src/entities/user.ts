@@ -22,6 +22,7 @@ export  interface User {
     payOnTime?:boolean;
     count?:number;
     averagePoints?:number;
+    acceptPolicity:boolean;
     neighborhood:{
         firstName:string;
         address:string;
