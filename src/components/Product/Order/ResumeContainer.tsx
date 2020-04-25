@@ -141,7 +141,6 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             setAlertMessage(
               `su orden fue creada con el numero de seguimiento ${response.code}`
             );
-            clearCart()
 
           })
           .catch((error) => {
@@ -153,7 +152,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
       }
       setShowAlert2(true);
     },
-    [address, cashValue, clearCart, currentUser._id, currentUser.neighborhood.address, flagExtraCharge, paymentMethod, products, provider._id, provider.deliveryCharge, schedule, tip]
+    [address, cashValue, currentUser._id, currentUser.neighborhood.address, flagExtraCharge, paymentMethod, products, provider._id, provider.deliveryCharge, schedule, tip]
   );
 
   if (order) {
@@ -398,7 +397,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
         isOpen={showAlert2}
         onDidDismiss={() => {
           if(alertMessage.includes("seguimiento")){
-            closeModal(false);history.go(0);
+            clearCart(); closeModal(false);history.go(0);
           }
           setShowAlert2(false)
         }}
@@ -409,6 +408,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
           text: "Ok",
           handler: async () => {
             try {
+              clearCart();
               closeModal(false);
               setShowAlert2(false)
               history.go(0);

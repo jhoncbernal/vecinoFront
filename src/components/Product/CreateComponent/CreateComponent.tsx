@@ -31,17 +31,20 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
     "Carne",
     "Pollo",
     "Pescado",
+    "Cerdo",
+    "Queso"
   ];
+  
   const measureType = ["Lb", "Kg", "Und"];
   const body: { [id: string]: any } = {};
   const [dataToast, setDataToast] = useState({ show: false, message: "" });
-
   const handleValueChange = (key: string, value: any) => {
     body[key] = value;
   };
 
   const submitData = async (e: FormEvent) => {
     e.preventDefault();
+    let error: boolean = false;
     const method = product._id ? "PATCH" : "POST";
     const pathUrl = product._id
       ? `${config.ProductContext}/${product._id}`
@@ -50,13 +53,39 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
       action({ hasChanges: false });
       return;
     }
-    await HttpRequest(pathUrl, method, body, true)
-      .then(async (response: any) => {
-        action({ hasChanges: true });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    if (method === "POST") {
+      if (!body["code"]) {
+        body["code"] = new Date().getTime();
+      }
+      if (!body["keyImage"]) {
+        error = true;
+        setDataToast({ show: true, message: "se debe agregar una imagen" });
+      }
+      if (body["price"] === 0) {
+        error = true;
+        setDataToast({
+          show: true,
+          message: "el precio debe ser superior a 0",
+        });
+      }
+      if (body["totalAmount"] === 0) {
+        error = true;
+        return setDataToast({
+          show: true,
+          message: "las unidades en stock deben ser mayores a 0",
+        });
+      }
+    }
+    if (!error) {
+      await HttpRequest(pathUrl, method, body, true)
+        .then(async (response: any) => {
+          action({ hasChanges: true });
+        })
+        .catch((error) => {
+          setDataToast({ show: true, message: error.message });
+          console.error(error);
+        });
+    }
   };
 
   return (
@@ -165,18 +194,17 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
                 ></IonInput>
-                 <label>Codigo de Producto</label>
+                <label>Codigo de Producto</label>
                 <IonInput
                   required={true}
-                  value={product.code?product.code:new Date().getTime()}
+                  value={product.code ? product.code : new Date().getTime()}
                   name="code"
-                  onIonChange={(e: any) => {
+                  onIonBlur={(e: any) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
                 ></IonInput>
                 <label>Precio en promoción </label>
                 <IonInput
-                  required={true}
                   value={product.promotionPrice}
                   name="promotionPrice"
                   onIonChange={(e: any) => {
@@ -189,7 +217,11 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
                   name="promotionExpires"
                   placeholder="Seleccione la fecha de expiración"
                   monthShortNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
-                  value={product.promotionExpires?product.promotionExpires.toLocaleString():null}
+                  value={
+                    product.promotionExpires
+                      ? product.promotionExpires.toLocaleString()
+                      : null
+                  }
                   onIonChange={(e: any) => {
                     handleValueChange(e.target.name, e.target.value!);
                   }}
