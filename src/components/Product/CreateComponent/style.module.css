@@ -1,5 +1,6 @@
 .form-inputs ion-input,
 .form-inputs ion-select,
+.form-inputs ion-datetime,
 ion-textarea {
   border: 2px solid #3880ff;
   border-radius: 5px;
