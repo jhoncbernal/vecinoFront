@@ -95,13 +95,13 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
     setdataModall(dataModal);
   }, [dataModal]);
   return (
-    <>
+    <IonContent>
       <IonToolbar color="primary">
         <IonTitle>
           <h1>Actualizar datos</h1>
         </IonTitle>
       </IonToolbar>
-      <IonContent>
+      <>
         <form
           onSubmit={e => {
             handleSubmit(e);
@@ -313,8 +313,8 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
           message={message}
           buttons={["OK"]}
         />
+      </>
       </IonContent>
-    </>
   );
 };
 
