@@ -73,7 +73,7 @@ export class SignUpPage extends React.Component<
     };
     this.getAllNeighborhoodNames();
   }
-  ionViewDidLeave() {
+  ClearState() {
     this.setState({'username': ""});
     this.setState({'email': ""});
     this.setState({'password': ""});
@@ -130,6 +130,7 @@ export class SignUpPage extends React.Component<
           .then((response: any) => {
             this.setState({ hiddenbar: true });
             if (response.emailResult) {
+              this.ClearState();
               this.setState({
                 loginMessage:
                   "se envio un correo de verificacion de cuenta a " +

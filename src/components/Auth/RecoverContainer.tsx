@@ -47,6 +47,7 @@ export class RecoverContainer extends React.Component<
       await HttpRequest(pathUrl, "POST", data)
         .then((response: any) => {
           this.setState({ hiddenbar: true });
+          this.setState({'email':''});
           if (response.emailResult) {
             this.setState({
               loginMessage:
@@ -63,6 +64,7 @@ export class RecoverContainer extends React.Component<
           throw error;
         });
     } catch (e) {
+      this.setState({'email':''});
       this.setState({ hiddenbar: true });
       this.setState({ loginMessage: e.message });
       this.setState({ showToast1: true });
