@@ -189,3 +189,20 @@ ion-toolbar {
   --ion-color-shade: var(--ion-color-red-light-shade);
   --ion-color-tint: var(--ion-color-red-light-tint);
 }
+:root {
+  --ion-color-steel: #797979;
+  --ion-color-steel-rgb: 121,121,121;
+  --ion-color-steel-contrast: #ffffff;
+  --ion-color-steel-contrast-rgb: 255,255,255;
+  --ion-color-steel-shade: #6a6a6a;
+  --ion-color-steel-tint: #868686;
+}
+
+.ion-color-steel {
+  --ion-color-base: var(--ion-color-steel);
+  --ion-color-base-rgb: var(--ion-color-steel-rgb);
+  --ion-color-contrast: var(--ion-color-steel-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-steel-contrast-rgb);
+  --ion-color-shade: var(--ion-color-steel-shade);
+  --ion-color-tint: var(--ion-color-steel-tint);
+}

@@ -6,6 +6,7 @@ export interface ShoppingProduct {
       price: number;
       salving: number;
       quantity: number;
+      totalAmount:number;
 }
 
 export interface ShoppingOrder {

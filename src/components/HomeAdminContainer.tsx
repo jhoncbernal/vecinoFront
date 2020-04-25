@@ -21,9 +21,9 @@ import {
 
 import ChartsContainer from "./Dashboard/ChartsContainer";
 import config from "../config";
-
+import * as H from 'history';
 interface ContainerProps {
-  history: any;
+  history: H.History;
 }
 const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
   const [hiddenBar, setHiddenBar] = useState(false);

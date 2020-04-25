@@ -24,13 +24,13 @@ import {
   PushNotificationToken,
   PushNotificationActionPerformed,
 } from "@capacitor/core";
-
+import * as H from 'history';
 const { PushNotifications } = Plugins;
 const notifications = [
   { id: "id", title: "Test Push", body: "This is my first push notification" },
 ];
 export class LoginPage extends React.Component<
-  { history: any },
+  { history: H.History },
   {
     email: string;
     password: string;

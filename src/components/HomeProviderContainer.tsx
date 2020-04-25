@@ -11,7 +11,7 @@ import {
 import { HttpRequest } from "../hooks/HttpRequest";
 import ListContainer from "./Product/ListContainer";
 import { Storages } from "../hooks/Storage";
-import { barChartSharp, pricetagsSharp, pricetag, time } from "ionicons/icons";
+import { barChartSharp, pricetagsSharp, time } from "ionicons/icons";
 
 import ChartsContainer from "./Dashboard/ChartsContainer";
 import config from "../config";
@@ -54,6 +54,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
             }
           } catch (e) {
             console.error(e);
+            history.go(0);
           }
           if (Array.isArray(resultado)) {
             setProductsArray(resultado);
@@ -126,6 +127,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
           <>
             {segmentValue === "product" && hiddenBar ? (
               <ListContainer
+              history={history}
                 loadData={loadData}
                 inputs={productsArray}
                 currentUser={currentUser}

@@ -15,11 +15,13 @@ import {
   IonTitle,
   IonIcon,
   IonToolbar,
-  IonToast
+  IonToast,
+  IonDatetime,
 } from "@ionic/react";
 import config from "../../../config";
 import { HttpRequest } from "../../../hooks/HttpRequest";
 import { arrowBack } from "ionicons/icons";
+import { Product } from "../../../entities";
 
 const CreateComponent: FC<componentData> = ({ product, action }) => {
   const productType = [
@@ -28,7 +30,7 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
     "Salud",
     "Carne",
     "Pollo",
-    "Pescado"
+    "Pescado",
   ];
   const measureType = ["Lb", "Kg", "Und"];
   const body: { [id: string]: any } = {};
@@ -48,13 +50,12 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
       action({ hasChanges: false });
       return;
     }
-    body["code"] = new Date().getTime();
     await HttpRequest(pathUrl, method, body, true)
       .then(async (response: any) => {
         action({ hasChanges: true });
       })
-      .catch(error => {
-        throw error;
+      .catch((error) => {
+        console.error(error);
       });
   };
 
@@ -87,12 +88,12 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
             </IonCol>
             <IonCol size="12" className={style["form-inputs"]}>
               <form
-                onSubmit={e => {
+                onSubmit={(e) => {
                   submitData(e);
                 }}
                 action="post"
               >
-                <label>Nombre del productoo</label>
+                <label>Nombre del producto</label>
                 <IonInput
                   required={true}
                   name="productName"
@@ -164,6 +165,15 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
                 ></IonInput>
+                 <label>Codigo de Producto</label>
+                <IonInput
+                  required={true}
+                  value={product.code?product.code:new Date().getTime()}
+                  name="code"
+                  onIonChange={(e: any) => {
+                    handleValueChange(e.target.name, e.target.value);
+                  }}
+                ></IonInput>
                 <label>Precio en promoción </label>
                 <IonInput
                   required={true}
@@ -173,6 +183,17 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
                 ></IonInput>
+                <label>Fecha de expiracion de la promoción</label>
+                <IonDatetime
+                  displayFormat="DD/MMM/YYYY"
+                  name="promotionExpires"
+                  placeholder="Seleccione la fecha de expiración"
+                  monthShortNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+                  value={product.promotionExpires?product.promotionExpires.toLocaleString():null}
+                  onIonChange={(e: any) => {
+                    handleValueChange(e.target.name, e.target.value!);
+                  }}
+                ></IonDatetime>
                 <label>Descripción</label>
                 <IonTextarea
                   required={true}
@@ -206,21 +227,7 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
 };
 interface componentData {
   [id: string]: any;
+  product: Product;
 }
 
-interface Product {
-  enabled: boolean;
-  keyImage: string;
-  measureType: "Lb" | "Kg" | "Und";
-  price: number;
-  productName: string;
-  productType: string;
-  provider: string;
-  totalAmount: number;
-  urlImage: string;
-  code?: number;
-  brand?: string;
-  features?: string;
-  promotionPrice?: number;
-}
 export default CreateComponent;

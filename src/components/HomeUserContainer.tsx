@@ -11,13 +11,11 @@ import {
 import { HttpRequest } from "../hooks/HttpRequest";
 import ListContainer from "./Provider/ListContainer";
 import { Storages } from "../hooks/Storage";
-import { barChartSharp, pricetagsSharp } from "ionicons/icons";
 
-import ChartsContainer from "./Dashboard/ChartsContainer";
 import config from "../config";
-
+import * as H from 'history';
 interface ContainerProps {
-  history: any;
+  history: H.History;
   currentUser: any;
 }
 
@@ -37,9 +35,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
       let pathUrl;
       if (segmentValue === "provider") {
         pathUrl = `${config.ProviderContext}/names/1`;
-      } else {
-        pathUrl = ""; //`/parkingspace/${segmentValue}`;
-      }
+      
       await HttpRequest(pathUrl, "GET", "", true)
         .then(async (resultado: any) => {
           try {
@@ -49,6 +45,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
             }
           } catch (e) {
             console.error(e);
+            history.go(0);
           }
           if (Array.isArray(resultado)) {
             setProductsArray(resultado);
@@ -65,6 +62,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
             throw error;
           }
         });
+      } 
     } catch (e) {
       const { removeItem } = await Storages();
       await removeItem("token");
@@ -94,18 +92,11 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
             }}
             value={segmentValue}
           >
-            <IonSegmentButton value="dashboard">
-              <IonIcon
-                class="icons-segment"
-                size="medium"
-                icon={barChartSharp}
-              />
-            </IonSegmentButton>
             <IonSegmentButton value="provider">
               <IonIcon
                 class="icons-segment"
                 size="medium"
-                icon={pricetagsSharp}
+                icon={"assets/icons/MarketPlace.svg"}
               />
             </IonSegmentButton>
           </IonSegment>
@@ -114,13 +105,12 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
           <>
             {segmentValue === "provider" && hiddenBar ? (
               <ListContainer
+              history={history}
                 loaddata={loadData}
                 inputs={productsArray}
                 currentUser={currentUser}
               ></ListContainer>
-            ) : segmentValue === "dashboard" ? (
-              <ChartsContainer></ChartsContainer>
-            ) : null}
+            )  : null}
           </>
         ) : (
           <></>

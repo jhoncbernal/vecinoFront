@@ -4,11 +4,12 @@ import { arrowBackOutline, carSportOutline, closeCircle, checkmarkCircle, bicycl
 import './ListContainer.css';
 import CreateContainer from './CreateContainer';
 import ChosePosition from './ChosePositionContainer';
+import * as H from 'history';
 interface ContainerProps {
   parkingType: string;
   loaddata: boolean;
   inputs: Array<any>;
-  history: any;
+  history: H.History;
 }
 
 const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs, history }) => {

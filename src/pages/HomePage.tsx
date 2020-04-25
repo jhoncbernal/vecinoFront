@@ -8,7 +8,7 @@ import {
   IonImg,
   IonToolbar,
   IonText,
-  IonAlert
+  IonAlert,
 } from "@ionic/react";
 import HomeAdminPageContainer from "../components/HomeAdminContainer";
 import HomeProviderContainer from "../components/HomeProviderContainer";
@@ -18,41 +18,41 @@ import { Storages } from "../hooks/Storage";
 import HomeUserContainer from "../components/HomeUserContainer";
 import config from "../config";
 import SideMenuCar from "../components/Provider/SideMenuCar";
+import * as H from "history";
 
 export class Home extends React.Component<
-  { history: any },
+  { history: H.History },
   {
     currentUser: any;
     pendingShoppingCar: any;
     showAlert: boolean;
     errorMessage: string;
-    thishistory: any;
   }
 > {
   constructor(props: any) {
     super(props);
-    const { history } = this.props;
     this.state = {
       currentUser: "",
       pendingShoppingCar: {},
       showAlert: false,
       errorMessage: "",
-      thishistory: history
     };
-    this.preValues();
+   
     this.handlerDataSide = this.handlerDataSide.bind(this);
   }
 
   async preValues() {
     try {
-      const { getObject } = await Storages();
+      const { history } = this.props;
+
+      const { getObject } =  Storages();
       const user: any = await getObject("user");
 
       if (!user) {
         let message = "sus credenciales vencieron";
         this.setState({ errorMessage: message });
         this.setState({ showAlert: true });
-        this.state.thishistory.push("/login");
+        history.push("/login");
       } else {
         this.setState({ currentUser: user.obj });
       }
@@ -60,10 +60,14 @@ export class Home extends React.Component<
       console.error(e);
     }
   }
-  async doRefresh(event: CustomEvent<RefresherEventDetail>) {
+  componentDidMount() {
+    this.preValues();
+  }
+  async doRefresh(event: CustomEvent<RefresherEventDetail>, his: H.History) {
     try {
       setTimeout(() => {
         event.detail.complete();
+        his.go(0);
       }, 2000);
     } catch (e) {
       console.error(e);
@@ -87,22 +91,32 @@ export class Home extends React.Component<
 
     return (
       <IonPage>
-        <br />
-        <br />
         <IonContent class="bg-image">
+          <IonRefresher
+            slot="fixed"
+            onIonRefresh={(e) => {
+              this.doRefresh(e, history);
+            }}
+          >
+            <IonRefresherContent
+              refreshing-spinner={"bubbles"}
+            ></IonRefresherContent>
+          </IonRefresher>
+          <FloatingButtonsMenuContainer
+            history={history}
+            currentUser={this.state.currentUser}
+          ></FloatingButtonsMenuContainer>
           <IonToolbar>
             <IonTitle>
               <IonImg class="img" src={"/assets/img/IconLogo.png"} />
               {this.state.currentUser.firstName ? (
-                <IonText color="primary">{`${this.state.currentUser.firstName}`}</IonText>
+                <IonText color="primary">{`${this.state.currentUser.firstName.charAt(0).toUpperCase()+ this.state.currentUser.firstName.slice(1)}`}</IonText>
               ) : (
                 <></>
               )}
             </IonTitle>
           </IonToolbar>
-          <FloatingButtonsMenuContainer
-            history={history}
-          ></FloatingButtonsMenuContainer>
+
           {this.state.currentUser.roles ? (
             this.state.currentUser.roles.includes(config.RolAdminAccess) ? (
               <HomeAdminPageContainer
@@ -123,16 +137,6 @@ export class Home extends React.Component<
               ></HomeUserContainer>
             )
           ) : null}
-          <IonContent id="auxContent"></IonContent>
-          <IonRefresher slot="fixed" onIonRefresh={this.doRefresh}>
-            <IonRefresherContent
-              color="primary"
-              pullingIcon="arrow-dropdown"
-              pullingText="Deslice para actualizar"
-              refreshingSpinner="circles"
-              refreshingText="Actualizando..."
-            ></IonRefresherContent>
-          </IonRefresher>
         </IonContent>
         <IonAlert
           isOpen={this.state.showAlert}

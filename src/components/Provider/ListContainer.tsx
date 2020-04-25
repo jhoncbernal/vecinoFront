@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   IonItem,
   IonIcon,
-  IonLabel,
   IonCard,
   IonCardContent,
   IonSearchbar,
@@ -10,7 +9,6 @@ import {
   IonModal,
   IonFab,
   IonFabButton,
-  IonTitle,
   IonCardHeader,
   IonThumbnail,
   IonImg,
@@ -20,13 +18,16 @@ import { arrowBackOutline } from "ionicons/icons";
 import ListContainerProduct from "../Product/ListContainer";
 import { HttpRequest } from "../../hooks/HttpRequest";
 import config from "../../config";
+import * as H from 'history';
 interface ContainerProps {
+  history:H.History;
   loaddata: boolean;
   inputs: Array<any>;
   currentUser: any;
 }
 
 const ListContainer: React.FC<ContainerProps> = ({
+  history,
   loaddata,
   inputs,
   currentUser,
@@ -72,9 +73,10 @@ const ListContainer: React.FC<ContainerProps> = ({
             return (
               <IonCard key={index} id="card">
                 <IonCardHeader color="primary">
-                  <IonTitle>
-                    <strong>{input.firstName}</strong>
-                  </IonTitle>
+
+                    <IonText>
+                    <strong>{input.firstName.toUpperCase()}</strong></IonText>
+
                 </IonCardHeader>
                 <IonCardContent
                   onClick={async () => {
@@ -87,16 +89,17 @@ const ListContainer: React.FC<ContainerProps> = ({
                       }
                     ).catch((err)=>{
                       console.error(err);
+                      history.go(0);
                     });
                   }}
                 >
-                  <IonItem>
-                    <IonThumbnail class="productImage" slot="start">
-                      <IonImg src={input.urlImage ? input.urlImage : "https://vecino.s3.amazonaws.com/1587059420099.jpeg"} />
+                  <IonItem lines="none">
+                    <IonThumbnail class="productImage ion-align-items-start ion-align-self-center" slot="start">
+                      <IonImg src={input.urlImage ? input.urlImage : null} />
                     </IonThumbnail>
-                    <IonLabel>
-                      <h1>{input ? input.category : ""}</h1>
-                    </IonLabel>
+                      <IonText color={'steel'} class="ion-align-self-center ion-align-items-start">
+                      <h1>{input ? input.category.charAt(0).toUpperCase() + input.category.slice(1) : null}</h1>
+                      </IonText>
                   </IonItem>
                 </IonCardContent>
                 <IonModal 
@@ -106,6 +109,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                 >
                   <IonContent>
                     <ListContainerProduct
+                    history={history}
                       loaddata={loadData}
                       inputs={productsArray}
                       currentUser={currentUser}

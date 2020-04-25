@@ -29,11 +29,15 @@ import { refUserCar } from "../../config/firebase";
 import ShoppingListContainer from "./shopingCart/ListContainer";
 import { Product } from "../../entities";
 import handleProducts from "./shopingCart/handleProducts";
+import * as H from "history";
 interface ContainerProps {
   [id: string]: any;
+  inputs: Array<Product>;
+  history: H.History;
 }
 
 const ListContainer: React.FC<ContainerProps> = ({
+  history,
   loadData,
   inputs,
   currentUser,
@@ -42,27 +46,17 @@ const ListContainer: React.FC<ContainerProps> = ({
 }) => {
   const [searchText, setSearchText] = useState("");
   const [data, setData] = useState<Array<any>>([{}]);
-  const [dataModal, setDataModal] = useState<Product>();
+  const [dataModal, setDataModal] = useState<Product>(emptyProduct);
   const [showModal, setShowModal] = useState(false);
   const [shoppingCart, setShoppingCart] = useState<any>({});
   const [flagRefresh, setFlagRefresh] = useState<boolean>(false);
   const [showPopover, setShowPopover] = useState(false);
-  const addNewProduct = () => {
-    const newProduct: Product = {
-      enabled: false,
-      keyImage: "",
-      measureType: "notSet",
-      price: 0,
-      productName: "",
-      productType: "",
-      provider: "",
-      totalAmount: 0,
-      urlImage: "",
-    };
-    setShowModal(true);
-    setDataModal(newProduct);
-  };
 
+  var today = new Date().toLocaleString();
+  const addNewProduct = () => {
+    setDataModal(emptyProduct);
+    setShowModal(true);
+  };
 
   const handleSearch = useCallback(
     async (e: any) => {
@@ -96,9 +90,10 @@ const ListContainer: React.FC<ContainerProps> = ({
         setFlagRefresh(true);
       } catch (e) {
         console.error(e);
+        history.go(0);
       }
     },
-    [inputs, searchText]
+    [history, inputs, searchText]
   );
   const handleCloseModal = (data: any) => {
     if (!data) {
@@ -160,7 +155,7 @@ const ListContainer: React.FC<ContainerProps> = ({
         <>
           <IonToolbar color="primary">
             <IonTitle>
-              <h1>{provider.firstName}</h1>
+              <h1>{provider.firstName.toUpperCase()}</h1>
             </IonTitle>
           </IonToolbar>
 
@@ -197,7 +192,6 @@ const ListContainer: React.FC<ContainerProps> = ({
               handleSearch(e);
             }}
             showCancelButton="always"
-            hidden={!loadData}
           ></IonSearchbar>
           {renderAddButton()}
           {Object.keys(data).map((category: any, index) => {
@@ -214,7 +208,13 @@ const ListContainer: React.FC<ContainerProps> = ({
                 <IonToolbar>
                   <IonTitle>{category}</IonTitle>
                 </IonToolbar>
-                {data[category].map((input: any, index: number) => {
+                {data[category].map((input: Product, index: number) => {
+                  let DatePromotion: string = "";
+                  if (input.promotionExpires) {
+                    DatePromotion = new Date(
+                      input.promotionExpires
+                    ).toLocaleString();
+                  }
                   if (!input.productName) {
                     return (
                       <IonCard key={index}>
@@ -263,7 +263,9 @@ const ListContainer: React.FC<ContainerProps> = ({
                           <IonText color={"dark"}>
                             <h2>
                               <strong>
-                                {!input.promotionPrice ? (
+                                {!(
+                                  input.promotionPrice && DatePromotion >= today
+                                ) ? (
                                   input.price.toLocaleString()
                                 ) : input.promotionPrice ? (
                                   <s>{input.price.toLocaleString()}</s>
@@ -273,7 +275,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                               </strong>
                             </h2>
                             {input ? (
-                              input.promotionPrice ? (
+                              input.promotionPrice && DatePromotion >= today ? (
                                 <IonText>
                                   <h2 color="dark">
                                     Precio de Oferta:{" "}
@@ -313,18 +315,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                           </IonLabel>
                         </IonItem>
                       </IonCardContent>
-                      <IonModal
-                        isOpen={showModal}
-                        onDidDismiss={(e) => setShowModal(false)}
-                        animated={true}
-                      >
-                        <IonContent>
-                          <CreateComponent
-                            product={dataModal}
-                            action={handleCloseModal}
-                          ></CreateComponent>
-                        </IonContent>
-                      </IonModal>
+
                       <div
                         hidden={
                           currentUser.roles.includes(config.RolUserAccess)
@@ -345,7 +336,11 @@ const ListContainer: React.FC<ContainerProps> = ({
                                   shoppingCart[`${input._id}`] ||
                                 input.totalAmount !== 0
                               ) {
-                                let products = handleProducts(input._id, "Add",shoppingCart);
+                                let products = handleProducts(
+                                  input._id ? input._id : "",
+                                  "Add",
+                                  shoppingCart
+                                );
                                 setShoppingCart((prevState: any) => ({
                                   ...prevState,
                                   ...products,
@@ -363,7 +358,11 @@ const ListContainer: React.FC<ContainerProps> = ({
                               size={"small"}
                               fill="outline"
                               onClick={() => {
-                                let products = handleProducts(input._id, "Less",shoppingCart);
+                                let products = handleProducts(
+                                  input._id ? input._id : "",
+                                  "Less",
+                                  shoppingCart
+                                );
                                 setShoppingCart((prevState: any) => ({
                                   ...prevState,
                                   ...products,
@@ -396,12 +395,16 @@ const ListContainer: React.FC<ContainerProps> = ({
                                   input.totalAmount >
                                   shoppingCart[`${input._id}`]
                                 ) {
-                                  let products = handleProducts(input._id, "Add",shoppingCart);
+                                  let products = handleProducts(
+                                    input._id ? input._id : "",
+                                    "Add",
+                                    shoppingCart
+                                  );
                                   setShoppingCart((prevState: any) => ({
                                     ...prevState,
                                     ...products,
                                   }));
-                                   setFlagRefresh(true);
+                                  setFlagRefresh(true);
                                 }
                               }}
                             >
@@ -445,11 +448,11 @@ const ListContainer: React.FC<ContainerProps> = ({
             id={"modal"}
           >
             <ShoppingListContainer
+              history={history}
               provider={provider}
               oldShoppingCart={shoppingCart}
               currentUser={currentUser}
-              changeShoppingCart
-              ={(response: any) => {
+              changeShoppingCart={(response: any) => {
                 setShoppingCart(response);
               }}
               accionTrigger={(response: boolean) => {
@@ -457,14 +460,36 @@ const ListContainer: React.FC<ContainerProps> = ({
               }}
             ></ShoppingListContainer>
           </IonModal>
+          <IonModal
+            isOpen={showModal}
+            onDidDismiss={(e) => setShowModal(false)}
+            animated={true}
+          >
+            <IonContent>
+              <CreateComponent
+                product={dataModal}
+                action={handleCloseModal}
+              ></CreateComponent>
+            </IonContent>
+          </IonModal>
         </>
       );
     } else {
       return (
         <>
-          <h1>
-            <IonText color="primary">Sin conexion</IonText>
-          </h1>
+          {renderAddButton()}
+          <IonModal
+            isOpen={showModal}
+            onDidDismiss={(e) => setShowModal(false)}
+            animated={true}
+          >
+            <IonContent>
+              <CreateComponent
+                product={dataModal}
+                action={handleCloseModal}
+              ></CreateComponent>
+            </IonContent>
+          </IonModal>
         </>
       );
     }
@@ -473,5 +498,23 @@ const ListContainer: React.FC<ContainerProps> = ({
     throw e;
   }
 };
+const emptyProduct:Product= {
+  _id: '',
+  enabled: true,
+  keyImage: '',
+  measureType: "notSet",
+  price: 0,
+  productName: '',
+  productType: '',
+  provider: '',
+  totalAmount: 0,
+  urlImage: '',
+  code: 0,
+  brand: '',
+  features: '',
+  promotionPrice: 0,
+  promotionExpires:new Date(),
+  quantity: 0
+}
 
 export default ListContainer;
