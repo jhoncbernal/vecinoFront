@@ -8,7 +8,7 @@ import {
   IonText,
   IonCardContent,
   IonCard,
-  IonCardHeader,
+  IonCardHeader
 } from "@ionic/react";
 import style from "./style.module.css";
 import { menuController } from "@ionic/core";
@@ -27,7 +27,7 @@ const PendingShoppingContainer: FC<componentData> = ({
     prepare: { color: "purple", next: "delivery" },
     delivery: { color: "blue-hole", next: "finished" },
     finished: { color: "green-light", next: "" },
-    cancel: "red-light"
+    cancel: { color: "red-light", next: "" }
   };
   const [bills, setBills] = useState<any[]>();
 
@@ -108,7 +108,7 @@ const PendingShoppingContainer: FC<componentData> = ({
   };
   return (
     <>
-      <IonHeader>
+      <IonHeader id="auxContent">
         <IonTitle className={style["title-header"]}>
           Pedidos pendientes
         </IonTitle>

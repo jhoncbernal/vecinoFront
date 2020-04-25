@@ -1,5 +1,6 @@
 import firebase from "firebase";
 import { Bill } from "../entities";
+import { async } from "q";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -35,6 +36,10 @@ const pushProviderFirebase = async (bill: Bill) => {
     .set(bill);
 };
 
+const deleteBillFirebase = (bill: Bill) => {
+  fire_db.ref("providers").child(bill.provider._id).child(bill.code).remove();
+};
+
 const pushStatesUserFirebase = (bill: Bill, states: any) => {
   fire_db.ref("users").child(bill.user._id).child(bill.code).set(states);
 };
@@ -50,5 +55,6 @@ export {
   pushProviderFirebase,
   refUserCar,
   refProviderFirebase,
-  pushStatesUserFirebase
+  pushStatesUserFirebase,
+  deleteBillFirebase
 };
