@@ -52,7 +52,7 @@ export class SignUpPage extends React.Component<
     hiddenbar: boolean;
   }
 > {
-  constructor(props: any, private storage: Storage) {
+  constructor(props: any) {
     super(props);
     this.state = {
       username: "",
@@ -73,6 +73,19 @@ export class SignUpPage extends React.Component<
     };
     this.getAllNeighborhoodNames();
   }
+  ionViewDidLeave() {
+    this.setState({'username': ""});
+    this.setState({'email': ""});
+    this.setState({'password': ""});
+    this.setState({'confirmpassword': ""});
+    this.setState({'phone': ""});
+    this.setState({'firstName': ""});
+    this.setState({'lastName': ""});
+    this.setState({'blockNumber': ""});
+    this.setState({'homeNumber': ""});
+    this.setState({'documentId': ""});
+  }
+  
   async getAllNeighborhoodNames() {
     let pathUrl = `${config.AllNeighborhoodsContext}`;
     await HttpRequest(pathUrl, "GET", "")
@@ -90,7 +103,14 @@ export class SignUpPage extends React.Component<
           loginMessage: "la confirmacion de contraseña no coincide",
         });
         this.setState({ showToast1: true });
-      } else {
+      } else if (!this.state.uniquecode) {
+        this.setState({
+          loginMessage: "Se debe seleccionar un conjunto",
+        });
+        this.setState({ showToast1: true });
+      }
+      
+      else {
         let pathUrl = `${config.AuthSignUp}`;
         let data = {
           roles: ["ROLE_USER_ACCESS"],
@@ -121,10 +141,15 @@ export class SignUpPage extends React.Component<
             }
             this.setState({ showToast1: true });
           })
-          .catch((error) => console.error("Error:", error));
+          .catch((error) => {
+            throw error;
+          });
       }
     } catch (e) {
-      console.error(e);
+      this.setState({ hiddenbar: true });
+      this.setState({ loginMessage: e.message });
+      this.setState({ showToast1: true });
+      console.error("Error:", e);
     }
   }
 
@@ -141,12 +166,14 @@ export class SignUpPage extends React.Component<
                 <IonIcon color="primary" icon={personOutline} slot="start" />
                 <IonLabel position="floating">Nombre de usuario</IonLabel>
                 <IonInput
+                  minlength={8}
+                  maxlength={12}
                   color="dark"
                   required={true}
                   autocomplete="on"
                   type="text"
                   value={this.state.username}
-                  onInput={(e: any) =>
+                  onIonChange={(e: any) =>
                     this.setState({ username: e.target.value })
                   }
                 />
@@ -155,12 +182,13 @@ export class SignUpPage extends React.Component<
                 <IonIcon color="primary" icon={mailOpenOutline} slot="start" />
                 <IonLabel position="floating">Email</IonLabel>
                 <IonInput
+                  minlength={8}
                   color="dark"
                   required={true}
                   autocomplete="on"
                   type="email"
                   value={this.state.email}
-                  onInput={(email: any) =>
+                  onIonChange={(email: any) =>
                     this.setState({ email: email.target.value })
                   }
                 />
@@ -173,13 +201,15 @@ export class SignUpPage extends React.Component<
                 />
                 <IonLabel position="floating">Telefono</IonLabel>
                 <IonInput
+                  minlength={8}
+                  maxlength={10}
                   color="dark"
                   required={true}
                   autocomplete="on"
-                  type="number"
+                  type="tel"
                   value={this.state.phone}
-                  onInput={(phone: any) =>
-                    this.setState({ phone: phone.target.value })
+                  onIonChange={(phone: any) =>this.setState({ phone: phone.target.value })
+                   
                   }
                 />
               </IonItem>
@@ -195,12 +225,14 @@ export class SignUpPage extends React.Component<
                       />
                       <IonLabel position="floating">Nombre</IonLabel>
                       <IonInput
+                        minlength={4}
+                        maxlength={20}
                         color="dark"
                         required={true}
                         autocomplete="on"
                         type="text"
                         value={this.state.firstName}
-                        onInput={(e: any) =>
+                        onIonChange={(e: any) =>
                           this.setState({ firstName: e.target.value })
                         }
                       />
@@ -215,12 +247,14 @@ export class SignUpPage extends React.Component<
                       />
                       <IonLabel position="floating">Apellido</IonLabel>
                       <IonInput
+                        minlength={4}
+                        maxlength={20}
                         color="dark"
                         required={true}
                         autocomplete="on"
                         type="text"
                         value={this.state.lastName}
-                        onInput={(e: any) =>
+                        onIonChange={(e: any) =>
                           this.setState({ lastName: e.target.value })
                         }
                       />
@@ -240,12 +274,13 @@ export class SignUpPage extends React.Component<
                       />
                       <IonLabel position="floating">Torre</IonLabel>
                       <IonInput
+                        minlength={1}
+                        maxlength={3}
                         color="dark"
                         required={true}
-                        autocomplete="on"
-                        type="number"
+                        type="tel"
                         value={this.state.blockNumber}
-                        onInput={(e: any) =>
+                        onIonChange={(e: any) =>
                           this.setState({ blockNumber: e.target.value })
                         }
                       />
@@ -260,12 +295,14 @@ export class SignUpPage extends React.Component<
                       />
                       <IonLabel position="floating">Apartamento</IonLabel>
                       <IonInput
+                        minlength={2}
+                        maxlength={6}
                         color="dark"
                         required={true}
                         autocomplete="on"
-                        type="number"
+                        type="tel"
                         value={this.state.homeNumber}
-                        onInput={(e: any) =>
+                        onIonChange={(e: any) =>
                           this.setState({ homeNumber: e.target.value })
                         }
                       />
@@ -279,12 +316,14 @@ export class SignUpPage extends React.Component<
                   Numero de identificación
                 </IonLabel>
                 <IonInput
+                  minlength={8}
+                  maxlength={20}
                   color="dark"
                   required={true}
                   autocomplete="on"
-                  type="number"
+                  type="tel"
                   value={this.state.documentId}
-                  onInput={(e: any) =>
+                  onIonChange={(e: any) =>
                     this.setState({ documentId: e.target.value })
                   }
                 />
@@ -317,11 +356,11 @@ export class SignUpPage extends React.Component<
                   color="dark"
                   required={true}
                   minlength={8}
-                  maxlength={18}
+                  maxlength={12}
                   name="password"
                   type="password"
                   value={this.state.password}
-                  onInput={(password: any) =>
+                  onIonChange={(password: any) =>
                     this.setState({ password: password.target.value })
                   }
                 />
@@ -333,11 +372,11 @@ export class SignUpPage extends React.Component<
                   color="dark"
                   required={true}
                   minlength={8}
-                  maxlength={18}
+                  maxlength={12}
                   name="password"
                   type="password"
                   value={this.state.confirmpassword}
-                  onInput={(confirmpassword: any) =>
+                  onIonChange={(confirmpassword: any) =>
                     this.setState({
                       confirmpassword: confirmpassword.target.value,
                     })
@@ -356,6 +395,7 @@ export class SignUpPage extends React.Component<
           </form>
           <IonToast
             isOpen={this.state.showToast1}
+            color="warning"
             onDidDismiss={() => this.setState({ showToast1: false })}
             message={this.state.loginMessage}
             duration={3000}
