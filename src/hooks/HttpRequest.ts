@@ -1,6 +1,7 @@
 import config from "../config";
 import { Storages } from "./Storage";
 import Axios from "axios";
+import { ErroDictionary } from "./HandleHttpErrors";
 
 export async function HttpRequest(
   pathUrl: string,
@@ -63,15 +64,23 @@ export async function HttpRequest(
             } else {
               errorMessage = error.Error;
             }
+            if(errorMessage){
             if(errorMessage.includes('token')){
               const { removeItem } = Storages();
                   await removeItem('token');
                   await removeItem('user');
                   await removeItem('fireToken');
             }
+            let EspError=ErroDictionary().Errors;
             const err = new Error();
-            err.message = errorMessage;
+            err.message = EspError.get(errorMessage)?EspError.get(errorMessage):errorMessage;
             throw err;
+          }
+          else{
+            const err = new Error();
+            err.message = 'Error con el servidor '+error.response.data?error.response.data:'';
+            throw err;
+          }
           } else if (error.request) {
             /*
              * The request was made but no response was received, `error.request`
