@@ -59,12 +59,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
   }>({
     open: false,
   });
-  const [showAlertCancel, setShowAlertCancel] = useState<{
-    open: boolean;
-    item?: Product;
-  }>({
-    open: false
-  });
+
   const [showAlertCancel, setShowAlertCancel] = useState<{
     open: boolean;
     item?: Product;
@@ -169,20 +164,6 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
       });
   };
 
-  const cancelBill = (states: any[]) => {
-    const pathUrl = `${config.BillsContext}/${dataSide._id}`;
-    const changes = { enabled: false };
-    HttpRequest(pathUrl, "PATCH", changes, true)
-      .then(response => {
-        deleteBillFirebase(dataSide);
-        menuController.close();
-        setBodyChanges(null);
-      })
-      .catch(error => {
-        console.log("error", error);
-      });
-  };
-
   const nextState = () => {
     let mStates: any[] = [];
     if (dataSide.states) {
@@ -211,36 +192,6 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
       updateStateFirebase(mStates);
     }
   };
-
-  const cancelState = () => {
-    let mStates: any[] = [];
-    if (dataSide.state === "start") {
-      mStates.push({ state: "start" });
-      mStates.push({
-        state: "cancel",
-        start: new Date().toLocaleString("en-US", {
-          timeZone: "America/Bogota"
-        })
-      });
-    } else {
-      if (dataSide.state) {
-        mStates = [
-          ...dataSide.state,
-          {
-            state: "cancel",
-            start: new Date().toLocaleString("en-US", {
-              timeZone: "America/Bogota"
-            })
-          }
-        ];
-      }
-    }
-
-    //setBodyChanges({ ...bodyChanges, enabled: false, state: mStates });
-    cancelBill(mStates);
-    //updateStateFirebase(mStates);
-  };
-
   const cancelState = () => {
     let mStates: any[] = [];
     if (dataSide.state === "start") {
@@ -330,34 +281,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
     );
   };
 
-  const renderAlertCancel = () => {
-    return (
-      <IonAlert
-        isOpen={showAlertCancel.open}
-        onDidDismiss={() => {
-          setShowAlertCancel({ open: false });
-        }}
-        header="Cancelar"
-        subHeader={`Se cancelara el pedido "${
-          showAlertCancel.item ? showAlertCancel.item.productName : ""
-        }"`}
-        message="Esta seguro de cancelar el pedido, se le notificara al usuario"
-        buttons={[
-          "No",
-          {
-            text: "Si",
-            role: "cancel",
-            cssClass: "danger",
-            handler: response => {
-              console.log("cancelar");
-              cancelState();
-            }
-          }
-        ]}
-      ></IonAlert>
-    );
-  };
-
+  
   const renderAlertCancel = () => {
     return (
       <IonAlert
