@@ -31,6 +31,7 @@ import { menuController } from "@ionic/core";
 import {
   pushProviderBillsFirebase,
   pushStatesUserFirebase,
+  deleteBillFirebase
 } from "../../../config/firebase";
 
 const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
@@ -57,6 +58,12 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
     item?: Product;
   }>({
     open: false,
+  });
+  const [showAlertCancel, setShowAlertCancel] = useState<{
+    open: boolean;
+    item?: Product;
+  }>({
+    open: false
   });
 
   const [showPopOverEdit, setShowPopOverEdit] = useState<{
@@ -132,12 +139,27 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
 
   const saveChanges = () => {
     const pathUrl = `${config.BillsContext}/${dataSide._id}`;
+    console.log("body", bodyChanges);
     HttpRequest(pathUrl, "PATCH", bodyChanges, true)
       .then((response) => {
         updateFirebase(dataSide);
       })
       .catch((error) => {
         console.error("error", error);
+      });
+  };
+
+  const cancelBill = (states: any[]) => {
+    const pathUrl = `${config.BillsContext}/${dataSide._id}`;
+    const changes = { enabled: false };
+    HttpRequest(pathUrl, "PATCH", changes, true)
+      .then(response => {
+        deleteBillFirebase(dataSide);
+        menuController.close();
+        setBodyChanges(null);
+      })
+      .catch(error => {
+        console.log("error", error);
       });
   };
 
@@ -168,6 +190,35 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
       }
       updateStateFirebase(mStates);
     }
+  };
+
+  const cancelState = () => {
+    let mStates: any[] = [];
+    if (dataSide.state === "start") {
+      mStates.push({ state: "start" });
+      mStates.push({
+        state: "cancel",
+        start: new Date().toLocaleString("en-US", {
+          timeZone: "America/Bogota"
+        })
+      });
+    } else {
+      if (dataSide.state) {
+        mStates = [
+          ...dataSide.state,
+          {
+            state: "cancel",
+            start: new Date().toLocaleString("en-US", {
+              timeZone: "America/Bogota"
+            })
+          }
+        ];
+      }
+    }
+
+    //setBodyChanges({ ...bodyChanges, enabled: false, state: mStates });
+    cancelBill(mStates);
+    //updateStateFirebase(mStates);
   };
 
   const renderList = (products: any) => {
@@ -230,6 +281,34 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
     );
   };
 
+  const renderAlertCancel = () => {
+    return (
+      <IonAlert
+        isOpen={showAlertCancel.open}
+        onDidDismiss={() => {
+          setShowAlertCancel({ open: false });
+        }}
+        header="Cancelar"
+        subHeader={`Se cancelara el pedido "${
+          showAlertCancel.item ? showAlertCancel.item.productName : ""
+        }"`}
+        message="Esta seguro de cancelar el pedido, se le notificara al usuario"
+        buttons={[
+          "No",
+          {
+            text: "Si",
+            role: "cancel",
+            cssClass: "danger",
+            handler: response => {
+              console.log("cancelar");
+              cancelState();
+            }
+          }
+        ]}
+      ></IonAlert>
+    );
+  };
+
   const renderPopUpOptions = () => {
     return (
       <IonPopover
@@ -266,6 +345,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
                 <IonButton
                   expand="block"
                   color="danger"
+                  disabled={dataSide.products && dataSide.products.length == 1}
                   onClick={() => {
                     setPopOverOptions({ open: false, event: undefined });
                     setShowAlertDelete({
@@ -365,6 +445,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
             </IonTitle>
           </IonHeader>
           {!bodyChanges ? (
+<<<<<<< HEAD
             <IonButton
               color="primary"
               expand="full"
@@ -376,6 +457,34 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
             >
               Avanzar
             </IonButton>
+=======
+            <>
+              <IonButton
+                color="primary"
+                expand="full"
+                onClick={nextState}
+                disabled={
+                  dataSide.state &&
+                  dataSide.state[dataSide.state.length - 1].state === "finished"
+                }
+              >
+                Avanzar
+              </IonButton>
+              <IonButton
+                color="danger"
+                expand="full"
+                disabled={
+                  dataSide.state &&
+                  dataSide.state[dataSide.state.length - 1].state === "finished"
+                }
+                onClick={() => {
+                  setShowAlertCancel({ open: true });
+                }}
+              >
+                Cancelar
+              </IonButton>
+            </>
+>>>>>>> master
           ) : (
             <IonButton onClick={saveChanges} color="warning" expand="full">
               Guardar
@@ -471,6 +580,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
         </IonPopover>
         {renderPopUpOptions()}
         {renderAlert()}
+        {renderAlertCancel()}
       </IonMenu>
     </>
   );
