@@ -345,7 +345,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
                 <IonButton
                   expand="block"
                   color="danger"
-                  disabled={dataSide.products && dataSide.products.length == 1}
+                  disabled={dataSide.products && dataSide.products.length === 1}
                   onClick={() => {
                     setPopOverOptions({ open: false, event: undefined });
                     setShowAlertDelete({
@@ -445,27 +445,14 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
             </IonTitle>
           </IonHeader>
           {!bodyChanges ? (
-<<<<<<< HEAD
-            <IonButton
-              color="primary"
-              expand="full"
-              onClick={nextState}
-              disabled={
-                dataSide.states &&
-                dataSide.states[dataSide.states.length - 1].state === "finished"
-              }
-            >
-              Avanzar
-            </IonButton>
-=======
             <>
               <IonButton
                 color="primary"
                 expand="full"
                 onClick={nextState}
                 disabled={
-                  dataSide.state &&
-                  dataSide.state[dataSide.state.length - 1].state === "finished"
+                  dataSide.states &&
+                  dataSide.states[dataSide.states.length - 1].state === "finished"
                 }
               >
                 Avanzar
@@ -474,8 +461,8 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
                 color="danger"
                 expand="full"
                 disabled={
-                  dataSide.state &&
-                  dataSide.state[dataSide.state.length - 1].state === "finished"
+                  dataSide.states &&
+                  dataSide.states[dataSide.states.length - 1].state === "finished"
                 }
                 onClick={() => {
                   setShowAlertCancel({ open: true });
@@ -484,7 +471,6 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
                 Cancelar
               </IonButton>
             </>
->>>>>>> master
           ) : (
             <IonButton onClick={saveChanges} color="warning" expand="full">
               Guardar
