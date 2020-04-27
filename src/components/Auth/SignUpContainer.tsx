@@ -84,6 +84,7 @@ export class SignUpPage extends React.Component<
     this.setState({'blockNumber': ""});
     this.setState({'homeNumber': ""});
     this.setState({'documentId': ""});
+    this.setState({'neighborhoods': [""]}); 
   }
   
   async getAllNeighborhoodNames() {
@@ -399,7 +400,7 @@ export class SignUpPage extends React.Component<
             color="warning"
             onDidDismiss={() => this.setState({ showToast1: false })}
             message={this.state.loginMessage}
-            duration={3000}
+            duration={4000}
           />
           <IonFab vertical="bottom" horizontal="start" slot="fixed">
             <IonFabButton routerLink="/login">
