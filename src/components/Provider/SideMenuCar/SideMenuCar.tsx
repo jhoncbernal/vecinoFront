@@ -19,7 +19,7 @@ import {
   IonAlert,
   IonFabButton,
   IonIcon,
-  IonButtons
+  IonButtons,
 } from "@ionic/react";
 import style from "./style.module.css";
 import { Product, Bill } from "../../../entities";
@@ -29,20 +29,19 @@ import { add, remove, informationCircleOutline } from "ionicons/icons";
 import { deepCopy } from "../../../hooks/DeepCopy";
 import { menuController } from "@ionic/core";
 import {
-  pushProviderFirebase,
-  pushStatesUserFirebase
+  pushProviderBillsFirebase,
+  pushStatesUserFirebase,
 } from "../../../config/firebase";
 
 const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
   const prevProducts: Product[] = deepCopy(dataSide.products);
-  const states: { [id: string]: any } = {
-    start: { color: "gray", next: "prepare" },
-    prepare: { color: "purple", next: "delivery" },
-    delivery: { color: "blue-hole", next: "finished" },
-    finished: { color: "green-light", next: "" },
-    cancel: "red-light"
-  };
-
+  const states: Array<any> = [
+    { color: "gray", next: "prepare" },
+    { color: "purple", next: "delivery" },
+    { color: "blue-hole", next: "finished" },
+    { color: "green-light", next: "" },
+    { color: "red-light", next: "" },
+  ];
   const [showPopOverOption, setPopOverOptions] = useState<{
     open: boolean;
     event: Event | undefined;
@@ -50,14 +49,14 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
     indexItem?: number;
   }>({
     open: false,
-    event: undefined
+    event: undefined,
   });
 
   const [showAlertDelete, setShowAlertDelete] = useState<{
     open: boolean;
     item?: Product;
   }>({
-    open: false
+    open: false,
   });
 
   const [showPopOverEdit, setShowPopOverEdit] = useState<{
@@ -67,7 +66,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
     indexItem?: number;
   }>({
     open: false,
-    event: undefined
+    event: undefined,
   });
 
   const [showPopUpInfo, setPopUpInfo] = useState<boolean>(false);
@@ -102,72 +101,73 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
   };
 
   const updateFirebase = (bill: Bill) => {
-    pushProviderFirebase({
+    pushProviderBillsFirebase({
       ...bill,
       Total: sumFullBill(),
-      subTotal: sumProducts()
+      subTotal: sumProducts(),
     })
-      .then(response => {
+      .then((response) => {
         menuController.close();
         setBodyChanges(null);
       })
-      .catch(error => {
-        console.log("error", error);
+      .catch((error) => {
+        console.error("error", error);
       });
   };
 
   const updateStateFirebase = (states: any[]) => {
-    pushProviderFirebase({
+    pushProviderBillsFirebase({
       ...dataSide,
-      state: states
+      states: states,
     })
-      .then(response => {
+      .then((response) => {
         pushStatesUserFirebase(dataSide, states);
         menuController.close();
         setBodyChanges(null);
       })
-      .catch(error => {
-        console.log("error", error);
+      .catch((error) => {
+        console.error("error", error);
       });
   };
 
   const saveChanges = () => {
     const pathUrl = `${config.BillsContext}/${dataSide._id}`;
     HttpRequest(pathUrl, "PATCH", bodyChanges, true)
-      .then(response => {
+      .then((response) => {
         updateFirebase(dataSide);
       })
-      .catch(error => {
-        console.log("error", error);
+      .catch((error) => {
+        console.error("error", error);
       });
   };
 
   const nextState = () => {
     let mStates: any[] = [];
-    if (dataSide.state === "start") {
-      mStates.push({ state: "start" });
-      mStates.push({
-        state: "prepare",
-        start: new Date().toLocaleString("en-US", {
-          timeZone: "America/Bogota"
-        })
-      });
-    } else {
-      if (dataSide.state) {
-        const actualState =
-          states[dataSide.state[dataSide.state.length - 1].state];
-        mStates = [
-          ...dataSide.state,
-          {
-            state: actualState.next,
-            start: new Date().toLocaleString("en-US", {
-              timeZone: "America/Bogota"
-            })
-          }
-        ];
+    if (dataSide.states) {
+      if (dataSide.states.length === 1) {
+        mStates.push({ state: "start" });
+        mStates.push({
+          state: "prepare",
+          start: new Date().toLocaleString("en-US", {
+            timeZone: "America/Bogota",
+          }),
+        });
+      } else {
+        if (dataSide.states) {
+          const actualState = states[dataSide.states.length - 1];
+          mStates = [
+            ...dataSide.states,
+            {
+              state: actualState.next,
+              start: new Date().toLocaleString("en-US", {
+                timeZone: "America/Bogota",
+              }),
+            },
+          ];
+        }
       }
+      updateStateFirebase(mStates);
     }
-    updateStateFirebase(mStates);
   };
 
   const renderList = (products: any) => {
@@ -176,12 +176,12 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
         return (
           <IonItem
             key={index}
-            onClick={e => {
+            onClick={(e) => {
               setPopOverOptions({
                 open: true,
                 event: e.nativeEvent,
                 item: product,
-                indexItem: index
+                indexItem: index,
               });
             }}
           >
@@ -221,10 +221,10 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
             text: "Eliminar",
             role: "cancel",
             cssClass: "danger",
-            handler: response => {
+            handler: (response) => {
               deleteProductFromBill(showAlertDelete.item!);
-            }
-          }
+            },
+          },
         ]}
       ></IonAlert>
     );
@@ -235,7 +235,9 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
       <IonPopover
         isOpen={showPopOverOption.open}
         event={showPopOverOption.event}
-        onDidDismiss={e => setPopOverOptions({ open: false, event: undefined })}
+        onDidDismiss={(e) =>
+          setPopOverOptions({ open: false, event: undefined })
+        }
       >
         <IonContent>
           <IonGrid>
@@ -253,7 +255,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
                       open: true,
                       event: undefined,
                       item: deepCopy(showPopOverOption.item),
-                      indexItem: showPopOverOption.indexItem
+                      indexItem: showPopOverOption.indexItem,
                     });
                   }}
                 >
@@ -268,7 +270,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
                     setPopOverOptions({ open: false, event: undefined });
                     setShowAlertDelete({
                       open: true,
-                      item: showPopOverOption.item
+                      item: showPopOverOption.item,
                     });
                   }}
                 >
@@ -321,12 +323,14 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
 
   const getColorState = () => {
     let color = "gray";
-    if (dataSide.state === "start") {
-      return color;
-    } else {
-      if (dataSide.state) {
-        color = states[dataSide.state[dataSide.state.length - 1].state].color;
+    if (dataSide.states) {
+      if (dataSide.states.length === 1) {
         return color;
+      } else {
+        if (dataSide.states) {
+          color = states[dataSide.states.length - 1].color;
+          return color;
+        }
       }
     }
   };
@@ -366,8 +370,8 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
               expand="full"
               onClick={nextState}
               disabled={
-                dataSide.state &&
-                dataSide.state[dataSide.state.length - 1].state === "finished"
+                dataSide.states &&
+                dataSide.states[dataSide.states.length - 1].state === "finished"
               }
             >
               Avanzar
@@ -405,7 +409,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
                           open: true,
                           event: undefined,
                           item: showPopOverEdit.item,
-                          indexItem: showPopOverEdit.indexItem
+                          indexItem: showPopOverEdit.indexItem,
                         });
                       }
                     }}
@@ -436,7 +440,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
                           open: true,
                           event: undefined,
                           item: showPopOverEdit.item,
-                          indexItem: showPopOverEdit.indexItem
+                          indexItem: showPopOverEdit.indexItem,
                         });
                       }
                     }}
@@ -457,7 +461,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
                 setBodyChanges({
                   ...bodyChanges,
                   products: dataSide.products,
-                  Total: sumFullBill()
+                  Total: sumFullBill(),
                 });
               }}
             >

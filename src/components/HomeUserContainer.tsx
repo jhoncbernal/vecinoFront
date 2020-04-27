@@ -7,6 +7,7 @@ import {
   IonSegment,
   IonSegmentButton,
   IonIcon,
+  IonContent,
 } from "@ionic/react";
 import { HttpRequest } from "../hooks/HttpRequest";
 import ListContainer from "./Provider/ListContainer";
@@ -14,14 +15,19 @@ import { Storages } from "../hooks/Storage";
 
 import config from "../config";
 import * as H from 'history';
+import PendingShoppingContainer from "./Provider/PendingShoppingContainer";
+import { User } from "../entities";
+import { timeOutline } from "ionicons/icons";
 interface ContainerProps {
   history: H.History;
-  currentUser: any;
+  currentUser: User;
+  handlerDataSide:any;
 }
 
 const HomeUserContainer: React.FC<ContainerProps> = ({
   history,
   currentUser,
+  handlerDataSide
 }) => {
   const [hiddenBar, setHiddenBar] = useState(false);
   const [loadData, setLoadData] = useState(false);
@@ -29,7 +35,9 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
   const [message, setMessage] = useState("");
   const [productsArray, setProductsArray] = useState<any>([{}]);
   const [segmentValue, setSegmentValue] = useState<any>("provider");
-
+  const handlerDataSideContainer = (data: any) => {
+    handlerDataSide(data);
+  };
   const httpRequest = useCallback(async () => {
     try {
       let pathUrl;
@@ -83,7 +91,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
   }, [httpRequest, segmentValue]);
 
   return (
-    <>
+    <IonContent>
       <IonCard class="card-center">
         <IonToolbar>
           <IonSegment
@@ -99,6 +107,9 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
                 icon={"assets/icons/MarketPlace.svg"}
               />
             </IonSegmentButton>
+            <IonSegmentButton value="pendingShop">
+              <IonIcon class="icons-segment" size="medium" icon={timeOutline} />
+            </IonSegmentButton>
           </IonSegment>
         </IonToolbar>
         {segmentValue ? (
@@ -110,7 +121,15 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
                 inputs={productsArray}
                 currentUser={currentUser}
               ></ListContainer>
-            )  : null}
+            )  : segmentValue === "pendingShop"  ?(
+              <PendingShoppingContainer
+                dataTrigger={handlerDataSideContainer}
+                currentUser={currentUser}
+                hideLoadBar={(response: boolean) => {
+                  setHiddenBar(response);
+                }}
+              ></PendingShoppingContainer>
+            ):null}
           </>
         ) : (
           <></>
@@ -130,7 +149,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
         message={message}
         buttons={["OK"]}
       />
-    </>
+    </IonContent>
   );
 };
 
