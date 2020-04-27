@@ -31,7 +31,7 @@ import {
 import config from "../../../config";
 import { HttpRequest } from "../../../hooks/HttpRequest";
 import {
-  pushProviderFirebase
+  pushProviderBillsFirebase
 } from "../../../config/firebase";
 import * as H from 'history';
 interface ContainerProps {
@@ -135,7 +135,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
         await HttpRequest(pathUrl, "POST", data, true)
           .then(async (response: Bill) => {
             if (currentUser._id && provider._id) {
-              await pushProviderFirebase(response);
+              await pushProviderBillsFirebase(response);
             }
             setAlertHeader("Confirmacion de Orden");
             setAlertMessage(

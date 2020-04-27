@@ -27,7 +27,7 @@ const refUserCar = (userId: string, providerId: string) => {
   return fire_db.ref("cart").child(userId).child(providerId);
 };
 
-const pushProviderFirebase = async (bill: Bill) => {
+const pushProviderBillsFirebase = async (bill: Bill) => {
   await fire_db
     .ref("providers")
     .child(bill.provider._id)
@@ -39,7 +39,10 @@ const pushStatesUserFirebase = (bill: Bill, states: any) => {
   fire_db.ref("users").child(bill.user._id).child(bill.code).set(states);
 };
 
-const refProviderFirebase = (IdProvider: string) => {
+const refProviderBillsFirebase = (IdProvider: string) => {
+  return fire_db.ref("providers").child(IdProvider);
+};
+const refUserBillsFirebase = (IdProvider: string) => {
   return fire_db.ref("providers").child(IdProvider);
 };
 
@@ -47,8 +50,9 @@ export {
   fire_auth,
   fire_db,
   pushCartFirebase,
-  pushProviderFirebase,
+  pushProviderBillsFirebase,
   refUserCar,
-  refProviderFirebase,
+  refProviderBillsFirebase,
+  refUserBillsFirebase,
   pushStatesUserFirebase
 };
