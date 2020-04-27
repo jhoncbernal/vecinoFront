@@ -36,7 +36,7 @@ import {
 
 const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
   const prevProducts: Product[] = deepCopy(dataSide.products);
-  const states: Array<any> = [
+  const states: Array<{color:string,next:string}> = [
     { color: "gray", next: "prepare" },
     { color: "purple", next: "delivery" },
     { color: "blue-hole", next: "finished" },

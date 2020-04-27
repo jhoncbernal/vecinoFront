@@ -1,5 +1,6 @@
 import firebase from "firebase";
 import { Bill } from "../entities";
+import { async } from "q";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,

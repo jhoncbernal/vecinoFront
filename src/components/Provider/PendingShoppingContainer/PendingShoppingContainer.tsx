@@ -22,7 +22,7 @@ const PendingShoppingContainer: FC<componentData> = ({
   hideLoadBar,
   currentUser
 }) => {
-  const states: Array<any> = [
+  const states: Array<{color:string,next:string}> = [
     { color: "gray", next: "prepare" },
     { color: "purple", next: "delivery" },
      { color: "blue-hole", next: "finished" },
