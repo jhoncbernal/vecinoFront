@@ -94,7 +94,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
   };
 
   return (
-    <IonContent>
+    <>
       <IonCard class="card-center">
         <IonToolbar>
           <IonSegment
@@ -158,7 +158,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
         message={message}
         buttons={["OK"]}
       />
-    </IonContent>
+    </>
   );
 };
 

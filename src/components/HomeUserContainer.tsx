@@ -15,7 +15,7 @@ import { Storages } from "../hooks/Storage";
 
 import config from "../config";
 import * as H from 'history';
-import PendingShoppingContainer from "./Provider/PendingShoppingContainer";
+import ListContainerPendings from '../components/Product/Order/ListContainer'
 import { User } from "../entities";
 import { timeOutline } from "ionicons/icons";
 interface ContainerProps {
@@ -35,9 +35,6 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
   const [message, setMessage] = useState("");
   const [productsArray, setProductsArray] = useState<any>([{}]);
   const [segmentValue, setSegmentValue] = useState<any>("provider");
-  const handlerDataSideContainer = (data: any) => {
-    handlerDataSide(data);
-  };
   const httpRequest = useCallback(async () => {
     try {
       let pathUrl;
@@ -91,7 +88,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
   }, [httpRequest, segmentValue]);
 
   return (
-    <IonContent>
+    <>
       <IonCard class="card-center">
         <IonToolbar>
           <IonSegment
@@ -120,24 +117,21 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
                 loaddata={loadData}
                 inputs={productsArray}
                 currentUser={currentUser}
-              ></ListContainer>
+              ><IonProgressBar
+              hidden={hiddenBar}
+              type="indeterminate"
+            ></IonProgressBar></ListContainer>
             )  : segmentValue === "pendingShop"  ?(
-              <PendingShoppingContainer
-                dataTrigger={handlerDataSideContainer}
-                currentUser={currentUser}
-                hideLoadBar={(response: boolean) => {
-                  setHiddenBar(response);
-                }}
-              ></PendingShoppingContainer>
+              <ListContainerPendings
+              history={history}
+              currentUser={currentUser}
+              ></ListContainerPendings>
             ):null}
           </>
         ) : (
           <></>
         )}
-        <IonProgressBar
-          hidden={hiddenBar}
-          type="indeterminate"
-        ></IonProgressBar>
+        
         <br />
       </IonCard>
 
@@ -149,7 +143,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
         message={message}
         buttons={["OK"]}
       />
-    </IonContent>
+    </>
   );
 };
 

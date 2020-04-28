@@ -23,7 +23,7 @@ Errors.set("vehicle already exist","El vehiculo ya existe");
 Errors.set("Internal server error","Error Interno comuniquese con soporte tecnico si esto persiste");
 Errors.set("User has not been verified","Verifique su correo");
 Errors.set("email does not exist","El correo o el usuario no existen");
-Errors.set("Error de conexion","Network Error");
+Errors.set("Network Error","Error de conexion con el servidor comuniquese con soporte tecnico si esto persiste");
 Errors.set("Verify account email","Se ha re enviado el correo de verificacion con 1 hora de vigencia");
 
 return {

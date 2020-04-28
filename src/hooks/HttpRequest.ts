@@ -53,6 +53,8 @@ export async function HttpRequest(
         .catch(async (error: any) => {
           // Error 😨
           let errorMessage;
+          let EspError=ErroDictionary().Errors;
+          const err = new Error();
           if (error.response) {
             /*
              * The request was made and the server responded with a
@@ -71,13 +73,10 @@ export async function HttpRequest(
                   await removeItem('user');
                   await removeItem('fireToken');
             }
-            let EspError=ErroDictionary().Errors;
-            const err = new Error();
             err.message = EspError.get(errorMessage)?EspError.get(errorMessage):errorMessage;
             throw err;
           }
           else{
-            const err = new Error();
             err.message = 'Error con el servidor '+error.response.data?error.response.data:'';
             throw err;
           }
@@ -93,6 +92,10 @@ export async function HttpRequest(
             console.error("Error", error.message);
           }
           console.error(error);
+          if(error.message){
+            err.message = EspError.get(error.message)?EspError.get(error.message):error.message;
+            throw err;
+          }
           throw error;
         });
     } catch (err) {

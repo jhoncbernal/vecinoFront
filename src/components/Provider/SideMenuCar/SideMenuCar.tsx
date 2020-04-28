@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useCallback } from "react";
 import {
   IonMenu,
   IonHeader,
@@ -31,7 +31,8 @@ import { menuController } from "@ionic/core";
 import {
   pushProviderBillsFirebase,
   pushStatesUserFirebase,
-  deleteBillFirebase
+  deleteProviderBillsFirebase,
+  deleteUserBillsFirebase
 } from "../../../config/firebase";
 
 const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
@@ -79,7 +80,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
 
   const [showPopUpInfo, setPopUpInfo] = useState<boolean>(false);
 
-  const [bodyChanges, setBodyChanges] = useState();
+  const [bodyChanges, setBodyChanges] = useState<any>({});
 
   const sumFullBill = () => {
     let sum = 0;
@@ -105,9 +106,15 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
   const deleteProductFromBill = (product: Product) => {
     const index = dataSide.products.indexOf(product);
     dataSide.products.splice(index, 1);
-    setBodyChanges({ ...bodyChanges, products: dataSide.products });
+    setBodyChanges((prevState: any) => ({
+      ...prevState,
+       products: dataSide.products,
+       subTotal: sumProducts(),
+       Total: sumFullBill()
+    }));
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateFirebase = (bill: Bill) => {
     pushProviderBillsFirebase({
       ...bill,
@@ -116,13 +123,14 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
     })
       .then((response) => {
         menuController.close();
-        setBodyChanges(null);
+        setBodyChanges({});
       })
       .catch((error) => {
         console.error("error", error);
       });
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateStateFirebase = (states: any[]) => {
     pushProviderBillsFirebase({
       ...dataSide,
@@ -131,51 +139,45 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
       .then((response) => {
         pushStatesUserFirebase(dataSide, states);
         menuController.close();
-        setBodyChanges(null);
+        setBodyChanges({});
       })
       .catch((error) => {
         console.error("error", error);
       });
   };
 
-  const saveChanges = () => {
+  const saveChanges =useCallback(async () => {
     const pathUrl = `${config.BillsContext}/${dataSide._id}`;
     console.log("body", bodyChanges);
-    HttpRequest(pathUrl, "PATCH", bodyChanges, true)
+    await HttpRequest(pathUrl, "PATCH", bodyChanges, true)
       .then((response) => {
         updateFirebase(dataSide);
       })
       .catch((error) => {
         console.error("error", error);
       });
-  };
+  },[bodyChanges, dataSide, updateFirebase]);
 
-  const cancelBill = (states: any[]) => {
+  const closeBill = useCallback(async ( states:Array<{state:string,start:string}>) => {
+    console.log(bodyChanges);
     const pathUrl = `${config.BillsContext}/${dataSide._id}`;
-    const changes = { enabled: false };
-    HttpRequest(pathUrl, "PATCH", changes, true)
+   await HttpRequest(pathUrl, "PATCH", {enabled:false,states:states}, true)
       .then(response => {
-        deleteBillFirebase(dataSide);
+        deleteProviderBillsFirebase(dataSide);
+        deleteUserBillsFirebase(dataSide);
         menuController.close();
-        setBodyChanges(null);
+        setBodyChanges({});
       })
       .catch(error => {
         console.log("error", error);
       });
-  };
+    },
+    [bodyChanges, dataSide]
+  );
 
-  const nextState = () => {
-    let mStates: any[] = [];
+  const nextState = useCallback( () => {
+    let mStates: Array<{state:string,start:string}> = [];
     if (dataSide.states) {
-      if (dataSide.states.length === 1) {
-        mStates.push({ state: "start" });
-        mStates.push({
-          state: "prepare",
-          start: new Date().toLocaleString("en-US", {
-            timeZone: "America/Bogota",
-          }),
-        });
-      } else {
         if (dataSide.states) {
           const actualState = states[dataSide.states.length - 1];
           mStates = [
@@ -186,38 +188,42 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
                 timeZone: "America/Bogota",
               }),
             },
-          ];
+          ]; 
+          if(actualState.next==='finished'){
+            closeBill(mStates);
+          }
+          else{
+          updateStateFirebase(mStates);
+          } 
         }
-      }
-      updateStateFirebase(mStates);
     }
-  };
+  },[closeBill, dataSide.states, states, updateStateFirebase]);
   const cancelState = () => {
-    let mStates: any[] = [];
-    if (dataSide.state === "start") {
-      mStates.push({ state: "start" });
+    let mStates:Array<{state:string,start:string}> = [];
+    if (dataSide.states) {
+      if (dataSide.states.length === 1) {
+      mStates.push({ state: "start",start: new Date().toLocaleString("en-US", {
+        timeZone: "America/Bogota"
+      }) });
       mStates.push({
-        state: "cancel",
         start: new Date().toLocaleString("en-US", {
           timeZone: "America/Bogota"
-        })
+        }),
+        state: "cancel"
       });
     } else {
-      if (dataSide.state) {
         mStates = [
-          ...dataSide.state,
+          ...dataSide.states,
           {
-            state: "cancel",
             start: new Date().toLocaleString("en-US", {
               timeZone: "America/Bogota"
-            })
+            }),
+            state: "cancel"
           }
         ];
       }
     }
-
-    //setBodyChanges({ ...bodyChanges, enabled: false, state: mStates });
-    cancelBill(mStates);
+    closeBill(mStates);
     //updateStateFirebase(mStates);
   };
 
@@ -445,7 +451,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
               </IonText>
             </IonTitle>
           </IonHeader>
-          {!bodyChanges ? (
+          {Object.keys(bodyChanges).length===0 ? (
             <>
               <IonButton
                 color="primary"
@@ -554,11 +560,12 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
                 dataSide.products[showPopOverEdit.indexItem!] =
                   showPopOverEdit.item;
                 setShowPopOverEdit({ open: false, event: undefined });
-                setBodyChanges({
-                  ...bodyChanges,
+                setBodyChanges((prevState: any) => ({
+                  ...prevState,
                   products: dataSide.products,
-                  Total: sumFullBill(),
-                });
+                  subTotal: sumProducts(),
+                  Total: sumFullBill()
+                }));
               }}
             >
               Guardar cambio

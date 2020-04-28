@@ -9,7 +9,7 @@ export interface Bill {
   cashValue: number;
   change: number;
   enabled: boolean;
-  states: [{start:Date,state:string}];
+  states: [{start:string,state:string}];
   code: string;
   otherAddress: string;
   products: ProductBill;

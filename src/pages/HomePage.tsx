@@ -148,10 +148,10 @@ export class Home extends React.Component<
               ></HomeUserContainer>
             )
           ) : null}
- <IonContent id="auxContent"></IonContent>
+ 
  {this.renderSideMenu(this.state.currentUser.roles)}
-
-        </IonContent>
+ <IonContent id='auxContent'></IonContent>
+     </IonContent>
         <IonAlert
           isOpen={this.state.showAlert}
           onDidDismiss={() => this.setState({ showAlert: false })}
