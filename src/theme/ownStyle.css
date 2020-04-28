@@ -14,7 +14,10 @@ ion-content {
   -moz-background-size: cover;
   background-size: cover;
 }
-
+ #auxContent{
+  --background: transparent!important;
+  background:transparent!important;
+}
 .bg-image {
   background-color: inherit !important;
   background-size: cover;

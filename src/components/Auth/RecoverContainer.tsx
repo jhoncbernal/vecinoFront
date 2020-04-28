@@ -113,7 +113,7 @@ export class RecoverContainer extends React.Component<
             isOpen={this.state.showToast1}
             onDidDismiss={() => this.setState({ showToast1: false })}
             message={this.state.loginMessage}
-            duration={2000}
+            duration={4000}
           />
 
           <IonFab vertical="bottom" horizontal="start" slot="fixed">

@@ -1,6 +1,5 @@
 import firebase from "firebase";
 import { Bill } from "../entities";
-import { async } from "q";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -28,33 +27,40 @@ const refUserCar = (userId: string, providerId: string) => {
   return fire_db.ref("cart").child(userId).child(providerId);
 };
 
-const pushProviderFirebase = async (bill: Bill) => {
+const pushProviderBillsFirebase = async (bill: Bill) => {
   await fire_db
     .ref("providers")
     .child(bill.provider._id)
     .child(bill.code)
     .set(bill);
 };
-
-const deleteBillFirebase = (bill: Bill) => {
+const pushStatesUserFirebase = async (bill: Bill, states: any) => {
+  await fire_db.ref("users").child(bill.user._id).child(bill.code).set(states);
+};
+const deleteProviderBillsFirebase = (bill: Bill) => {
   fire_db.ref("providers").child(bill.provider._id).child(bill.code).remove();
 };
-
-const pushStatesUserFirebase = (bill: Bill, states: any) => {
-  fire_db.ref("users").child(bill.user._id).child(bill.code).set(states);
+const deleteUserBillsFirebase = (bill: Bill) => {
+  fire_db.ref("users").child(bill.user._id).child(bill.code).remove();
 };
 
-const refProviderFirebase = (IdProvider: string) => {
+
+const refProviderBillsFirebase = (IdProvider: string) => {
   return fire_db.ref("providers").child(IdProvider);
+};
+const refUserBillsFirebase = (IdUser: string) => {
+  return fire_db.ref("users").child(IdUser);
 };
 
 export {
   fire_auth,
   fire_db,
   pushCartFirebase,
-  pushProviderFirebase,
+  pushProviderBillsFirebase,
   refUserCar,
-  refProviderFirebase,
+  refProviderBillsFirebase,
+  refUserBillsFirebase,
   pushStatesUserFirebase,
-  deleteBillFirebase
+  deleteProviderBillsFirebase,
+  deleteUserBillsFirebase
 };

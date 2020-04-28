@@ -38,6 +38,7 @@ export class LoginPage extends React.Component<
     showToast1: boolean;
     loginMessage: string;
     hiddenbar: boolean;
+    toastColor:string;
     notification: { id: string; title: string; body: string }[];
   }
 > {
@@ -45,6 +46,7 @@ export class LoginPage extends React.Component<
     super(props);
 
     this.state = {
+      toastColor:"warning",
       email: "",
       password: "",
       checked: false,
@@ -96,18 +98,22 @@ export class LoginPage extends React.Component<
             await removeItem("checked");
             await removeItem("username");
           }
+          this.setState({ toastColor: "white" });
           this.setState({ loginMessage: "Bienvenido!" });
           this.setState({ password: "" });
 
           this.props.history.push("/home");
         })
         .catch((error) => {
+          this.setState({ password: "" });
           console.error(error);
           this.setState({ loginMessage: error.message });
         });
       this.setState({ hiddenbar: true });
       this.setState({ showToast1: true });
     } catch (e) {
+
+      this.setState({ password: "" });
       this.setState({ hiddenbar: true });
       console.error("Login: " + e);
     }
@@ -230,10 +236,11 @@ export class LoginPage extends React.Component<
           </form>
 
           <IonToast
+            color={this.state.toastColor}
             isOpen={this.state.showToast1}
             onDidDismiss={() => this.setState({ showToast1: false })}
             message={this.state.loginMessage}
-            duration={2000}
+            duration={4000}
           />
 
           <div id="btn-auth">

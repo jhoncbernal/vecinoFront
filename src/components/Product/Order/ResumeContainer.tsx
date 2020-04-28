@@ -19,6 +19,7 @@ import {
   IonItemOptions,
   IonItemOption,
   IonItemDivider,
+  IonSpinner,
 } from "@ionic/react";
 import { cashOutline, trashBinOutline, mapOutline, walletOutline } from "ionicons/icons";
 import {
@@ -31,7 +32,7 @@ import {
 import config from "../../../config";
 import { HttpRequest } from "../../../hooks/HttpRequest";
 import {
-  pushProviderFirebase
+  pushProviderBillsFirebase, pushStatesUserFirebase
 } from "../../../config/firebase";
 import * as H from 'history';
 interface ContainerProps {
@@ -88,7 +89,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
   const [alertMessage, setAlertMessage] = useState("");
   const [alertHeader, setAlertHeader] = useState("");
   const [showAlert2, setShowAlert2] = useState(false);
-
+  const [hiddenSpiner,setHiddenSpiner]= useState<boolean>(false);
   let total = 0;
   const deliverySchedule = useCallback(
     (value) => {
@@ -99,8 +100,10 @@ const ResumeContainer: React.FC<ContainerProps> = ({
     },
     [flagExtraCharge]
   );
+ 
   const submitOrder = useCallback(
     async (order: ShoppingOrder) => {
+      setHiddenSpiner(true);
       let newTotal = Number(tip) + order.total + provider.deliveryCharge;
       if (
         (!cashValue || cashValue < newTotal) &&
@@ -135,7 +138,16 @@ const ResumeContainer: React.FC<ContainerProps> = ({
         await HttpRequest(pathUrl, "POST", data, true)
           .then(async (response: Bill) => {
             if (currentUser._id && provider._id) {
-              await pushProviderFirebase(response);
+              await pushProviderBillsFirebase(response);
+              let mStates = [
+                {
+                  state: 'start',
+                  start: new Date().toLocaleString("en-US", {
+                    timeZone: "America/Bogota",
+                  }),
+                },
+              ]; 
+             await pushStatesUserFirebase(response, mStates);
             }
             setAlertHeader("Confirmacion de Orden");
             setAlertMessage(
@@ -144,12 +156,12 @@ const ResumeContainer: React.FC<ContainerProps> = ({
 
           })
           .catch((error) => {
+            setHiddenSpiner(false); 
             console.error(error);
             throw error;
           });
-
-          
       }
+      setHiddenSpiner(false);
       setShowAlert2(true);
     },
     [address, cashValue, currentUser._id, currentUser.neighborhood.address, flagExtraCharge, paymentMethod, products, provider._id, provider.deliveryCharge, schedule, tip]
@@ -210,14 +222,14 @@ const ResumeContainer: React.FC<ContainerProps> = ({
               <IonSelectOption>
                 {today.getHours() <= openHour - 1
                   ? `Hoy de ${openHour}:00  a ${openHour + 1}:00 `
-                  : `${tomorrow} de ${openHour}:00  a ${openHour + 1}:00 `}{" "}
+                  : `${tomorrow} de ${openHour}:00  a ${openHour + 1}:00 `}
               </IonSelectOption>
               <IonSelectOption>
                 {today.getHours() <= openHour + 4
                   ? `Hoy de ${openHour + 4}:00  a ${openHour + 5}:00 `
                   : `${tomorrow} de ${openHour + 4}:00  a ${
                       openHour + 5
-                    }:00 `}{" "}
+                    }:00 `}
               </IonSelectOption>
               <IonSelectOption>
                 {today.getHours() <= closeHour - 1
@@ -300,7 +312,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
         <IonItem>
           <IonLabel class="ion-align-items-start">Propina:</IonLabel>
           <IonLabel class="ion-align-items-end ion-text-end">
-            {" "}
+            
             ${Number(tip).toLocaleString()}
           </IonLabel>
         </IonItem>
@@ -345,7 +357,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             <IonTitle class=" ion-text-end">${total.toLocaleString()}</IonTitle>
           </IonItem>
           <IonButton
-           disabled={order?order.total>0?false:true:true}
+           disabled={order?order.total>0&&!hiddenSpiner?false:true:true}
             onClick={() => {
               if (order) {
                 submitOrder(order);
@@ -353,7 +365,8 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             }}
             expand="full"
           >
-            Finalizar compra{" "}
+            Finalizar compra
+            <IonSpinner hidden={!hiddenSpiner} color={'white'} name="bubbles" />
           </IonButton>
         </IonToolbar>
       </IonFooter>
@@ -395,8 +408,9 @@ const ResumeContainer: React.FC<ContainerProps> = ({
       />
       <IonAlert
         isOpen={showAlert2}
-        onDidDismiss={() => {
+        onDidDismiss={async() => {
           if(alertMessage.includes("seguimiento")){
+            
             clearCart(); closeModal(false);history.go(0);
           }
           setShowAlert2(false)

@@ -14,7 +14,7 @@ import style from "./style.module.css";
 import { menuController } from "@ionic/core";
 import config from "../../../config";
 import { HttpRequest } from "../../../hooks/HttpRequest";
-import { refProviderFirebase } from "../../../config/firebase";
+import { refProviderBillsFirebase } from "../../../config/firebase";
 import { Bill } from "../../../entities";
 
 const PendingShoppingContainer: FC<componentData> = ({
@@ -22,13 +22,13 @@ const PendingShoppingContainer: FC<componentData> = ({
   hideLoadBar,
   currentUser
 }) => {
-  const states: { [id: string]: any } = {
-    start: { color: "gray", next: "prepare" },
-    prepare: { color: "purple", next: "delivery" },
-    delivery: { color: "blue-hole", next: "finished" },
-    finished: { color: "green-light", next: "" },
-    cancel: { color: "red-light", next: "" }
-  };
+  const states: Array<{color:string,next:string}> = [
+    { color: "gray", next: "prepare" },
+    { color: "purple", next: "delivery" },
+     { color: "blue-hole", next: "finished" },
+     { color: "green-light", next: "" },
+     { color: "red-light", next: "" }
+];
   const [bills, setBills] = useState<any[]>();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -45,7 +45,7 @@ const PendingShoppingContainer: FC<componentData> = ({
   };
 
   useEffect(() => {
-    refProviderFirebase(currentUser._id).on("value", snapshot => {
+    refProviderBillsFirebase(currentUser._id).on("value", snapshot => {
       setBills([]);
       const pendingData: any[] = [];
       snapshot.forEach(snap => {
@@ -97,14 +97,14 @@ const PendingShoppingContainer: FC<componentData> = ({
   };
   const getColorState = (bill: Bill) => {
     let color = "gray";
-    if (bill.state === "start") {
+    if(bill.states){
+    if (bill.states.length === 1) {
       return color;
     } else {
-      if (bill.state) {
-        color = states[bill.state[bill.state.length - 1].state].color;
+        color = states[bill.states.length-1].color;
         return color;
-      }
     }
+  }
   };
   return (
     <>
