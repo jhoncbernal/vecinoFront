@@ -34,20 +34,22 @@ const pushProviderBillsFirebase = async (bill: Bill) => {
     .child(bill.code)
     .set(bill);
 };
-
-const deleteBillFirebase = (bill: Bill) => {
+const pushStatesUserFirebase = async (bill: Bill, states: any) => {
+  await fire_db.ref("users").child(bill.user._id).child(bill.code).set(states);
+};
+const deleteProviderBillsFirebase = (bill: Bill) => {
   fire_db.ref("providers").child(bill.provider._id).child(bill.code).remove();
 };
-
-const pushStatesUserFirebase = (bill: Bill, states: any) => {
-  fire_db.ref("users").child(bill.user._id).child(bill.code).set(states);
+const deleteUserBillsFirebase = (bill: Bill) => {
+  fire_db.ref("users").child(bill.user._id).child(bill.code).remove();
 };
+
 
 const refProviderBillsFirebase = (IdProvider: string) => {
   return fire_db.ref("providers").child(IdProvider);
 };
-const refUserBillsFirebase = (IdProvider: string) => {
-  return fire_db.ref("providers").child(IdProvider);
+const refUserBillsFirebase = (IdUser: string) => {
+  return fire_db.ref("users").child(IdUser);
 };
 
 export {
@@ -59,5 +61,6 @@ export {
   refProviderBillsFirebase,
   refUserBillsFirebase,
   pushStatesUserFirebase,
-  deleteBillFirebase
+  deleteProviderBillsFirebase,
+  deleteUserBillsFirebase
 };
