@@ -98,7 +98,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
 
   return (
     <>
-      <IonCard class="card-center">
+      <IonCard class="home-card-center">
         <IonToolbar>
           <IonSegment
             onIonChange={(e) => {
