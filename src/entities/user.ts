@@ -2,7 +2,7 @@ export  interface User {
     _id?: string;
     username: string;
     email: string;
-    enabled:string;
+    enabled:boolean;
     roles: Array<string>;
     firstName: string;
     lastName?: string;
@@ -10,7 +10,7 @@ export  interface User {
     phone: number;
     resetPasswordToken?: string;
     resetPasswordExpires?: string;
-    isVerified?: string;
+    isVerified?: boolean;
     fireToken?: string;
 
     uniquecode:string;

@@ -236,7 +236,6 @@ const ListContainer: React.FC<ContainerProps> = ({
                         hidden={input.totalAmount < 10 ? false : true}
                       >
                         <strong>
-                          {" "}
                           {input.totalAmount <= 0
                             ? "  Agotado"
                             : input.totalAmount < 10
@@ -278,7 +277,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                               input.promotionPrice && DatePromotion >= today ? (
                                 <IonText>
                                   <h2 color="dark">
-                                    Precio de Oferta:{" "}
+                                    Precio de Oferta:
                                     <strong>
                                       {input.promotionPrice.toLocaleString()}
                                     </strong>
@@ -288,8 +287,8 @@ const ListContainer: React.FC<ContainerProps> = ({
                             ) : null}
                             <IonLabel>
                               <h3>
-                                {input ? input.productType : ""}{" "}
-                                {input ? input.productName : ""}{" "}
+                                {input ? input.productType : ""}
+                                {input ? input.productName : ""}
                               </h3>
                               <p>{`1 (${input.measureType})`}</p>
                             </IonLabel>
@@ -498,23 +497,23 @@ const ListContainer: React.FC<ContainerProps> = ({
     throw e;
   }
 };
-const emptyProduct:Product= {
-  _id: '',
+const emptyProduct: Product = {
+  _id: "",
   enabled: true,
-  keyImage: '',
+  keyImage: "",
   measureType: "notSet",
   price: 0,
-  productName: '',
-  productType: '',
-  provider: '',
+  productName: "",
+  productType: "",
+  provider: "",
   totalAmount: 0,
-  urlImage: '',
+  urlImage: "",
   code: 0,
-  brand: '',
-  features: '',
+  brand: "",
+  features: "",
   promotionPrice: 0,
-  promotionExpires:new Date(),
-  quantity: 0
-}
+  promotionExpires: new Date(),
+  quantity: 0,
+};
 
 export default ListContainer;

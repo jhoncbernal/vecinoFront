@@ -1,0 +1,21 @@
+ion-item-divider ion-thumbnail {
+    height: 3.5rem;
+    width: 3.5rem;
+    margin-right: 1%;
+    padding-right: 1%;
+}
+.md body ion-card {
+    background: transparent !important;
+    width: 75%;
+    margin: auto;
+    margin-top: 4%;
+  }
+ion-item-divider{
+    background: transparent !important; 
+}
+ion-card {
+    background: transparent !important;
+    width: 100%;
+    margin: auto;
+    margin-top: 4%;
+  }
