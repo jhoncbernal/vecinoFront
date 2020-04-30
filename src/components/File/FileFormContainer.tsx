@@ -14,11 +14,11 @@ import {
   IonImg,
   IonCardHeader,
   IonCardContent,
-  IonText
+  IonText,
 } from "@ionic/react";
 import { documentTextOutline } from "ionicons/icons";
 import axios from "axios";
-import * as H from 'history';
+import * as H from "history";
 export class FileFormPage extends React.Component<
   { history: H.History },
   {
@@ -27,14 +27,14 @@ export class FileFormPage extends React.Component<
     message: string;
     hiddenbar: boolean;
   }
-  > {
+> {
   constructor(props: any) {
     super(props);
     this.state = {
       file: "",
       showToast1: false,
       message: "",
-      hiddenbar: true
+      hiddenbar: true,
     };
   }
 
@@ -53,7 +53,7 @@ export class FileFormPage extends React.Component<
       let header = {
         Authorization: token.obj,
         "Access-Control-Allow-Origin": "*",
-        encType: "multipart/form-data"
+        encType: "multipart/form-data",
       };
       let url = `${config.BASE_URL}${config.API_VERSION}/file`;
       const data = new FormData();
@@ -73,7 +73,7 @@ export class FileFormPage extends React.Component<
           }
           return { response };
         })
-        .catch(error => {
+        .catch((error) => {
           try {
             this.setState({ hiddenbar: true });
             this.setState({ message: error });
@@ -99,14 +99,13 @@ export class FileFormPage extends React.Component<
           <IonItem>
             <IonImg class="img" src={"/assets/img/IconLogo.png"} />
           </IonItem>
-          <form onSubmit={e => this.handleSubmit(e)} action="post">
+          <form onSubmit={(e) => this.handleSubmit(e)} action="post">
             <IonCard class="card-center">
               <IonCardHeader>
                 <h3> Actualizar cartera</h3>
               </IonCardHeader>
               <IonCardContent>
                 <IonText color="primary">
-                  {" "}
                   <h3>
                     Por favor agrege el documento con la cartera actualizada
                   </h3>

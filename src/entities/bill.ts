@@ -12,15 +12,16 @@ export interface Bill {
   states: [{start:string,state:string}];
   code: string;
   otherAddress: string;
-  products: ProductBill;
+  tip:number;
+  products: [ProductBill];
   user: {
     _id: string;
     firstName: string;
     phone: number;
     email: string;
-    homenumber: number;
-    blocknumber: number;
-    neighborhood: string;
+    homeNumber: number;
+    blockNumber: number;
+    neighborhood: {firstName:string,address:string};
   };
   provider: {
     _id: string;
@@ -31,7 +32,7 @@ export interface Bill {
   createdAt: Date;
   updatedAt: Date;
 }
-interface ProductBill {
+export interface ProductBill {
   productName: string;
   measureType: string;
   quantity: number;

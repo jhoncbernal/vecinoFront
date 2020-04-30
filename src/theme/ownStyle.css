@@ -22,19 +22,19 @@ ion-content {
   background-color: inherit !important;
   background-size: cover;
 }
+.md body .card-center {
+  background: transparent !important;
+  width: 60%;
+  margin: auto;
+  margin-top: 4%;
+}
+.card-center {
+  background: transparent !important;
+  width: 93%;
+  margin: auto;
+  margin-top: 4%;
+}
 
-.card-center {
-  background: transparent !important;
-  width: 75%;
-  margin: auto;
-  margin-top: 4%;
-}
-.card-center {
-  background: transparent !important;
-  width: 75%;
-  margin: auto;
-  margin-top: 4%;
-}
 .btn-login {
   margin-top: 1.5%;
   margin-left: auto;

@@ -1,54 +1,37 @@
 import React, { FC, useEffect, useState } from "react";
 import {
   IonTitle,
-  IonList,
   IonItem,
   IonHeader,
   IonLabel,
   IonText,
-  IonCardContent,
   IonCard,
-  IonCardHeader
+  IonCardHeader,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonIcon,
+  IonBadge,
 } from "@ionic/react";
 import style from "./style.module.css";
 import { menuController } from "@ionic/core";
-import config from "../../../config";
-import { HttpRequest } from "../../../hooks/HttpRequest";
 import { refProviderBillsFirebase } from "../../../config/firebase";
 import { Bill } from "../../../entities";
+import { StatesDictionary } from "../../../hooks/OrderStates";
 
 const PendingShoppingContainer: FC<componentData> = ({
   dataTrigger,
   hideLoadBar,
-  currentUser
+  currentUser,
 }) => {
-  const states: Array<{color:string,next:string}> = [
-    { color: "gray", next: "prepare" },
-    { color: "purple", next: "delivery" },
-     { color: "blue-hole", next: "finished" },
-     { color: "green-light", next: "" },
-     { color: "red-light", next: "" }
-];
-  const [bills, setBills] = useState<any[]>();
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const getData = () => {
-    const pathUrl = `${config.BillsContext}/provider/1`;
-    HttpRequest(pathUrl, "GET", "", true)
-      .then(response => {
-        setBills(response);
-        hideLoadBar(true);
-      })
-      .catch(e => {
-        console.error(e);
-      });
-  };
+  const [bills, setBills] = useState<Array<Bill>>();
+  const statesStyle = StatesDictionary().states;
 
   useEffect(() => {
-    refProviderBillsFirebase(currentUser._id).on("value", snapshot => {
+    refProviderBillsFirebase(currentUser._id).on("value", (snapshot) => {
       setBills([]);
       const pendingData: any[] = [];
-      snapshot.forEach(snap => {
+      snapshot.forEach((snap) => {
         pendingData.push(snap.val());
         hideLoadBar(true);
       });
@@ -61,7 +44,8 @@ const PendingShoppingContainer: FC<componentData> = ({
   };
   const renderCardsData = () => {
     if (bills) {
-      return bills.map((bill, index) => {
+      return bills.map((bill: Bill, index) => {
+        let state = getStateStyle(bill);
         return (
           <IonCard
             key={index}
@@ -70,41 +54,183 @@ const PendingShoppingContainer: FC<componentData> = ({
               menuController.open();
             }}
           >
-            <IonCardHeader color={getColorState(bill)}>
-              <IonText>Pedido No: {bill.code}</IonText>
-              <IonText className={style["price-label"]}>{bill.Total}</IonText>
+            <IonCardHeader color={state ? state.color : "white"}>
+              <IonGrid>
+                <IonRow>
+                  <IonCol size="4">
+                    <IonIcon
+                      size="large"
+                      icon={state ? state.icon : "white"}
+                    ></IonIcon>
+                    <IonText class="ion-margin-vertical">
+                      {state ? state.state : null}
+                      {bill.DeliverySchedule ? (
+                        bill.DeliverySchedule.includes("Ahora") ? (
+                          <IonBadge color="danger">!!!</IonBadge>
+                        ) : null
+                      ) : null}
+                    </IonText>
+                  </IonCol>
+                  <IonCol class="ion-padding-vertical" size="4">
+                    <IonText>Pedido No: {bill.code}</IonText>
+                  </IonCol>
+
+                  <IonCol size="4">
+                    <IonText className={style["price-label"]}>
+                      ${bill.Total.toLocaleString()}
+                    </IonText>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
             </IonCardHeader>
-            <IonCardContent>
-              <IonList>
-                <IonItem>
-                  <IonLabel>Conjunto</IonLabel>
-                  <IonText>{bill.user.neighborhood.firstName}</IonText>
-                </IonItem>
-                <IonItem>
-                  <IonLabel>Horario</IonLabel>
-                  <IonText>{bill.DeliverySchedule}</IonText>
-                </IonItem>
-                <IonItem>
-                  <IonLabel>Cantidad de productos</IonLabel>
-                  <IonText>{bill.products ? bill.products.length : 0}</IonText>
-                </IonItem>
-              </IonList>
-            </IonCardContent>
+            <IonGrid>
+              <IonRow>
+                <IonCol size-xs="12" size-md="4" size-lg="4">
+                  <IonItem lines="none">
+                    <IonLabel position="stacked">
+                      <p>Direccion</p>
+                    </IonLabel>
+                    <IonText>
+                      {bill.otherAddress
+                        ? bill.otherAddress
+                        : bill.user.neighborhood.address}
+                    </IonText>
+                  </IonItem>
+                </IonCol>
+                {!bill.otherAddress ? (
+                  <>
+                    <IonCol size-xs="12" size-md="4" size-lg="2">
+                      <IonItem lines="none">
+                        <IonLabel position="stacked">
+                          <p>Conjunto</p>
+                        </IonLabel>
+                        <IonText>{bill.user.neighborhood.firstName}</IonText>
+                      </IonItem>
+                    </IonCol>
+                    <IonCol size-xs="6" size-md="3" size-lg="1">
+                      <IonItem lines="none">
+                        <IonLabel position="stacked">
+                          <p>Torre:</p>
+                        </IonLabel>
+                        <IonText>{bill.user.blockNumber}</IonText>
+                      </IonItem>
+                    </IonCol>
+                    <IonCol size-xs="6" size-md="3" size-lg="1">
+                      <IonItem lines="none">
+                        <IonLabel position="stacked">
+                          <p>Apt:</p>
+                        </IonLabel>
+                        <IonText>{bill.user.homeNumber}</IonText>
+                      </IonItem>
+                    </IonCol>
+                  </>
+                ) : null}
+                <IonCol size-xs="6" size-md="3" size-lg="2">
+                      <IonItem lines="none">
+                        <IonLabel position="stacked">
+                          <p>Nombre:</p>
+                        </IonLabel>
+                        <IonText>{bill.user.firstName}</IonText>
+                      </IonItem>
+                    </IonCol>
+                    <IonCol size-xs="6" size-md="3" size-lg="2">
+                      <IonItem lines="none">
+                        <IonLabel position="stacked">
+                          <p>Telefono:</p>
+                        </IonLabel>
+                        <IonText><small>{bill.user.phone}</small></IonText>
+                      </IonItem>
+                    </IonCol>
+              </IonRow>
+              <IonRow
+                class="ion-justify-content-end"
+              >
+                <IonCol
+                  size-xs="6"
+                  size-md="3"
+                  size-lg="2"
+                  hidden={bill.tip <= 0}
+                >
+                  <IonItem lines="none">
+                    <IonLabel position="stacked">
+                      <p>Propina</p>
+                    </IonLabel>
+                    <IonText>${bill.tip.toLocaleString()}</IonText>
+                  </IonItem>
+                </IonCol>
+                <IonCol
+                hidden={bill.deliveryExtraCharge + bill.deliveryCharge <= 0}
+                 size-xs="6" size-md="3" size-lg="2">
+                  <IonItem lines="none">
+                    <IonLabel position="stacked">
+                      <p>Envio</p>
+                    </IonLabel>
+                    <IonText>
+                      $
+                      {bill.deliveryExtraCharge
+                        ? (
+                            bill.deliveryExtraCharge + bill.deliveryCharge
+                          ).toLocaleString()
+                        : bill.deliveryCharge.toLocaleString()}
+                    </IonText>
+                  </IonItem>
+                </IonCol>
+                <IonCol
+                  size-xs="6"
+                  size-md="3"
+                  size-lg="2"
+                  hidden={bill.change <= 0}
+                >
+                  <IonItem lines="none">
+                    <IonLabel position="stacked">
+                      <p>Cambio</p>
+                    </IonLabel>
+                    <IonText>${bill.change.toLocaleString()}</IonText>
+                  </IonItem>
+                </IonCol>
+                <IonCol
+                  size-xs="6"
+                  size-md="3"
+                  size-lg="2"
+                  hidden={bill.cashValue <= 0}
+                >
+                  <IonItem lines="none">
+                    <IonLabel position="stacked">
+                      <p>Efectivo</p>
+                    </IonLabel>
+                    <IonText>${bill.cashValue.toLocaleString()}</IonText>
+                  </IonItem>
+                </IonCol>
+                <IonCol size-xs="6" size-md="3" size-lg="2">
+                  <IonItem lines="none">
+                    <IonLabel position="stacked">
+                      <p>#Productos</p>
+                    </IonLabel>
+                    <IonText>
+                      {bill.products ? bill.products.length : 0}
+                    </IonText>
+                  </IonItem>
+                </IonCol>
+                <IonCol size-xs="12" size-md="3" size-lg="2">
+                  <IonItem lines="none">
+                    <IonLabel position="stacked">
+                      <p>Horario</p>
+                    </IonLabel>
+                    <IonText>{bill.DeliverySchedule}</IonText>
+                  </IonItem>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
           </IonCard>
         );
       });
     }
   };
-  const getColorState = (bill: Bill) => {
-    let color = "gray";
-    if(bill.states){
-    if (bill.states.length === 1) {
-      return color;
-    } else {
-        color = states[bill.states.length-1].color;
-        return color;
+  const getStateStyle = (bill: Bill) => {
+    if (bill.states && statesStyle) {
+      let pos: number = bill.states.length - 1;
+      return statesStyle.get(bill.states[pos].state);
     }
-  }
   };
   return (
     <>

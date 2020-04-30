@@ -20,7 +20,6 @@ import {
   documentTextSharp,
   arrowBackOutline,
 } from "ionicons/icons";
-import { Storages } from "../hooks/Storage";
 import { FileFormPage } from "./File/FileFormContainer";
 import UpdateUser from "./User/UpdateContainer";
 
@@ -29,6 +28,7 @@ import { updateToken } from "../hooks/UpdateToken";
 import config from "../config";
 import { User } from "../entities";
 import * as H from 'history';
+import { logout } from "../hooks/Auth";
 interface ContainerProps {
   history: H.History;
   currentUser: User;
@@ -116,10 +116,7 @@ const FloatingButtonsMenu: React.FC<ContainerProps> = ({
               handler: async () => {
                 try {
                   updateToken("");
-                  const { removeItem } = await Storages();
-                  await removeItem("token");
-                  await removeItem("user");
-                  await removeItem("fireToken");
+                  logout();
                   history.push("/login");
                 } catch (e) {
                   console.error("HomePage.handler: " + e);

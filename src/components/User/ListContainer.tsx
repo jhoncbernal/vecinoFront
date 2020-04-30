@@ -69,7 +69,7 @@ const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs }) => {
                 <IonCardHeader color={input.debt > 0 ? "danger" : "primary"}>
                   <IonTitle>
                     <strong>
-                      T{input.blockNumber} {input.homeNumber}{" "}
+                      T{input.blockNumber} {input.homeNumber}
                       {input.debt > 0 ? "  ¡Usuario en mora!" : ""}
                     </strong>
                   </IonTitle>
@@ -103,7 +103,7 @@ const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs }) => {
                           </IonAvatar>
                           <IonLabel>
                             <h2>
-                              {input ? input.firstName : ""}{" "}
+                              {input ? input.firstName : ""}
                               {input ? input.lastName : ""}
                             </h2>
                             <h3>{input ? input.email : ""}</h3>

@@ -6,8 +6,7 @@ import {
   IonToolbar,
   IonSegment,
   IonSegmentButton,
-  IonIcon,
-  IonContent
+  IonIcon
 } from "@ionic/react";
 import { HttpRequest } from "../hooks/HttpRequest";
 import ListContainer from "./Product/ListContainer";

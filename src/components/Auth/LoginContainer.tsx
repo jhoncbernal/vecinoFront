@@ -25,6 +25,7 @@ import {
   PushNotificationActionPerformed,
 } from "@capacitor/core";
 import * as H from 'history';
+import { login } from "../../hooks/Auth";
 const { PushNotifications } = Plugins;
 const notifications = [
   { id: "id", title: "Test Push", body: "This is my first push notification" },
@@ -86,8 +87,7 @@ export class LoginPage extends React.Component<
           } catch (e) {
             console.error("Login: push", e);
           }
-          await setObject("user", resultado.user);
-          await setObject("token", resultado.token);
+          login(resultado.user,resultado.token)
           if (this.state.checked) {
             let rememberme = {
               checked: this.state.checked,

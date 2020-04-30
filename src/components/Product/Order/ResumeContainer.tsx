@@ -94,7 +94,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
   const deliverySchedule = useCallback(
     (value) => {
       setSchedule(value);
-      if (value === "rightNow" && !flagExtraCharge) {
+      if (value === "Ahora mismo" && !flagExtraCharge) {
         setShowAlert(true);
       }
     },
@@ -237,7 +237,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
                   : `${tomorrow} de ${closeHour - 1}:00  a ${closeHour}:00 `}
               </IonSelectOption>
               {flagDeliveryRighNow ? (
-                <IonSelectOption value="rightNow">Ahora mismo</IonSelectOption>
+                <IonSelectOption value="Ahora mismo">Ahora mismo</IonSelectOption>
               ) : null}
             </IonSelect>
             </IonItem>
@@ -256,7 +256,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             }}
           >
             <IonSelectOption value="efectivo">Efectivo</IonSelectOption>
-            <IonSelectOption value="tarjeta">Tarjeta</IonSelectOption>
+            <IonSelectOption disabled value="tarjeta">Tarjeta</IonSelectOption>
           </IonSelect>
           </IonItem>
         </IonItemDivider>
@@ -337,7 +337,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
                 onIonSwipe={() => {
                   setFlagExtraCharge(false);
                   setAddress(currentUser.neighborhood.address);
-                  if (schedule === "rightNow") {
+                  if (schedule === "Ahora mismo") {
                     setSchedule("");
                   }
                 }}
@@ -383,7 +383,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             handler: () => {
               try {
                 setFlagExtraCharge(false);
-                if (schedule === "rightNow") {
+                if (schedule === "Ahora mismo") {
                   setSchedule("");
                 }
               } catch (e) {
@@ -396,7 +396,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             handler: async () => {
               try {
                 setFlagExtraCharge(true);
-                if (schedule !== "rightNow") {
+                if (schedule !== "Ahora mismo") {
                   setSchedule("");
                 }
               } catch (e) {

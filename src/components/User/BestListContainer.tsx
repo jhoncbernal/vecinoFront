@@ -12,7 +12,7 @@ import {
   IonItemSliding,
   IonItemOptions,
   IonItemOption,
-  IonAvatar
+  IonAvatar,
 } from "@ionic/react";
 import { personOutline } from "ionicons/icons";
 import { HttpRequest } from "../../hooks/HttpRequest";
@@ -39,7 +39,7 @@ const BestListContainer: React.FC<ContainerProps> = ({ dataModal }) => {
           setShowProgressBar(false);
           setMessage("Mejores puntajes");
         })
-        .catch(error => {
+        .catch((error) => {
           throw error;
         });
 
@@ -79,7 +79,7 @@ const BestListContainer: React.FC<ContainerProps> = ({ dataModal }) => {
                   </IonAvatar>
                   <IonLabel>
                     <h2>
-                      {input ? input.firstName : ""}{" "}
+                      {input ? input.firstName : ""}
                       {input ? input.lastName : ""}
                     </h2>
                     <h3>{input ? input.email : ""}</h3>
