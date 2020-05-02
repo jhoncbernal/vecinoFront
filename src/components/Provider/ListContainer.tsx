@@ -69,13 +69,13 @@ const ListContainer: React.FC<ContainerProps> = ({
             hidden={!loaddata}
           ></IonSearchbar>
 
-          {data.map((input: any, index) => {
+          {data ?data.map((input: any, index) => {
             return (
               <IonCard key={index} id="card">
                 <IonCardHeader color="primary">
 
                     <IonText>
-                    <strong>{input.firstName.toUpperCase()}</strong></IonText>
+                    <strong>{input.firstName?.toUpperCase()}</strong></IonText>
 
                 </IonCardHeader>
                 <IonCardContent
@@ -98,7 +98,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                       <IonImg src={input.urlImage ? input.urlImage : null} />
                     </IonThumbnail>
                       <IonText color={'steel'} class="ion-align-self-center ion-align-items-start">
-                      <h1>{input ? input.category.charAt(0).toUpperCase() + input.category.slice(1) : null}</h1>
+                      <h1>{input ? input.category?.charAt(0).toUpperCase() + input.category?.slice(1) : null}</h1>
                       </IonText>
                   </IonItem>
                 </IonCardContent>
@@ -127,7 +127,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                 </IonModal>
               </IonCard>
             );
-          })}
+          }):null}
         </>
       );
     } else {

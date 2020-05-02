@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   IonItem,
   IonText,
-  useIonViewDidLeave,
   IonToolbar,
   IonTitle,
   IonList,
@@ -13,10 +12,11 @@ import {
   IonCard,
   IonCardContent, 
   IonItemGroup,
+  IonModal,
 } from "@ionic/react";
 import * as H from "history";
 import { ProductBill, Bill } from "../../../entities";
-
+import ShoppingListContainer from "../shopingCart/ListContainer"
 interface ContainerProps {
   history: H.History;
   bill: Bill;
@@ -25,11 +25,9 @@ interface ContainerProps {
 
 const ProductsDetailsContainer: React.FC<ContainerProps> = ({ history, bill,resumePayment }) => {
  let products: Array<ProductBill>=bill.products
- 
-  useIonViewDidLeave(() => {
-    console.log("ionViewDidLeave event fired");
-  });
-
+ const [showModal, setShowModal] = useState<boolean>(false);
+ let lastState=bill.states[bill.states.length-1].state;
+ let productsCart: any = {};
   return (
     <IonCard>
       <IonToolbar>
@@ -39,6 +37,8 @@ const ProductsDetailsContainer: React.FC<ContainerProps> = ({ history, bill,resu
       <IonList>
         {products
           ? products.map((product: ProductBill, index) => {
+           
+            productsCart[product._id] = product.quantity;
               let oldprice =
                 (product.price + product.salving / product.quantity) *
                 product.quantity;
@@ -90,9 +90,30 @@ const ProductsDetailsContainer: React.FC<ContainerProps> = ({ history, bill,resu
             })
           : null}
           <IonItemGroup> {resumePayment}</IonItemGroup>
+          <IonButton hidden={lastState==='finished'||lastState==='cancel'?false:true} expand='full' onClick={()=>{setShowModal(true)}}>Volver a comprar</IonButton>
       </IonList>
-       
+
       </IonCardContent>
+      <IonModal
+            isOpen={showModal}
+            swipeToClose={true}
+            onDidDismiss={(e) => setShowModal(false)}
+            animated={true}
+            id={"modal"}
+          >
+            <ShoppingListContainer
+              history={history}
+              provider={bill.provider}
+              oldShoppingCart={productsCart}
+              currentUser={bill.user}
+              changeShoppingCart={(response: any) => {
+                productsCart=response;
+              }}
+              accionTrigger={(response: boolean) => {
+                setShowModal(response);
+              }}
+            ></ShoppingListContainer>
+          </IonModal>
     </IonCard>
   );
 };
