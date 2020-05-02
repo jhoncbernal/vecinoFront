@@ -1,0 +1,17 @@
+.terms h2,.terms h3,.terms h4,.terms h1{
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+  font: small-caps bold 12px/30px;
+}
+.terms h1{
+  color:#5260ff ;
+}
+.terms h2{
+  color: #3171e0;
+}
+.terms h3{
+  color: #3880ff;
+}
+.terms h4{
+  color: #4c8dff;
+}
