@@ -18,6 +18,7 @@ import {
   IonContent,
   IonFab,
   IonFabButton,
+  IonButton,
 } from "@ionic/react";
 import * as H from "history";
 import { Bill } from "../../../entities";
@@ -144,12 +145,14 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
               }}
             >
               <IonItem lines="none">
-                <IonLabel>Productos</IonLabel>
+                <IonLabel>Productos </IonLabel>
                 <IonIcon
                   slot="start"
                   color={"primary"}
                   icon={basketSharp}
-                ></IonIcon>
+                ></IonIcon><IonBadge color={'white'}>
+                x{bill.products.length}
+              </IonBadge>
               </IonItem>
               <IonItemDivider class="ion-margin">
                 {bill.products.map((product: any, index) => {
@@ -162,19 +165,19 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
                   }
                 })}
                 <IonItemGroup class="ion-margin">
+                  <div>
+                
                   <IonIcon
+                  size='large'
                     color={"gray"}
                     class="ion-margin-top ion-margin-horizontal"
-                    size="large"
-                    slot="start"
                     icon={informationCircleSharp}
                   ></IonIcon>
+                  </div>
                   <IonText>
                     <p>
                       Ver todos
-                      <IonBadge slot={"start"}>
-                        {bill.products.length}
-                      </IonBadge>
+                    
                     </p>
                   </IonText>
                 </IonItemGroup>
