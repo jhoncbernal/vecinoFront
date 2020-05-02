@@ -24,7 +24,7 @@ import config from "../config";
 import SideMenuCar from "../components/Provider/SideMenuCar";
 import * as H from "history";
 import { arrowBackOutline } from "ionicons/icons";
-import {TermsCondContainer} from "./TermsCondContainer"
+import { TermsCondContainer } from "./TermsCondContainer";
 export class Home extends React.Component<
   { history: H.History },
   {
@@ -143,15 +143,15 @@ export class Home extends React.Component<
             ) : (
               <HomeUserContainer
                 history={history}
-				currentUser={this.state.currentUser}
-				handlerDataSide={this.handlerDataSide}
+                currentUser={this.state.currentUser}
+                handlerDataSide={this.handlerDataSide}
               ></HomeUserContainer>
             )
           ) : null}
- 
- {this.renderSideMenu(this.state.currentUser.roles)}
- <IonContent id='auxContent'></IonContent>
-     </IonContent>
+
+          {this.renderSideMenu(this.state.currentUser.roles)}
+          <IonContent id="auxContent"></IonContent>
+        </IonContent>
         <IonAlert
           isOpen={this.state.showAlert}
           onDidDismiss={() => this.setState({ showAlert: false })}
@@ -165,12 +165,15 @@ export class Home extends React.Component<
           isOpen={this.state.showModal}
           animated={true}
         >
-		  <TermsCondContainer history={history} currentUser={this.state.currentUser} 
-		  data={(user:any,closeModal:boolean)=>{
-			  this.setState({currentUser:user})
-			  this.setState({ showModal: closeModal });
-		  }}></TermsCondContainer>
-		  <IonFab vertical="bottom" horizontal="start" slot="fixed">
+          <TermsCondContainer
+            history={history}
+            currentUser={this.state.currentUser}
+            data={(user: any, closeModal: boolean) => {
+              this.setState({ currentUser: user });
+              this.setState({ showModal: closeModal });
+            }}
+          ></TermsCondContainer>
+          <IonFab vertical="bottom" horizontal="start" slot="fixed">
             <IonFabButton
               onClick={async () => {
                 this.setState({ showModal: false });

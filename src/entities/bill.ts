@@ -33,6 +33,7 @@ export interface Bill {
   updatedAt: Date;
 }
 export interface ProductBill {
+  _id:string
   productName: string;
   measureType: string;
   quantity: number;

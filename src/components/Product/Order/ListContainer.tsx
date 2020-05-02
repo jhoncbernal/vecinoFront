@@ -8,7 +8,6 @@ import {
   IonFab,
   IonFabButton,
   IonContent,
-  useIonViewDidLeave,
   IonAvatar,
   IonProgressBar,
   IonToolbar,
@@ -31,19 +30,17 @@ interface ContainerProps {
 }
 
 const ListContainer: React.FC<ContainerProps> = ({ history, currentUser }) => {
-  useIonViewDidLeave(() => {
-    console.log("ionViewDidLeave event fired");
-  });
+
 
   const [data, setdata] = useState<Array<Bill>>();
   const [fireData, setFireData] = useState<any[]>();
   const [showModal, setShowModal] = useState(false);
   const [billSelected, setBillSelected] = useState<Bill>();
+  const [statesSelected, setSetStatesSelected] = useState<Array<{state:string,start:string}>>();
   const [hideLoadBar, setHideLoadBar] = useState(false);
   const states = StatesDictionary().states;
   useEffect(() => {
     refUserBillsFirebase(currentUser._id).on("value", (snapshot) => {
-      setFireData([]);
       const pendingData: any[] = [];
       snapshot.forEach((snap) => {
         pendingData.push({ code: snap.key, states: snap.val() });
@@ -78,6 +75,7 @@ const ListContainer: React.FC<ContainerProps> = ({ history, currentUser }) => {
         ? data.map((bill: Bill, index) => {
             let billstate;
             let startState;
+            let ActualState:any;
             let total = bill.Total.toLocaleString();
 
             if (bill.enabled) {
@@ -91,12 +89,17 @@ const ListContainer: React.FC<ContainerProps> = ({ history, currentUser }) => {
                 startState =
                   fireStates.states[fireStates.states.length - 1].start;
               }
+              if(fireStates){
+              ActualState=fireStates.states;
+            }
             } else {
+              if(bill.states){
+              ActualState=bill.states;}
               startState = bill.states[bill.states.length - 1].start;
               billstate = states.get(bill.states[bill.states.length - 1].state);
             }
             return (
-                <IonCard key={index}  onClick={async () => {setBillSelected(bill);setShowModal(true)}}>
+                <IonCard key={index}  onClick={async () => {setBillSelected(bill);setShowModal(true);setSetStatesSelected(ActualState)}}>
                   <IonGrid>
                     <IonRow>
                       <IonCol size-xs="7" size-md="6">
@@ -152,7 +155,7 @@ const ListContainer: React.FC<ContainerProps> = ({ history, currentUser }) => {
                   animated={true}
                 >
                   <IonContent>
-                    <DetailsOrder history={history} bill={billSelected} ></DetailsOrder>
+                    <DetailsOrder history={history} bill={billSelected} fireData={statesSelected}></DetailsOrder>
                     <IonFab vertical="bottom" horizontal="start" slot="fixed">
                       <IonFabButton
                         onClick={() => setShowModal(false)}

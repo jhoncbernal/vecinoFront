@@ -1,7 +1,6 @@
 /* eslint-disable array-callback-return */
 import React, { useState, useEffect } from "react";
 import {
-  useIonViewDidLeave,
   IonToolbar,
   IonTitle,
   IonCard,
@@ -37,12 +36,10 @@ import ProductsDetailsContainer from "./ProductsDetails";
 interface ContainerProps {
   bill: Bill | undefined;
   history: H.History;
+  fireData:Array<{state:string,start:string}>| undefined;
 }
 
-const DetailsOrder: React.FC<ContainerProps> = ({ bill, history }) => {
-  useIonViewDidLeave(() => {
-    console.log("ionViewDidLeave event fired");
-  });
+const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
 
   const [showModal, setShowModal] = useState(false);
   const [chunkSize, setChunkSize] = useState();
@@ -50,7 +47,6 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history }) => {
   useEffect(() => {
     async function fetchData() {
       const device = await Device.getInfo();
-      console.log(device);
       let size =
         device.operatingSystem === "android" || device.operatingSystem === "ios"
           ? 3
@@ -62,7 +58,7 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history }) => {
     }
     fetchData();
   }, [Device, bill]);
-
+ 
   const statesStyle = StatesDictionary().states;
   const resumePayment = (bill: Bill) => {
         return (<>
@@ -112,8 +108,9 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history }) => {
         );
   };
   return (
+
     <IonContent>
-      {bill ? (
+      {bill&&fireData ? (
         <>
             <IonToolbar>
               <IonTitle>Estado de tu pedido</IonTitle>
@@ -121,7 +118,7 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history }) => {
           <IonCardContent>
             <IonCard>
               <IonItemGroup>
-                {bill.states.map((state, index) => {
+                {fireData.map((state, index) => {
                   let style = statesStyle.get(state.state);
                   return (
                     <IonItem lines="none" key={index}>
