@@ -17,8 +17,7 @@ import {
   IonModal,
   IonContent,
   IonFab,
-  IonFabButton,
-  IonButton,
+  IonFabButton
 } from "@ionic/react";
 import * as H from "history";
 import { Bill } from "../../../entities";
