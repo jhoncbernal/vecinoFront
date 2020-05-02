@@ -7,11 +7,11 @@ import {
   IonText,
   IonButton,
 } from "@ionic/react";
-import config from "../config";
-import { HttpRequest } from "../hooks/HttpRequest";
-import { Storages } from "../hooks/Storage";
+import config from "../../config";
+import { HttpRequest } from "../../hooks/HttpRequest";
+import { Storages } from "../../hooks/Storage";
 import * as H from "history";
-import { User } from "../entities";
+import { User } from "../../entities";
 import './TermsCondContainer.css';
 interface ContainerProps {
   history: H.History;

@@ -24,7 +24,7 @@ import config from "../config";
 import SideMenuCar from "../components/Provider/SideMenuCar";
 import * as H from "history";
 import { arrowBackOutline } from "ionicons/icons";
-import { TermsCondContainer } from "./TermsCondContainer";
+import { TermsCondContainer } from "../components/Auth/TermsCondContainer";
 export class Home extends React.Component<
   { history: H.History },
   {
