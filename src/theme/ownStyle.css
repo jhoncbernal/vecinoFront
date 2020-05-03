@@ -28,6 +28,13 @@ ion-content {
   margin: auto;
   margin-top: 4%;
 }
+
+.md body .home-card-center {
+  background: transparent !important;
+  width: 93%;
+  margin: auto;
+  margin-top: 4%;
+}
 .card-center {
   background: transparent !important;
   width: 93%;

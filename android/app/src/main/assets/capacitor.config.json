@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "VecinoIonic",
+  "appId": "io.ionic.vecinoo",
+  "appName": "Vecinoo",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",

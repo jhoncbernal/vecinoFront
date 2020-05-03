@@ -1,7 +1,8 @@
 {
-  "name": "VecinoIonic",
+  "name": "vecinoo",
   "version": "0.0.1",
   "private": true,
+  "homepage": "/",
   "dependencies": {
     "@babel/code-frame": "^7.8.3",
     "@capacitor/android": "^1.5.1",
@@ -44,7 +45,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "resources": "cordova-res ios && cordova-res android && node scripts/resources.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -63,6 +65,7 @@
   },
   "devDependencies": {
     "@capacitor/cli": "1.5.1",
+    "cordova-res": "^0.14.0",
     "prettier": "2.0.4"
   },
   "description": "An Ionic project"

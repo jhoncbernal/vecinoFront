@@ -88,7 +88,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
 
   return (
     <>
-      <IonCard class="card-center">
+      <IonCard class="home-card-center">
         <IonToolbar>
           <IonSegment
             onIonChange={(e) => {

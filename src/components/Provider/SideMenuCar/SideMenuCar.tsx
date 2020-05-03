@@ -148,7 +148,6 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
 
   const saveChanges = useCallback(async () => {
     const pathUrl = `${config.BillsContext}/${dataSide._id}`;
-    console.log("body", bodyChanges);
     await HttpRequest(pathUrl, "PATCH", bodyChanges, true)
       .then((response) => {
         updateFirebase(dataSide);
@@ -160,7 +159,6 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
 
   const closeBill = useCallback(
     async (states: Array<{ state: string; start: string }>) => {
-      console.log(bodyChanges);
       const pathUrl = `${config.BillsContext}/${dataSide._id}`;
       await HttpRequest(
         pathUrl,
@@ -175,10 +173,10 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
           setBodyChanges({});
         })
         .catch((error) => {
-          console.log("error", error);
+          console.error("error", error);
         });
     },
-    [bodyChanges, dataSide]
+    [dataSide]
   );
 
   const nextState = useCallback(() => {
@@ -314,7 +312,6 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
             role: "cancel",
             cssClass: "danger",
             handler: (response) => {
-              console.log("cancelar");
               cancelState();
             },
           },

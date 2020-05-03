@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">VecinoIonic</string>
-    <string name="title_activity_main">VecinoIonic</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">Vecinoo</string>
+    <string name="title_activity_main">Vecinoo</string>
+    <string name="package_name">io.ionic.vecinoo</string>
+    <string name="custom_url_scheme">io.ionic.vecinoo</string>
 </resources>

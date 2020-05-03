@@ -21,6 +21,7 @@ export interface Bill {
     email: string;
     homeNumber: number;
     blockNumber: number;
+    address:string;
     neighborhood: {firstName:string,address:string};
   };
   provider: {
@@ -33,6 +34,7 @@ export interface Bill {
   updatedAt: Date;
 }
 export interface ProductBill {
+  _id:string
   productName: string;
   measureType: string;
   quantity: number;
