@@ -668,6 +668,7 @@ export class SignUpPage extends React.Component<
                   }
                 />
               </IonItem>
+              <IonItem><a href='/PrivacyPolicy'>Politica de privacidad</a></IonItem>
               <IonProgressBar
                 hidden={this.state.hiddenbar}
                 type="indeterminate"
