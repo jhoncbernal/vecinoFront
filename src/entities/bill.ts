@@ -21,6 +21,7 @@ export interface Bill {
     email: string;
     homeNumber: number;
     blockNumber: number;
+    address:string;
     neighborhood: {firstName:string,address:string};
   };
   provider: {

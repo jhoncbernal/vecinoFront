@@ -14,8 +14,9 @@ export  interface User {
     fireToken?: string;
 
     uniquecode:string;
-    homeNumber:number;
-    blockNumber:number;
+    address:string;
+    homeNumber?:number;
+    blockNumber?:number;
     points:Number;
     isOwner?:boolean;
     debt?:string;

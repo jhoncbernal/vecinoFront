@@ -93,7 +93,7 @@ const PendingShoppingContainer: FC<componentData> = ({
                     <IonText>
                       {bill.otherAddress
                         ? bill.otherAddress
-                        : bill.user.neighborhood.address}
+                        : bill.user.neighborhood.address==='NO APLICA'?bill.user.address:bill.user.neighborhood.address}
                     </IonText>
                   </IonItem>
                 </IonCol>

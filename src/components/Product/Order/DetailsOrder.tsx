@@ -197,7 +197,7 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
                   <IonText color="dark">
                     {bill.otherAddress
                       ? bill.otherAddress
-                      : bill.user.neighborhood.address}
+                      : bill.user.neighborhood.address==='NO APLICA'?bill.user.address:bill.user.neighborhood.address}
                   </IonText>
                 </IonItem>
               </IonItemDivider>

@@ -81,7 +81,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
   const [schedule, setSchedule] = useState<string>();
   const [cashValue, setCashValue] = useState<number>(0);
   const [address, setAddress] = useState<string>(
-    currentUser.neighborhood.address
+    currentUser.neighborhood.address==='NO APLICA'?currentUser.address:currentUser.neighborhood.address
   );
   const [tip, setTip] = useState<string>("1000");
   const [flagExtraCharge, setFlagExtraCharge] = useState<boolean>(false);
@@ -127,7 +127,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
           flagExtraCharge: flagExtraCharge,
           tip: Number(tip),
         };
-        if (address !== currentUser.neighborhood.address) {
+        if (address !== (currentUser.neighborhood.address||currentUser.address)) {
           data = { ...data, ...{ otherAddress: address } };
         }
         if (paymentMethod === "efectivo") {
@@ -164,7 +164,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
       setHiddenSpiner(false);
       setShowAlert2(true);
     },
-    [address, cashValue, currentUser._id, currentUser.neighborhood.address, flagExtraCharge, paymentMethod, products, provider._id, provider.deliveryCharge, schedule, tip]
+    [address, cashValue, currentUser._id, currentUser.address, currentUser.neighborhood.address, flagExtraCharge, paymentMethod, products, provider._id, provider.deliveryCharge, schedule, tip]
   );
 
   if (order) {
@@ -336,7 +336,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
               <IonItemOptions
                 onIonSwipe={() => {
                   setFlagExtraCharge(false);
-                  setAddress(currentUser.neighborhood.address);
+                  setAddress(currentUser.neighborhood.address==='NO APLICA'?currentUser.address:currentUser.neighborhood.address);
                   if (schedule === "Ahora mismo") {
                     setSchedule("");
                   }
