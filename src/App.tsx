@@ -15,6 +15,8 @@ import LoginPage from "./pages/Auth/LoginPage";
 import SignUpPage from "./pages/Auth/SignUpPage";
 import RecoveryPage from "./pages/Auth/RecoveryPage";
 import HomePage from "./pages/HomePage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -43,6 +45,7 @@ const App: React.FC = () => {
             <Route path="/signup" component={SignUpPage} exact={true} />
             <Route path="/recover" component={RecoveryPage} />
             <Route path="/home" component={HomePage} exact={true} />
+            <Route path="/PrivacyPolicy" component={PrivacyPolicy} exact={true} />
             <Route
               path="/"
               render={() => <Redirect to="/login" />}

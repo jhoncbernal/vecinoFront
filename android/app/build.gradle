@@ -1,6 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/Users/jhoncasallas/Documents/OwnCode/VecinoIonic/Untitled')
+            keyAlias = cdvMinSdkVersion
+            keyPassword cdvMinSdkVersion
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "io.ionic.vecinoo"
