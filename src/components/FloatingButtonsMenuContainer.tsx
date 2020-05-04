@@ -132,7 +132,7 @@ const FloatingButtonsMenu: React.FC<ContainerProps> = ({
           {fabButtonValue === "document" ? (
             <FileFormPage history={history}></FileFormPage>
           ) : fabButtonValue === "config" ? (
-            <UpdateUser dataModal={dataModal}></UpdateUser>
+            <UpdateUser dataModal={dataModal} triggerChange={(response:boolean)=>{response?history.go(0):console.error(response)}}></UpdateUser>
           ) : fabButtonValue === "bestPoints" ? (
             <BestListContainer dataModal={dataModal}></BestListContainer>
           ) : fabButtonValue === "payment" ? (

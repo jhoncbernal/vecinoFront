@@ -24,12 +24,14 @@ import {
   warningOutline,
 } from "ionicons/icons";
 import UpdateUser from "./UpdateContainer";
+import * as H from 'history';
 interface ContainerProps {
   loaddata: boolean;
   inputs: Array<any>;
+  history:H.History;
 }
 
-const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs }) => {
+const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs,history }) => {
   const dataModalIni: any = {};
   const [searchText, setSearchText] = useState("");
   const [data, setdata] = useState(inputs);
@@ -141,7 +143,7 @@ const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs }) => {
                   isOpen={showModal}
                   animated={true}
                 >
-                  <UpdateUser dataModal={dataModal}></UpdateUser>
+                  <UpdateUser dataModal={dataModal} triggerChange={(response:boolean)=>{response?history.go(0):console.error(response)}}></UpdateUser>
                   <IonFab vertical="bottom" horizontal="start" slot="fixed">
                     <IonFabButton
                       onClick={() => setShowModal(false)}

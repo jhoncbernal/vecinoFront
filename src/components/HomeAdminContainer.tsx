@@ -143,6 +143,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
           <>
             {segmentValue === "user" && hiddenBar ? (
               <ListContainer
+                history={history}
                 loaddata={loadData}
                 inputs={usersArray}
               ></ListContainer>

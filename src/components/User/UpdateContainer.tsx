@@ -14,37 +14,41 @@ import {
   IonToggle,
   IonProgressBar,
   IonButton,
-  IonAlert
+  IonAlert,
 } from "@ionic/react";
 import {
   personOutline,
   phonePortraitOutline,
   mailOpenOutline,
-  homeOutline,
   cardOutline,
   bulbOutline,
-  pushOutline
+  pushOutline,
 } from "ionicons/icons";
 import { HttpRequest } from "../../hooks/HttpRequest";
 import { Storages } from "../../hooks/Storage";
 import config from "../../config";
+import { User } from "../../entities";
+import AddressContainer from "../Auth/AddressContainer";
 
 interface ContainerProps {
   dataModal: any;
+  triggerChange: any;
 }
 
-const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
+const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
   let body: any = {};
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState("");
-  const [dataModall, setdataModall] = useState(dataModal);
+  const [dataModall, setdataModall] = useState<User>(dataModal);
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [bodyChange, setbodyChange] = useState(false);
   const handleValueChange = useCallback(
     (property: string, value) => {
       try {
-        setbodyChange(true);
-        body[property] = value;
+        if (value !== undefined || value !== "") {
+          setbodyChange(true);
+          body[property] = value;
+        }
       } catch (e) {
         console.error(e);
       }
@@ -59,9 +63,9 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
         let pathUrl = ``;
         if (dataModal.roles.includes(config.RolUserAccess)) {
           pathUrl = `${config.UserContext}/${dataModal._id}`;
-        } else if(dataModal.roles.includes(config.RolAdminAccess)) {
+        } else if (dataModal.roles.includes(config.RolAdminAccess)) {
           pathUrl = `${config.AdminContext}/${dataModal._id}`;
-        }else{
+        } else {
           pathUrl = `${config.ProviderContext}/${dataModal._id}`;
         }
         let data = body;
@@ -74,11 +78,9 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
               setMessage("Actualizacion Exitosa");
               setbodyChange(false);
               setdataModall(response);
-              if (!dataModal.roles.includes("ROLE_USER_ACCESS")) {
-                await setObject("user", response);
-              }
+              await setObject("user", response);
             })
-            .catch(error => {
+            .catch((error) => {
               throw error;
             });
         }
@@ -91,7 +93,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
         console.error(e);
       }
     },
-    [body, dataModal, bodyChange]
+    [dataModal.roles, dataModal._id, body, bodyChange, triggerChange]
   );
   useEffect(() => {
     setdataModall(dataModal);
@@ -105,7 +107,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
       </IonToolbar>
       <>
         <form
-          onSubmit={e => {
+          onSubmit={(e) => {
             handleSubmit(e);
           }}
           action="post"
@@ -214,53 +216,61 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
             <IonGrid
               hidden={
                 dataModall
-                  ? dataModal.roles.includes("ROLE_USER_ACCESS")
+                  ? dataModal.roles.includes(config.RolUserAccess)
                     ? false
                     : true
                   : false
               }
             >
-              <IonLabel>Info de recidencia</IonLabel>
-              <IonRow>
-                <IonCol>
-                  <IonItem>
-                    <IonIcon color="primary" icon={homeOutline} slot="start" />
-                    <IonLabel position="floating">Torre</IonLabel>
-                    <IonInput
-                      color="dark"
-                      autocomplete="off"
-                      type="number"
-                      value={dataModall ? dataModall.blockNumber : ""}
-                      name="blockNumber"
-                      onIonChange={(e: any) => {
+              <AddressContainer
+                currentAddress={
+                  dataModall
+                    ? {
+                        homeNumber: dataModall.homeNumber,
+                        blockNumber: dataModall.blockNumber,
+                        neighborhood: dataModall.neighborhood?dataModall.neighborhood.firstName:'',
+                        uniquecode: dataModall.uniquecode,
+                        city: dataModall.city,
+                      }
+                    : null
+                }
+                accionTrigger={(response: any) => {
+                  if (response.whereIlive) {
+                    if (response.city !== dataModall.city) {
+                      handleValueChange("city", response.city);
+                    }
+                    if (response.uniquecode !== dataModall.uniquecode) {
+                      handleValueChange("uniquecode", response.uniquecode);
+                    }
+                    if (
+                      response.homeNumber &&
+                      response.blockNumber &&
+                      response.whereIlive === "Conjunto"
+                    ) {
+                      if (response.homeNumber !== dataModall.homeNumber) {
+                        handleValueChange("homeNumber", response.homeNumber);
+                      }
+                      if (response.blockNumber !== dataModall.blockNumber) {
+                        handleValueChange("blockNumber", response.blockNumber);
+                      }
+                      if (
+                        response.neighborhoodId !== dataModall.neighborhood &&
+                        response.neighborhoodId
+                      ) {
                         handleValueChange(
-                          e.target.name,
-                          Number(e.target.value)
+                          "neighborhood",
+                          response.neighborhoodId
                         );
-                      }}
-                    />
-                  </IonItem>
-                </IonCol>
-                <IonCol>
-                  <IonItem>
-                    <IonIcon color="primary" icon={homeOutline} slot="start" />
-                    <IonLabel position="floating">Apartamento</IonLabel>
-                    <IonInput
-                      color="dark"
-                      autocomplete="off"
-                      type="number"
-                      value={dataModall ? dataModall.homeNumber : ""}
-                      name="homeNumber"
-                      onIonChange={(e: any) => {
-                        handleValueChange(
-                          e.target.name,
-                          Number(e.target.value)
-                        );
-                      }}
-                    />
-                  </IonItem>
-                </IonCol>
-              </IonRow>
+                      }
+                    }
+                    if (response.address && response.whereIlive === "Barrio") {
+                      if (response.address !== dataModall.address) {
+                        handleValueChange("address", response.address);
+                      }
+                    }
+                  }
+                }}
+              ></AddressContainer>
             </IonGrid>
             <IonItem>
               <IonIcon color="primary" icon={cardOutline} slot="start" />
@@ -278,12 +288,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
               />
             </IonItem>
             <IonItem
-              hidden={
-                dataModall
-                  ? dataModal.roles.includes("ROLE_USER_ACCESS")
-                    ? false
-                    : true
-                  : false
+              hidden={true
               }
             >
               <IonIcon color="primary" icon={bulbOutline} slot="start" />
@@ -313,10 +318,26 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
           header={"Actualizacion"}
           subHeader={"respuesta:"}
           message={message}
-          buttons={["OK"]}
+          buttons={[
+            {
+              text: "",
+              role: "",
+              cssClass: "secondary",
+            },
+            {
+              text: "Confirmar",
+              handler: async () => {
+                try {
+                 triggerChange(true)
+                } catch (e) {
+                  console.error("HomePage.handler: " + e);
+                }
+              },
+            },
+          ]}
         />
       </>
-      </IonContent>
+    </IonContent>
   );
 };
 

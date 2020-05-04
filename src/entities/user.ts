@@ -15,6 +15,7 @@ export  interface User {
 
     uniquecode:string;
     address:string;
+    city:string;
     homeNumber?:number;
     blockNumber?:number;
     points:Number;

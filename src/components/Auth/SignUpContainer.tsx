@@ -17,27 +17,20 @@ import {
   IonCol,
   IonFab,
   IonFabButton,
-  IonSelect,
-  IonSelectOption,
-  IonSegment,
-  IonSegmentButton,
-  IonText,
+  IonCheckbox,
 } from "@ionic/react";
 import {
   mailOpenOutline,
   personOutline,
-  homeOutline,
-  bookOutline,
   keyOutline,
   cardOutline,
   phonePortraitOutline,
   arrowBackOutline,
-  mapOutline,
-  locationOutline,
 } from "ionicons/icons";
 import { HttpRequest } from "../../hooks/HttpRequest";
 import config from "../../config";
-import { neighborhoodsNotExist } from "./neighborhoodsNotExist";
+
+import AddressContainer from "./AddressContainer";
 
 export class SignUpPage extends React.Component<
   {},
@@ -49,25 +42,17 @@ export class SignUpPage extends React.Component<
     phone: number | string;
     firstName: string;
     lastName: string;
-    city: string;
+    address: string;
     blockNumber: number | string;
     homeNumber: number | string;
+    whereIlive: string;
+    city: string;
     documentId: number | string;
-    uniquecode: string;
-    neighborhoods: Array<any>;
+    privacyPolicy: boolean;
+    uniquecode: string | undefined;
     showToast1: boolean;
     loginMessage: string;
     hiddenbar: boolean;
-    whereIlive: string;
-    address: string;
-    kind: string;
-    number: number | null;
-    post: string;
-    kind2: string;
-    number2: number | null;
-    number3: number | null;
-    post2: string;
-    neighborhood: string;
   }
 > {
   constructor(props: any) {
@@ -80,25 +65,17 @@ export class SignUpPage extends React.Component<
       phone: "",
       firstName: "",
       lastName: "",
-      city: "",
       blockNumber: "",
       homeNumber: "",
+      whereIlive: "",
+      city: "",
       documentId: "",
       uniquecode: "",
-      neighborhoods: [""],
       showToast1: false,
       loginMessage: "",
       hiddenbar: true,
-      whereIlive: "Conjunto",
       address: "",
-      kind: "",
-      number: null,
-      post: "",
-      kind2: "",
-      number2: null,
-      number3: null,
-      post2: "",
-      neighborhood: "",
+      privacyPolicy: false,
     };
     this.getAllNeighborhoodNames();
   }
@@ -113,17 +90,9 @@ export class SignUpPage extends React.Component<
     this.setState({ blockNumber: "" });
     this.setState({ homeNumber: "" });
     this.setState({ documentId: "" });
-    this.setState({ neighborhoods: [""] });
   }
 
-  async getAllNeighborhoodNames() {
-    let pathUrl = `${config.AllNeighborhoodsContext}`;
-    await HttpRequest(pathUrl, "GET", "")
-      .then((response: any) => {
-        this.setState({ neighborhoods: response });
-      })
-      .catch((error) => console.error("Error:", error));
-  }
+  async getAllNeighborhoodNames() {}
   async handleSubmit(e: FormEvent) {
     e.preventDefault();
 
@@ -133,25 +102,18 @@ export class SignUpPage extends React.Component<
           loginMessage: "la confirmacion de contraseña no coincide",
         });
         this.setState({ showToast1: true });
-      } else if (!this.state.uniquecode) {
-        this.setState({
-          loginMessage: "Se debe seleccionar un " + this.state.whereIlive,
-        });
-        this.setState({ showToast1: true });
-      } else if (!this.state.city) {
+      } else if(!this.state.city){
         this.setState({
           loginMessage: "Se debe seleccionar una ciudad",
         });
         this.setState({ showToast1: true });
-      } else if (
-        this.state.whereIlive === "Barrio" &&
-        (!this.state.kind ||
-          !this.state.number ||
-          !this.state.number2 ||
-          !this.state.number3)
-      ) {
+      }
+      else if (!this.state.uniquecode) {
+        const complement = this.state.whereIlive
+          ? this.state.whereIlive
+          : "sector";
         this.setState({
-          loginMessage: "Los campos de direccion con (*) son Obligatorios",
+          loginMessage: "Se debe seleccionar un " + complement,
         });
         this.setState({ showToast1: true });
       } else {
@@ -166,6 +128,8 @@ export class SignUpPage extends React.Component<
           lastName: this.state.lastName,
           documentId: this.state.documentId,
           uniquecode: this.state.uniquecode,
+          city: this.state.city,
+          acceptPolicity: this.state.privacyPolicy,
         };
         data =
           this.state.whereIlive === "Conjunto"
@@ -179,13 +143,7 @@ export class SignUpPage extends React.Component<
             : {
                 ...data,
                 ...{
-                  address: `${this.state.neighborhood} ${this.state.kind} ${
-                    this.state.number ? this.state.number : ""
-                  } ${this.state.post} ${this.state.number ? "No" : ""} ${
-                    this.state.number2 ? this.state.number2 : ""
-                  } ${this.state.number2 ? "-" : ""} ${
-                    this.state.number3 ? this.state.number3 : ""
-                  } ${this.state.post2}`,
+                  address: this.state.address,
                   blockNumber: 0,
                   homeNumber: 0,
                 },
@@ -220,16 +178,6 @@ export class SignUpPage extends React.Component<
   }
 
   render() {
-    const TypesOfStreets = [
-      "Avenida Calle",
-      "Avenida Carrera ",
-      "Calle",
-      "Carrera",
-      "Transversal",
-      "Diagonal",
-      "Variante de Madrid",
-    ];
-    const TypesPosStreets = ["Norte", "Sur", "Este", "Bis", "No Aplica"];
     return (
       <>
         <IonContent class="bg-image">
@@ -338,284 +286,22 @@ export class SignUpPage extends React.Component<
                   </IonCol>
                 </IonRow>
               </IonGrid>
-              <IonGrid>
-                <IonLabel>Info de recidencia</IonLabel>
-                <IonRow>
-                  <IonCol>
-                    <IonItem>
-                      <IonIcon color="primary" icon={mapOutline} slot="start" />
-                      <IonLabel>Ciudad</IonLabel>
-                      <IonSelect
-                        interface="popover"
-                        color="dark"
-                        placeholder={"Ciudad de recidencia"}
-                        onIonChange={(e: any) =>
-                          this.setState({ city: e.target.value })
-                        }
-                      >
-                        <IonSelectOption>Madrid</IonSelectOption>
-                      </IonSelect>
-                    </IonItem>
-                  </IonCol>
-                </IonRow>
-                <IonRow>
-                  <IonCol>
-                    <IonSegment
-                      value={this.state.whereIlive}
-                      onIonChange={(e: any) => {
-                        this.setState({ whereIlive: e.detail.value });
-                      }}
-                    >
-                      <IonSegmentButton value="Conjunto">
-                        <IonLabel>Conjunto</IonLabel>
-                      </IonSegmentButton>
-                      <IonSegmentButton value="Barrio">
-                        <IonLabel>Barrio</IonLabel>
-                      </IonSegmentButton>
-                    </IonSegment>
-                  </IonCol>
-                </IonRow>
-                <IonRow>
-                  <IonCol>
-                    <IonItem>
-                      <IonIcon
-                        color="primary"
-                        icon={bookOutline}
-                        slot="start"
-                      />
-                      <IonLabel>{this.state.whereIlive}</IonLabel>
-                      <IonSelect
-                        interface="popover"
-                        color="dark"
-                        placeholder={"Seleccione un " + this.state.whereIlive}
-                        onIonChange={(e: any) => {
-                          this.setState({
-                            uniquecode: e.target.value.uniquecode,
-                          });
-                          this.setState({
-                            neighborhood: e.target.value.firstName,
-                          });
-                        }}
-                      >
-                        {(this.state.whereIlive === "Conjunto"
-                          ? this.state.neighborhoods
-                          : neighborhoodsNotExist
-                        ).map((neighborhood, index) => {
-                          if (
-                            neighborhood.firstName !== "No esta en la lista"
-                          ) {
-                            return (
-                              <IonSelectOption key={index} value={neighborhood}>
-                                {neighborhood.firstName}
-                              </IonSelectOption>
-                            );
-                          }
-                        })}
-                        )
-                      </IonSelect>
-                    </IonItem>
-                  </IonCol>
-                </IonRow>
-                {this.state.whereIlive === "Conjunto" ? (
-                  <IonRow>
-                    <IonCol>
-                      <IonItem>
-                        <IonIcon
-                          color="primary"
-                          icon={homeOutline}
-                          slot="start"
-                        />
-                        <IonLabel position="floating">Torre</IonLabel>
-                        <IonInput
-                          minlength={1}
-                          maxlength={3}
-                          color="dark"
-                          required={true}
-                          type="tel"
-                          value={this.state.blockNumber}
-                          onIonChange={(e: any) =>
-                            this.setState({ blockNumber: e.target.value })
-                          }
-                        />
-                      </IonItem>
-                    </IonCol>
-                    <IonCol>
-                      <IonItem>
-                        <IonIcon
-                          color="primary"
-                          icon={homeOutline}
-                          slot="start"
-                        />
-                        <IonLabel position="floating">Apartamento</IonLabel>
-                        <IonInput
-                          minlength={2}
-                          maxlength={6}
-                          color="dark"
-                          required={true}
-                          autocomplete="on"
-                          type="tel"
-                          value={this.state.homeNumber}
-                          onIonChange={(e: any) =>
-                            this.setState({ homeNumber: e.target.value })
-                          }
-                        />
-                      </IonItem>
-                    </IonCol>
-                  </IonRow>
-                ) : (
-                  <>
-                    <IonLabel position="stacked">Dirección</IonLabel>
-                    <IonLabel position="stacked">
-                      <p>
-                        <small>Ejemplo:</small>
-                      </p>
-                    </IonLabel>
-                    <IonRow>
-                      <IonCol>
-                        <IonItem>
-                          <IonLabel position="stacked">Calle (*)</IonLabel>
-                          <IonSelect
-                            interface="popover"
-                            color="dark"
-                            value={this.state.kind}
-                            onIonChange={(e: any) => {
-                              this.setState({ kind: e.target.value });
-                            }}
-                          >
-                            {TypesOfStreets.map((kind, index) => (
-                              <IonSelectOption key={index} value={kind}>
-                                {kind}
-                              </IonSelectOption>
-                            ))}
-                          </IonSelect>
-                        </IonItem>
-                      </IonCol>
-                      <IonCol>
-                        <IonItem>
-                          <IonLabel position="stacked">6a (*)</IonLabel>
-                          <IonInput
-                            minlength={2}
-                            maxlength={4}
-                            color="dark"
-                            required={true}
-                            autocomplete="off"
-                            type="tel"
-                            value={this.state.number}
-                            onIonChange={(e: any) => {
-                              this.setState({ number: e.target.value.trim() });
-                            }}
-                          />
-                        </IonItem>
-                      </IonCol>
-                      <IonCol>
-                        <IonItem>
-                          <IonLabel position="stacked">Sur </IonLabel>
-                          <IonSelect
-                            interface="popover"
-                            color="dark"
-                            value={this.state.post}
-                            onIonChange={(e: any) => {
-                              if (e.target.value === "No Aplica") {
-                                this.setState({ post: "" });
-                              } else {
-                                this.setState({ post: e.target.value });
-                              }
-                            }}
-                          >
-                            {TypesPosStreets.map((kind, index) => (
-                              <IonSelectOption key={index} value={kind}>
-                                {kind}
-                              </IonSelectOption>
-                            ))}
-                          </IonSelect>
-                        </IonItem>
-                      </IonCol>
-                      <IonLabel position="stacked"> No. </IonLabel>
-                      <IonCol>
-                        <IonItem>
-                          <IonLabel position="stacked">25c(*)</IonLabel>
-                          <IonInput
-                            minlength={2}
-                            maxlength={4}
-                            color="dark"
-                            required={true}
-                            autocomplete="off"
-                            type="tel"
-                            value={this.state.number2}
-                            onIonChange={(e: any) => {
-                              this.setState({ number2: e.target.value.trim() });
-                            }}
-                          />
-                        </IonItem>
-                      </IonCol>
-                      <IonLabel position="stacked">
-                        <h1> - </h1>
-                      </IonLabel>
-                      <IonCol>
-                        <IonItem>
-                          <IonLabel position="stacked">65(*)</IonLabel>
-                          <IonInput
-                            minlength={2}
-                            maxlength={4}
-                            color="dark"
-                            required={true}
-                            autocomplete="off"
-                            type="tel"
-                            value={this.state.number3}
-                            onIonChange={(e: any) => {
-                              this.setState({ number3: e.target.value });
-                            }}
-                          />
-                        </IonItem>
-                      </IonCol>
-                      <IonCol>
-                        <IonItem>
-                          <IonLabel position="stacked">Este </IonLabel>
-                          <IonSelect
-                            interface="popover"
-                            color="dark"
-                            value={this.state.post2}
-                            onIonChange={(e: any) => {
-                              if (e.target.value === "No Aplica") {
-                                this.setState({ post2: "" });
-                              } else {
-                                this.setState({ post2: e.target.value });
-                              }
-                            }}
-                          >
-                            {TypesPosStreets.map((kind, index) => (
-                              <IonSelectOption key={index} value={kind}>
-                                {kind}
-                              </IonSelectOption>
-                            ))}
-                          </IonSelect>
-                        </IonItem>
-                      </IonCol>
-                      <IonCol size={"12"}>
-                        <IonItem>
-                          <IonIcon
-                            color="primary"
-                            icon={locationOutline}
-                            slot="start"
-                          />
-                          <IonLabel position="stacked">
-                            Dirección Generada:
-                          </IonLabel>
-                          <IonText>{`${this.state.kind} ${
-                            this.state.number ? this.state.number : ""
-                          } ${this.state.post} ${
-                            this.state.number ? "No" : ""
-                          } ${this.state.number2 ? this.state.number2 : ""} ${
-                            this.state.number2 ? "-" : ""
-                          } ${this.state.number3 ? this.state.number3 : ""} ${
-                            this.state.post2
-                          }`}</IonText>
-                        </IonItem>
-                      </IonCol>
-                    </IonRow>
-                  </>
-                )}
-              </IonGrid>
+              <AddressContainer
+                accionTrigger={(response: any) => {
+                  if (response.whereIlive) {
+                    this.setState({ whereIlive: response.whereIlive });
+                    this.setState({ uniquecode: response.uniquecode });
+                    this.setState({city:response.city});
+                    if (response.homeNumber && response.blockNumber) {
+                      this.setState({ homeNumber: response.homeNumber });
+                      this.setState({ blockNumber: response.blockNumber });
+                    }
+                    if (response.address) {
+                      this.setState({ address: response.address });
+                    }
+                  }
+                }}
+              ></AddressContainer>
               <IonItem>
                 <IonIcon color="primary" icon={cardOutline} slot="start" />
                 <IonLabel position="floating">
@@ -668,7 +354,17 @@ export class SignUpPage extends React.Component<
                   }
                 />
               </IonItem>
-              <IonItem><a href='/PrivacyPolicy'>Politica de privacidad</a></IonItem>
+              <IonItem>
+                <IonLabel>
+                  <a href="/PrivacyPolicy">Acepto las politica de privacidad</a>
+                </IonLabel>
+                <IonCheckbox
+                  checked={this.state.privacyPolicy}
+                  onIonChange={(e) =>
+                    this.setState({ privacyPolicy: e.detail.checked })
+                  }
+                />
+              </IonItem>
               <IonProgressBar
                 hidden={this.state.hiddenbar}
                 type="indeterminate"
