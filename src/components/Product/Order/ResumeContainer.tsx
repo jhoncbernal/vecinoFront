@@ -21,7 +21,12 @@ import {
   IonItemDivider,
   IonSpinner,
 } from "@ionic/react";
-import { cashOutline, trashBinOutline, mapOutline, walletOutline } from "ionicons/icons";
+import {
+  cashOutline,
+  trashBinOutline,
+  mapOutline,
+  walletOutline,
+} from "ionicons/icons";
 import {
   User,
   Provider,
@@ -32,9 +37,10 @@ import {
 import config from "../../../config";
 import { HttpRequest } from "../../../hooks/HttpRequest";
 import {
-  pushProviderBillsFirebase, pushStatesUserFirebase
+  pushProviderBillsFirebase,
+  pushStatesUserFirebase,
 } from "../../../config/firebase";
-import * as H from 'history';
+import * as H from "history";
 interface ContainerProps {
   history: H.History;
   closeModal: any;
@@ -42,7 +48,7 @@ interface ContainerProps {
   order: ShoppingOrder | undefined;
   provider: Provider;
   products: ShoppingProduct;
-  clearCart:any;
+  clearCart: any;
 }
 
 const ResumeContainer: React.FC<ContainerProps> = ({
@@ -57,31 +63,42 @@ const ResumeContainer: React.FC<ContainerProps> = ({
   const today: Date = new Date();
   const numDayOfWeek: number = today.getDay();
   const daysOfWeek: Array<string> = [
-    "NoAplica",
+    "domingo",
     "lunes",
     "martes",
     "miercoles",
     "jueves",
     "viernes",
     "sabado",
-    "domingo",
   ];
   const todayschedule: any = provider.schedule.filter((obj) =>
     obj.days.includes(daysOfWeek[numDayOfWeek])
   );
+console.log(todayschedule[0].open)
   let tomorrow: string = daysOfWeek[numDayOfWeek + 1];
-  if (daysOfWeek[numDayOfWeek] === "domingo") {
-    tomorrow = "lunes";
+  if (daysOfWeek[numDayOfWeek] === "sabado") {
+    tomorrow = "domingo";
   }
-  const openHour: number = new Date(todayschedule[0].open).getHours() + 5;
-  const closeHour: number = new Date(todayschedule[0].close).getHours() + 5;
+  const tomorrowschedule: any = provider.schedule.filter((obj) =>
+    obj.days.includes(daysOfWeek[tomorrow === "domingo" ? 0 : numDayOfWeek + 1])
+  );
+  const openHour: number =
+    new Date(todayschedule[0].open).getHours() + 5;
+  const closeHour: number =
+    new Date(todayschedule[0].close).getHours() + 5;
+  const openHourTomorrow: number =
+    new Date(tomorrowschedule[0].open).getHours() + 5;
+  const closeHourTomorrow: number =
+    new Date(tomorrowschedule[0].close).getHours() + 5;
   const flagDeliveryRighNow: boolean =
     openHour <= today.getHours() && today.getHours() <= closeHour - 1;
   const [paymentMethod, setPaymentMethod] = useState<string>("efectivo");
   const [schedule, setSchedule] = useState<string>();
   const [cashValue, setCashValue] = useState<number>(0);
   const [address, setAddress] = useState<string>(
-    currentUser.neighborhood.address==='NO APLICA'?currentUser.address:currentUser.neighborhood.address
+    currentUser.neighborhood.address === "NO APLICA"
+      ? currentUser.address
+      : currentUser.neighborhood.address
   );
   const [tip, setTip] = useState<string>("1000");
   const [flagExtraCharge, setFlagExtraCharge] = useState<boolean>(false);
@@ -89,7 +106,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
   const [alertMessage, setAlertMessage] = useState("");
   const [alertHeader, setAlertHeader] = useState("");
   const [showAlert2, setShowAlert2] = useState(false);
-  const [hiddenSpiner,setHiddenSpiner]= useState<boolean>(false);
+  const [hiddenSpiner, setHiddenSpiner] = useState<boolean>(false);
   let total = 0;
   const deliverySchedule = useCallback(
     (value) => {
@@ -100,7 +117,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
     },
     [flagExtraCharge]
   );
- 
+
   const submitOrder = useCallback(
     async (order: ShoppingOrder) => {
       setHiddenSpiner(true);
@@ -127,36 +144,37 @@ const ResumeContainer: React.FC<ContainerProps> = ({
           flagExtraCharge: flagExtraCharge,
           tip: Number(tip),
         };
-        if (address !== (currentUser.neighborhood.address||currentUser.address)) {
+        if (
+          address !== (currentUser.neighborhood.address || currentUser.address)
+        ) {
           data = { ...data, ...{ otherAddress: address } };
         }
         if (paymentMethod === "efectivo") {
           data = { ...data, ...{ cashValue: cashValue } };
         }
         let pathUrl = `${config.BillsContext}`;
-        
+
         await HttpRequest(pathUrl, "POST", data, true)
           .then(async (response: Bill) => {
             if (currentUser._id && provider._id) {
               await pushProviderBillsFirebase(response);
               let mStates = [
                 {
-                  state: 'start',
+                  state: "start",
                   start: new Date().toLocaleString("en-US", {
                     timeZone: "America/Bogota",
                   }),
                 },
-              ]; 
-             await pushStatesUserFirebase(response, mStates);
+              ];
+              await pushStatesUserFirebase(response, mStates);
             }
             setAlertHeader("Confirmacion de Orden");
             setAlertMessage(
               `su orden fue creada con el numero de seguimiento ${response.code}`
             );
-
           })
           .catch((error) => {
-            setHiddenSpiner(false); 
+            setHiddenSpiner(false);
             console.error(error);
             throw error;
           });
@@ -164,33 +182,44 @@ const ResumeContainer: React.FC<ContainerProps> = ({
       setHiddenSpiner(false);
       setShowAlert2(true);
     },
-    [address, cashValue, currentUser._id, currentUser.address, currentUser.neighborhood.address, flagExtraCharge, paymentMethod, products, provider._id, provider.deliveryCharge, schedule, tip]
+    [
+      address,
+      cashValue,
+      currentUser._id,
+      currentUser.address,
+      currentUser.neighborhood.address,
+      flagExtraCharge,
+      paymentMethod,
+      products,
+      provider._id,
+      provider.deliveryCharge,
+      schedule,
+      tip,
+    ]
   );
 
   if (order) {
     total = Number(tip) + order.total + provider.deliveryCharge;
   }
-  if(flagExtraCharge){
-    total=total+provider.deliveryExtraCharge; 
+  if (flagExtraCharge) {
+    total = total + provider.deliveryExtraCharge;
   }
   return (
     <IonContent>
       <div>
-      <IonToolbar color={'white'}>
-                <IonTitle color={'primary'}>
-                  Orden de compra
-                </IonTitle>
-              </IonToolbar>
+        <IonToolbar color={"white"}>
+          <IonTitle color={"primary"}>Orden de compra</IonTitle>
+        </IonToolbar>
         <IonItemDivider>
           <IonItem lines="none">
-        <IonIcon color="primary" icon={mapOutline} slot="start" />
-          <IonLabel position="floating">Direccion:</IonLabel>
-          <IonInput
-            disabled={!flagExtraCharge}
-            type={"text"}
-            value={address}
-            onInput={(e: any) => setAddress(e.target.value)}
-          ></IonInput>
+            <IonIcon color="primary" icon={mapOutline} slot="start" />
+            <IonLabel position="floating">Direccion:</IonLabel>
+            <IonInput
+              disabled={!flagExtraCharge}
+              type={"text"}
+              value={address}
+              onInput={(e: any) => setAddress(e.target.value)}
+            ></IonInput>
           </IonItem>
           <IonButton
             hidden={flagExtraCharge}
@@ -208,7 +237,11 @@ const ResumeContainer: React.FC<ContainerProps> = ({
 
         <IonItemDivider>
           <IonItem>
-        <IonIcon color="primary" icon={"assets/icons/deliveryTimeOutline.svg"} slot="start" />
+            <IonIcon
+              color="primary"
+              icon={"assets/icons/deliveryTimeOutline.svg"}
+              slot="start"
+            />
             <IonLabel position="stacked">Programar envio:</IonLabel>
             <IonSelect
               interface="popover"
@@ -222,60 +255,69 @@ const ResumeContainer: React.FC<ContainerProps> = ({
               <IonSelectOption>
                 {today.getHours() <= openHour - 1
                   ? `Hoy de ${openHour}:00  a ${openHour + 1}:00 `
-                  : `${tomorrow} de ${openHour}:00  a ${openHour + 1}:00 `}
+                  : `${tomorrow} de ${openHourTomorrow}:00  a ${
+                      openHourTomorrow + 1
+                    }:00 `}
               </IonSelectOption>
               <IonSelectOption>
                 {today.getHours() <= openHour + 4
                   ? `Hoy de ${openHour + 4}:00  a ${openHour + 5}:00 `
-                  : `${tomorrow} de ${openHour + 4}:00  a ${
-                      openHour + 5
+                  : `${tomorrow} de ${openHourTomorrow + 4}:00  a ${
+                      openHourTomorrow + 5
                     }:00 `}
               </IonSelectOption>
               <IonSelectOption>
                 {today.getHours() <= closeHour - 1
                   ? `Hoy de ${closeHour - 1}:00  a ${closeHour}:00 `
-                  : `${tomorrow} de ${closeHour - 1}:00  a ${closeHour}:00 `}
+                  : `${tomorrow} de ${
+                      closeHourTomorrow - 1
+                    }:00  a ${closeHourTomorrow}:00 `}
               </IonSelectOption>
               {flagDeliveryRighNow ? (
-                <IonSelectOption value="Ahora mismo">Ahora mismo</IonSelectOption>
+                <IonSelectOption value="Ahora mismo">
+                  Ahora mismo
+                </IonSelectOption>
               ) : null}
             </IonSelect>
-            </IonItem>
+          </IonItem>
         </IonItemDivider>
         <IonItemDivider>
           <IonItem>
-        <IonIcon color="primary" src={walletOutline} slot="start" />
-          <IonLabel position="stacked">Metodo de Pago</IonLabel>
-          <IonSelect
-            interface="popover"
-            value={paymentMethod}
-            placeholder="Select One"
-            onIonChange={(e) => {
-              paymentMethod !== "efectivo"?setCashValue(0):
-              setPaymentMethod(e.detail.value);
-            }}
-          >
-            <IonSelectOption value="efectivo">Efectivo</IonSelectOption>
-            <IonSelectOption disabled value="tarjeta">Tarjeta</IonSelectOption>
-          </IonSelect>
+            <IonIcon color="primary" src={walletOutline} slot="start" />
+            <IonLabel position="stacked">Metodo de Pago</IonLabel>
+            <IonSelect
+              interface="popover"
+              value={paymentMethod}
+              placeholder="Select One"
+              onIonChange={(e) => {
+                paymentMethod !== "efectivo"
+                  ? setCashValue(0)
+                  : setPaymentMethod(e.detail.value);
+              }}
+            >
+              <IonSelectOption value="efectivo">Efectivo</IonSelectOption>
+              <IonSelectOption disabled value="tarjeta">
+                Tarjeta
+              </IonSelectOption>
+            </IonSelect>
           </IonItem>
         </IonItemDivider>
         {paymentMethod === "efectivo" ? (
           <IonItemDivider>
-             <IonItem>
-            <IonIcon color="primary" icon={cashOutline} slot="start" />
-            <IonLabel position="floating">
-              Efectivo con el cual va a pagar
-            </IonLabel>
-            <IonInput
-              color="dark"
-              required={true}
-              autocomplete="on"
-              type="number"
-              value={cashValue}
-              onInput={(e: any) => setCashValue(e.target.value)}
-            />
-             </IonItem>
+            <IonItem>
+              <IonIcon color="primary" icon={cashOutline} slot="start" />
+              <IonLabel position="floating">
+                Efectivo con el cual va a pagar
+              </IonLabel>
+              <IonInput
+                color="dark"
+                required={true}
+                autocomplete="on"
+                type="number"
+                value={cashValue}
+                onInput={(e: any) => setCashValue(e.target.value)}
+              />
+            </IonItem>
           </IonItemDivider>
         ) : null}
         <IonItem>
@@ -312,7 +354,6 @@ const ResumeContainer: React.FC<ContainerProps> = ({
         <IonItem>
           <IonLabel class="ion-align-items-start">Propina:</IonLabel>
           <IonLabel class="ion-align-items-end ion-text-end">
-            
             ${Number(tip).toLocaleString()}
           </IonLabel>
         </IonItem>
@@ -336,7 +377,11 @@ const ResumeContainer: React.FC<ContainerProps> = ({
               <IonItemOptions
                 onIonSwipe={() => {
                   setFlagExtraCharge(false);
-                  setAddress(currentUser.neighborhood.address==='NO APLICA'?currentUser.address:currentUser.neighborhood.address);
+                  setAddress(
+                    currentUser.neighborhood.address === "NO APLICA"
+                      ? currentUser.address
+                      : currentUser.neighborhood.address
+                  );
                   if (schedule === "Ahora mismo") {
                     setSchedule("");
                   }
@@ -357,7 +402,9 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             <IonTitle class=" ion-text-end">${total.toLocaleString()}</IonTitle>
           </IonItem>
           <IonButton
-           disabled={order?order.total>0&&!hiddenSpiner?false:true:true}
+            disabled={
+              order ? (order.total > 0 && !hiddenSpiner ? false : true) : true
+            }
             onClick={() => {
               if (order) {
                 submitOrder(order);
@@ -366,7 +413,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
             expand="full"
           >
             Finalizar compra
-            <IonSpinner hidden={!hiddenSpiner} color={'white'} name="bubbles" />
+            <IonSpinner hidden={!hiddenSpiner} color={"white"} name="bubbles" />
           </IonButton>
         </IonToolbar>
       </IonFooter>
@@ -408,30 +455,35 @@ const ResumeContainer: React.FC<ContainerProps> = ({
       />
       <IonAlert
         isOpen={showAlert2}
-        onDidDismiss={async() => {
-          if(alertMessage.includes("seguimiento")){
-            
-            clearCart(); closeModal(false);history.go(0);
+        onDidDismiss={async () => {
+          if (alertMessage.includes("seguimiento")) {
+            clearCart();
+            closeModal(false);
+            history.go(0);
           }
-          setShowAlert2(false)
+          setShowAlert2(false);
         }}
         header={alertHeader}
         message={alertMessage}
-        buttons={alertMessage.includes("seguimiento")?
-        ([{
-          text: "Ok",
-          handler: async () => {
-            try {
-              clearCart();
-              closeModal(false);
-              setShowAlert2(false)
-              history.go(0);
-            } catch (e) {
-              console.error("ResumeContainer.handler: " + e);
-            }
-          },
-        }])
-        :["OK"]}
+        buttons={
+          alertMessage.includes("seguimiento")
+            ? [
+                {
+                  text: "Ok",
+                  handler: async () => {
+                    try {
+                      clearCart();
+                      closeModal(false);
+                      setShowAlert2(false);
+                      history.go(0);
+                    } catch (e) {
+                      console.error("ResumeContainer.handler: " + e);
+                    }
+                  },
+                },
+              ]
+            : ["OK"]
+        }
       />
     </IonContent>
   );
