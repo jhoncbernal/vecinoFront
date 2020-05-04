@@ -4,8 +4,8 @@ android {
     signingConfigs {
         debug {
             storeFile file('/Users/jhoncasallas/Documents/OwnCode/VecinoIonic/Untitled')
-            keyAlias = cdvMinSdkVersion
-            keyPassword cdvMinSdkVersion
+            keyAlias = 'migatito'
+            keyPassword 'migatito'
         }
     }
     compileSdkVersion 28
@@ -13,7 +13,7 @@ android {
         applicationId "io.ionic.vecinoo"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
+        versionCode 3
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

@@ -93,7 +93,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
         console.error(e);
       }
     },
-    [dataModal.roles, dataModal._id, body, bodyChange, triggerChange]
+    [dataModal.roles, dataModal._id, body, bodyChange]
   );
   useEffect(() => {
     setdataModall(dataModal);
