@@ -74,7 +74,6 @@ const ResumeContainer: React.FC<ContainerProps> = ({
   const todayschedule: any = provider.schedule.filter((obj) =>
     obj.days.includes(daysOfWeek[numDayOfWeek])
   );
-console.log(todayschedule[0].open)
   let tomorrow: string = daysOfWeek[numDayOfWeek + 1];
   if (daysOfWeek[numDayOfWeek] === "sabado") {
     tomorrow = "domingo";
