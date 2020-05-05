@@ -20,7 +20,7 @@ const dev = {
 const prod = {
   API_VERSION: "/v1/api",
   BASE_URL: "https://vecinoob.herokuapp.com",
-  AdminContext: "admin",
+  AdminContext: "/admin",
   AllNeighborhoodsContext: "/admin/names/1",
   AuthSignUp: "/auth/signup",
   FileUploadImageContext: "/file/images/upload",
