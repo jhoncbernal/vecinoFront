@@ -30,6 +30,7 @@ import { HttpRequest } from "../../hooks/HttpRequest";
 import config from "../../config";
 
 interface Address {
+  address?:string;
   number?: number;
   post?: string;
   number2?: number;
@@ -62,7 +63,7 @@ const AddressContainer: React.FC<ContainerProps> = ({ accionTrigger,currentAddre
           if(currentAddress){
             setAddress((prevState: any) => ({
               ...prevState,
-              ...{neighborhoods: response , neighborhood: currentAddress.neighborhood,blockNumber:currentAddress.blockNumber,homeNumber:currentAddress.homeNumber,whereIlive:'Conjunto',uniquecode:currentAddress.uniquecode,city:currentAddress.city },
+              ...{neighborhoods: response , neighborhood: currentAddress.neighborhood,blockNumber:currentAddress.blockNumber,homeNumber:currentAddress.homeNumber,whereIlive:currentAddress.address?'Barrio':'Conjunto',uniquecode:currentAddress.uniquecode,city:currentAddress.city,address:currentAddress.address },
             }));
           }
           else{
@@ -78,11 +79,11 @@ const AddressContainer: React.FC<ContainerProps> = ({ accionTrigger,currentAddre
   }, [currentAddress]);
   useEffect(() => {
     if (address) {
-      let addressTemp;
+      let addressTemp:string='';
       if (address.whereIlive === "Conjunto") {
         addressTemp = `${address.neighborhood ? address.neighborhood : ""} 
-                      ${address.blockNumber ? address.blockNumber : ""} 
-                      ${address.homeNumber ? address.homeNumber : ""}
+                      ${address.blockNumber&&address.neighborhood ? address.blockNumber : ""} 
+                      ${address.homeNumber&&address.neighborhood ? address.homeNumber : ""}
                       ${address.city ? address.city : ""}`;
      
       } else {
@@ -95,10 +96,12 @@ const AddressContainer: React.FC<ContainerProps> = ({ accionTrigger,currentAddre
         } ${address.number2 ? "-" : ""} ${
           address.number3 ? address.number3 : ""
         } ${address.post2 ? address.post2 : ""} ${
-          address.city ? address.city : ""
+          address.city&&address.number3 ? address.city : ""
         }`;
       }
-      setNewAddres(addressTemp);
+      
+      if(addressTemp.trim()!==''){
+      setNewAddres(addressTemp);}
       if (
         address.whereIlive &&
         ((address.blockNumber && address.homeNumber) ||( address.number3&&address.kind))
@@ -191,7 +194,7 @@ const AddressContainer: React.FC<ContainerProps> = ({ accionTrigger,currentAddre
                     <IonSelect
                       interface="popover"
                       color="dark"
-                      placeholder={currentAddress?currentAddress.neighborhood:""}
+                      placeholder={currentAddress&&address.whereIlive==='Conjunto'?currentAddress.neighborhood:""}
                       onIonChange={(e: any) => {
                         setAddress((prevState: any) => ({
                           ...prevState,
@@ -449,7 +452,7 @@ const AddressContainer: React.FC<ContainerProps> = ({ accionTrigger,currentAddre
                       slot="start"
                     />
                     <IonLabel position="stacked">Dirección Generada:</IonLabel>
-                    <IonText>{newAddres}</IonText>
+                    <IonText>{currentAddress?currentAddress.address&&!newAddres!?currentAddress.address: newAddres:newAddres}</IonText>
                   </IonItem>
                 </IonCol>
               </IonRow>

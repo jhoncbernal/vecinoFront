@@ -228,8 +228,9 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
                     ? {
                         homeNumber: dataModall.homeNumber,
                         blockNumber: dataModall.blockNumber,
-                        neighborhood: dataModall.neighborhood?dataModall.neighborhood.firstName:'',
+                        neighborhood: dataModall.neighborhood&&!dataModall.address?dataModall.neighborhood.firstName:'',
                         uniquecode: dataModall.uniquecode,
+                        address: dataModall.address,
                         city: dataModall.city,
                       }
                     : null
@@ -261,6 +262,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
                           "neighborhood",
                           response.neighborhoodId
                         );
+                        handleValueChange("address", '');
                       }
                     }
                     if (response.address && response.whereIlive === "Barrio") {
