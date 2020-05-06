@@ -1,42 +1,35 @@
 {
   "project_info": {
-    "project_number": "53077348618",
-    "firebase_url": "https://acarapp-ba737.firebaseio.com",
-    "project_id": "acarapp-ba737",
-    "storage_bucket": "acarapp-ba737.appspot.com"
+    "project_number": "592124382565",
+    "firebase_url": "https://vecinoo-c5fcd.firebaseio.com",
+    "project_id": "vecinoo-c5fcd",
+    "storage_bucket": "vecinoo-c5fcd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:53077348618:android:8b5297b15e3f833292aaf3",
+        "mobilesdk_app_id": "1:592124382565:android:5507326e2a413da87ca58c",
         "android_client_info": {
           "package_name": "io.ionic.vecinoo"
         }
       },
       "oauth_client": [
         {
-          "client_id": "53077348618-k5kup7vuvkrjt1q5pl7hnddd955bv24h.apps.googleusercontent.com",
+          "client_id": "592124382565-9s0hm7nhrlh01iisqq6o72dtrtcu6dmb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBtgD2s2ywp49MLv4VDijh3CmrNnMUzBPE"
+          "current_key": "AIzaSyDUfZWfglzX11Lgkxc4GvTi-n7CrYmLRy0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "53077348618-k5kup7vuvkrjt1q5pl7hnddd955bv24h.apps.googleusercontent.com",
+              "client_id": "592124382565-9s0hm7nhrlh01iisqq6o72dtrtcu6dmb.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "53077348618-kfnhbldmo2iataerjosplg05clloulr3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.interwap.iwVAUTO"
-              }
             }
           ]
         }
