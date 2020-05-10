@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { IonImg, IonSpinner } from "@ionic/react";
 import style from "./style.module.css";
 import { Storages } from "../../../hooks/Storage";
@@ -11,12 +11,13 @@ const UploadComponent: FC<componentData> = ({
   output,
   srcInitial = "assets/icon/icon.png"
 }) => {
-  const [urlImage, setUrlImage] = useState<string>(
-    srcInitial.length > 0 ? srcInitial : "assets/icon/icon.png"
-  );
+  const [urlImage, setUrlImage] = useState<string>();
   let [inputElement, setInputElement] = useState();
   let [spinnerLoading, setSpinnerLoading] = useState<boolean>(false);
-
+useEffect(() => {
+  setUrlImage(
+  srcInitial.length > 0 ? srcInitial : "assets/icon/icon.png")
+}, [srcInitial])
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSpinnerLoading(true);
     let file = event.target.files![0];

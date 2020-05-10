@@ -119,7 +119,9 @@ const ListContainer: React.FC<ContainerProps> = ({
 
   useEffect(() => {
     const groupByType = groupBy("productType");
-    setData(groupByType(inputs));
+    if (inputs) {
+      setData(groupByType(inputs));
+    }
     let fireProductCart: any = {};
     refUserCar(currentUser._id, provider._id).on("value", (snapshot: any) => {
       snapshot.forEach((snap: any) => {
@@ -150,7 +152,7 @@ const ListContainer: React.FC<ContainerProps> = ({
   };
 
   try {
-    if (inputs.length > 0) {
+    if (inputs && inputs.length > 0) {
       return (
         <>
           <IonToolbar color="primary">
@@ -466,7 +468,7 @@ const ListContainer: React.FC<ContainerProps> = ({
           >
             <IonContent>
               <CreateComponent
-                product={dataModal}
+                prod={dataModal}
                 action={handleCloseModal}
               ></CreateComponent>
             </IonContent>
@@ -484,7 +486,7 @@ const ListContainer: React.FC<ContainerProps> = ({
           >
             <IonContent>
               <CreateComponent
-                product={dataModal}
+                prod={dataModal}
                 action={handleCloseModal}
               ></CreateComponent>
             </IonContent>

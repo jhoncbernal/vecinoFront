@@ -1,4 +1,4 @@
-import React, { FC, useState, FormEvent } from "react";
+import React, { FC, useState, FormEvent, useEffect } from "react";
 import UploadComponent from "../../../pages/interfaces/UploadComponent";
 import style from "./style.module.css";
 import {
@@ -23,7 +23,7 @@ import { HttpRequest } from "../../../hooks/HttpRequest";
 import { arrowBack } from "ionicons/icons";
 import { Product } from "../../../entities";
 
-const CreateComponent: FC<componentData> = ({ product, action }) => {
+const CreateComponent: FC<componentData> = ({ prod, action }) => {
   const productType = [
     "Limpieza",
     "Comida",
@@ -36,39 +36,51 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
   ];
   
   const measureType = ["Lb", "Kg", "Und"];
-  const body: { [id: string]: any } = {};
+  let temp: { [id: string]: any } = {};
   const [dataToast, setDataToast] = useState({ show: false, message: "" });
+  const [product, setProduct] = useState<{ [id: string]: any }>();
   const handleValueChange = (key: string, value: any) => {
-    body[key] = value;
+    temp[key] = value;
+    setProduct((prevState: any) => ({
+      ...prevState,
+      ...temp,
+    }));
   };
-
+useEffect(() => {
+ if(prod&&prod._id){
+  setProduct(prod);
+ }
+}, [prod])
   const submitData = async (e: FormEvent) => {
     e.preventDefault();
+    if(product){
     let error: boolean = false;
+    
     const method = product._id ? "PATCH" : "POST";
     const pathUrl = product._id
       ? `${config.ProductContext}/${product._id}`
       : `${config.ProductContext}`;
-    if (Object.keys(body).length === 0) {
+    if (Object.keys(product).length === 0) {
       action({ hasChanges: false });
       return;
     }
     if (method === "POST") {
-      if (!body["code"]) {
-        body["code"] = new Date().getTime();
+      if (!product["code"]) {
+        product["code"] = new Date().getTime();
       }
-      if (!body["keyImage"]) {
+      if (!product["keyImage"]) {
         error = true;
         setDataToast({ show: true, message: "se debe agregar una imagen" });
       }
-      if (body["price"] === 0) {
+      if (product["price"] === 0) {
         error = true;
         setDataToast({
           show: true,
           message: "el precio debe ser superior a 0",
         });
       }
-      if (body["totalAmount"] === 0) {
+
+      if (product["totalAmount"] === 0) {
         error = true;
         return setDataToast({
           show: true,
@@ -76,8 +88,17 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
         });
       }
     }
+    if (product["promotionPrice"]&&product.price&&(product["promotionPrice"]>product.price)) {
+      error = true;
+      setDataToast({
+        show: true,
+        message: "el precio en promocion debe ser inferior al precio normal",
+      });
+    }
     if (!error) {
-      await HttpRequest(pathUrl, method, body, true)
+      
+
+      await HttpRequest(pathUrl, method, product, true)
         .then(async (response: any) => {
           action({ hasChanges: true });
         })
@@ -85,6 +106,7 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
           setDataToast({ show: true, message: error.message });
           console.error(error);
         });
+    }
     }
   };
 
@@ -108,7 +130,7 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
           <IonRow>
             <IonCol size="4" offset="4">
               <UploadComponent
-                srcInitial={product.urlImage}
+                srcInitial={product?product.urlImage:''}
                 output={(value: any) => {
                   handleValueChange("urlImage", value.Location);
                   handleValueChange("keyImage", value.key);
@@ -124,9 +146,10 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
               >
                 <label>Nombre del producto</label>
                 <IonInput
+                type='text'
                   required={true}
                   name="productName"
-                  value={product.productName}
+                  value={product?.productName}
                   onIonChange={(e: any) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
@@ -136,7 +159,7 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
                   interface="popover"
                   name="measureType"
                   placeholder="Seleccione uno"
-                  value={product.measureType}
+                  value={product?.measureType}
                   onIonChange={(e: any) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
@@ -151,16 +174,17 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
                 </IonSelect>
                 <label>Precio</label>
                 <IonInput
+                type='number'
                   required={true}
                   name="price"
-                  value={product.price}
+                  value={product?.price}
                   onIonChange={(e: any) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
                 ></IonInput>
                 <label>Tipo de producto</label>
                 <IonSelect
-                  value={product.productType}
+                  value={product?.productType}
                   interface="popover"
                   placeholder="Seleccione uno"
                   name="productType"
@@ -178,8 +202,9 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
                 </IonSelect>
                 <label>Unidades en stock</label>
                 <IonInput
+                type='number'
                   required={true}
-                  value={product.totalAmount}
+                  value={product?.totalAmount}
                   name="totalAmount"
                   onIonChange={(e: any) => {
                     handleValueChange(e.target.name, e.target.value);
@@ -187,8 +212,9 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
                 ></IonInput>
                 <label>Marca</label>
                 <IonInput
+                type='text'
                   required={true}
-                  value={product.brand}
+                  value={product?.brand}
                   name="brand"
                   onIonChange={(e: any) => {
                     handleValueChange(e.target.name, e.target.value);
@@ -197,7 +223,7 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
                 <label>Codigo de Producto</label>
                 <IonInput
                   required={true}
-                  value={product.code ? product.code : new Date().getTime()}
+                  value={product?.code ? product.code : new Date().getTime()}
                   name="code"
                   onIonBlur={(e: any) => {
                     handleValueChange(e.target.name, e.target.value);
@@ -205,7 +231,8 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
                 ></IonInput>
                 <label>Precio en promoción </label>
                 <IonInput
-                  value={product.promotionPrice}
+                type='number'
+                  value={product?.promotionPrice}
                   name="promotionPrice"
                   onIonChange={(e: any) => {
                     handleValueChange(e.target.name, e.target.value);
@@ -218,7 +245,7 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
                   placeholder="Seleccione la fecha de expiración"
                   monthShortNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
                   value={
-                    product.promotionExpires
+                    product?.promotionExpires
                       ? product.promotionExpires.toLocaleString()
                       : null
                   }
@@ -229,7 +256,7 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
                 <label>Descripción</label>
                 <IonTextarea
                   required={true}
-                  value={product.features}
+                  value={product?.features}
                   name="features"
                   onIonChange={(e: any) => {
                     handleValueChange(e.target.name, e.target.value);
@@ -259,7 +286,7 @@ const CreateComponent: FC<componentData> = ({ product, action }) => {
 };
 interface componentData {
   [id: string]: any;
-  product: Product;
+  prod: Product;
 }
 
 export default CreateComponent;
