@@ -1,4 +1,6 @@
-import firebase from "firebase";
+import  firebase from 'firebase/app';
+import 'firebase/auth'
+import 'firebase/database'
 import { Bill } from "../entities";
 
 const firebaseConfig = {
@@ -45,11 +47,8 @@ const deleteUserBillsFirebase = (bill: Bill) => {
 };
 
 
-const refProviderBillsFirebase = (IdProvider: string) => {
-  return fire_db.ref("providers").child(IdProvider);
-};
-const refUserBillsFirebase = (IdUser: string) => {
-  return fire_db.ref("users").child(IdUser);
+const refByIdFirebase = (refTo:string,Id: string) => {
+  return fire_db.ref(refTo).child(Id);
 };
 
 export {
@@ -58,8 +57,7 @@ export {
   pushCartFirebase,
   pushProviderBillsFirebase,
   refUserCar,
-  refProviderBillsFirebase,
-  refUserBillsFirebase,
+  refByIdFirebase,
   pushStatesUserFirebase,
   deleteProviderBillsFirebase,
   deleteUserBillsFirebase

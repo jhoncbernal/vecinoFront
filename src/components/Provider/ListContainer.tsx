@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   IonItem,
   IonIcon,
@@ -13,14 +13,19 @@ import {
   IonThumbnail,
   IonImg,
   IonContent,
+  IonLoading,
+  IonToolbar,
+  IonTitle,
+  IonSkeletonText,
+  IonLabel,
 } from "@ionic/react";
 import { arrowBackOutline } from "ionicons/icons";
 import ListContainerProduct from "../Product/ListContainer";
 import { HttpRequest } from "../../hooks/HttpRequest";
 import config from "../../config";
-import * as H from 'history';
+import * as H from "history";
 interface ContainerProps {
-  history:H.History;
+  history: H.History;
   loaddata: boolean;
   inputs: Array<any>;
   currentUser: any;
@@ -33,14 +38,16 @@ const ListContainer: React.FC<ContainerProps> = ({
   currentUser,
 }) => {
   const [searchText, setSearchText] = useState("");
-  const [data, setdata] = useState(inputs);
+  const [data, setdata] = useState();
   const [showModal, setShowModal] = useState(false);
   const [productsArray, setProductsArray] = useState<any>([{}]);
   const [loadData, setloadData] = useState(false);
 
-
+  useEffect(() => {
+    setdata(inputs);
+  }, [inputs]);
   try {
-    if (inputs.length > 0) {
+    if (inputs && inputs.length > 0) {
       return (
         <>
           <IonSearchbar
@@ -50,16 +57,8 @@ const ListContainer: React.FC<ContainerProps> = ({
               setSearchText(e.detail.value!);
 
               let newData = inputs.filter((item) => {
-                let itemData = `${item.productType.toUpperCase()} ${item.productName.toUpperCase()} 
-              ${item.features.toUpperCase()}
-              ${item.price.toString().toUpperCase()}
-              ${item.totalAmount.toString().toUpperCase()}
-              ${item.measureType.toUpperCase()}`;
-                if (item.promotionPrice) {
-                  itemData =
-                    itemData +
-                    `${item.promotionPrice.toString().toUpperCase()}`;
-                }
+                let itemData = `${item.category.toUpperCase()} ${item.firstName.toUpperCase()}`;
+
                 const textData = searchText.toUpperCase();
                 return itemData.indexOf(textData) > -1;
               });
@@ -69,73 +68,119 @@ const ListContainer: React.FC<ContainerProps> = ({
             hidden={!loaddata}
           ></IonSearchbar>
 
-          {data ?data.map((input: any, index) => {
-            return (
-              <IonCard key={index} id="card">
-                <IonCardHeader color="primary">
-
-                    <IonText>
-                    <strong>{input.firstName?.toUpperCase()}</strong></IonText>
-
-                </IonCardHeader>
-                <IonCardContent
-                  onClick={async () => {
-                    let pathUrl = `/${config.ProductContext}?providerId=${input._id}&pageSize=100`;
-                    await HttpRequest(pathUrl, "GET", "", true).then(
-                      async (resultado: any) => {
-                        setProductsArray(resultado);
-                        setloadData(true);
-                        setShowModal(true);
-                      }
-                    ).catch((err)=>{
-                      console.error(err);
-                      history.go(0);
-                    });
-                  }}
-                >
-                  <IonItem lines="none">
-                    <IonThumbnail class="productImage ion-align-items-start ion-align-self-center" slot="start">
-                      <IonImg src={input.urlImage ? input.urlImage : null} />
-                    </IonThumbnail>
-                      <IonText color={'steel'} class="ion-align-self-center ion-align-items-start">
-                      <h1>{input ? input.category?.charAt(0).toUpperCase() + input.category?.slice(1) : null}</h1>
+          {data
+            ? data.map((input: any, index: number) => {
+                return (
+                  <IonCard key={index} id="card">
+                    <IonCardHeader color="primary">
+                      <IonText>
+                        <strong>{input.firstName?.toUpperCase()}</strong>
                       </IonText>
-                  </IonItem>
-                </IonCardContent>
-                <IonModal 
-                onDidDismiss={(e) => setShowModal(false)}
-                  isOpen={showModal}
-                  animated={true}
-                >
-                  <IonContent>
-                    <ListContainerProduct
-                    history={history}
-                      loaddata={loadData}
-                      inputs={productsArray}
-                      currentUser={currentUser}
-                      provider={input}
-                    ></ListContainerProduct>
-                    <IonFab vertical="bottom" horizontal="start" slot="fixed">
-                      <IonFabButton
-                        onClick={() => setShowModal(false)}
-                        routerLink="/home"
-                      >
-                        <IonIcon icon={arrowBackOutline} />
-                      </IonFabButton>
-                    </IonFab>
-                  </IonContent>
-                </IonModal>
-              </IonCard>
-            );
-          }):null}
+                    </IonCardHeader>
+                    <IonCardContent
+                      onClick={async () => {
+                        let pathUrl = `/${config.ProductContext}?providerId=${input._id}&pageSize=100`;
+                        await HttpRequest(pathUrl, "GET", "", true)
+                          .then(async (resultado: any) => {
+                            setProductsArray(resultado);
+                            setloadData(true);
+                            setShowModal(true);
+                          })
+                          .catch((err) => {
+                            console.error(err);
+                            history.go(0);
+                          });
+                      }}
+                    >
+                      <IonItem lines="none">
+                        <IonThumbnail
+                          class="productImage ion-align-items-start ion-align-self-center"
+                          slot="start"
+                        >
+                          <IonImg
+                            src={input.urlImage ? input.urlImage : null}
+                          />
+                        </IonThumbnail>
+                        <IonText
+                          color={"steel"}
+                          class="ion-align-self-center ion-align-items-start"
+                        >
+                          <h1>
+                            {input
+                              ? input.category?.charAt(0).toUpperCase() +
+                                input.category?.slice(1)
+                              : null}
+                          </h1>
+                        </IonText>
+                      </IonItem>
+                    </IonCardContent>
+                    <IonModal
+                      onDidDismiss={(e) => setShowModal(false)}
+                      isOpen={showModal}
+                      animated={true}
+                    >
+                      <IonContent>
+                        <ListContainerProduct
+                          history={history}
+                          loaddata={loadData}
+                          inputs={productsArray}
+                          currentUser={currentUser}
+                          provider={input}
+                        ></ListContainerProduct>
+                        <IonFab
+                          vertical="bottom"
+                          horizontal="start"
+                          slot="fixed"
+                        >
+                          <IonFabButton
+                            onClick={() => setShowModal(false)}
+                            routerLink="/home"
+                          >
+                            <IonIcon icon={arrowBackOutline} />
+                          </IonFabButton>
+                        </IonFab>
+                      </IonContent>
+                    </IonModal>
+                  </IonCard>
+                );
+              })
+            : null}
         </>
       );
     } else {
       return (
         <>
-          <h1>
-            <IonText color="primary">Sin conexion</IonText>
-          </h1>
+          <IonLoading
+            isOpen={!loadData}
+            spinner="bubbles"
+            onDidDismiss={() => setloadData(true)}
+            message={"Por favor espere"}
+            duration={5000}
+          />
+          <IonToolbar><IonTitle class='ion-text-center'>Verifique su conexion a internet o recarge la pagina</IonTitle>
+          </IonToolbar>
+          <IonCard>
+            <IonCardHeader hidden={!loadData}>
+            </IonCardHeader>
+            <IonCardContent>
+            <IonItem>
+              <IonThumbnail slot="start">
+                <IonSkeletonText animated />
+              </IonThumbnail>
+              <IonLabel>
+                <h3>
+                  <IonSkeletonText animated style={{ width: '50%' }} />
+                </h3>
+                <p>
+                  <IonSkeletonText animated style={{ width: '80%' }} />
+                </p>
+                <p>
+                  <IonSkeletonText animated style={{ width: '60%' }} />
+                </p>
+              </IonLabel>
+            </IonItem>
+            </IonCardContent>
+          </IonCard>
         </>
       );
     }

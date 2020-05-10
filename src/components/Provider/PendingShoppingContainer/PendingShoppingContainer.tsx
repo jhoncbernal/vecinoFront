@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC} from "react";
 import {
   IonTitle,
   IonItem,
@@ -15,29 +15,15 @@ import {
 } from "@ionic/react";
 import style from "./style.module.css";
 import { menuController } from "@ionic/core";
-import { refProviderBillsFirebase } from "../../../config/firebase";
 import { Bill } from "../../../entities";
 import { StatesDictionary } from "../../../hooks/OrderStates";
 
 const PendingShoppingContainer: FC<componentData> = ({
-  dataTrigger,
-  hideLoadBar,
-  currentUser,
+  dataTrigger,bills
 }) => {
-  const [bills, setBills] = useState<Array<Bill>>();
+
   const statesStyle = StatesDictionary().states;
 
-  useEffect(() => {
-    refProviderBillsFirebase(currentUser._id).on("value", (snapshot) => {
-      setBills([]);
-      const pendingData: any[] = [];
-      snapshot.forEach((snap) => {
-        pendingData.push(snap.val());
-        hideLoadBar(true);
-      });
-      setBills(pendingData);
-    });
-  }, [currentUser._id, hideLoadBar]);
 
   const handlerSide = (request: any) => {
     dataTrigger(request);
@@ -93,7 +79,9 @@ const PendingShoppingContainer: FC<componentData> = ({
                     <IonText>
                       {bill.otherAddress
                         ? bill.otherAddress
-                        : bill.user.neighborhood.address==='NO APLICA'?bill.user.address:bill.user.neighborhood.address}
+                        : bill.user.neighborhood.address === "NO APLICA"
+                        ? bill.user.address
+                        : bill.user.neighborhood.address}
                     </IonText>
                   </IonItem>
                 </IonCol>
@@ -126,25 +114,25 @@ const PendingShoppingContainer: FC<componentData> = ({
                   </>
                 ) : null}
                 <IonCol size-xs="6" size-md="3" size-lg="2">
-                      <IonItem lines="none">
-                        <IonLabel position="stacked">
-                          <p>Nombre:</p>
-                        </IonLabel>
-                        <IonText>{bill.user.firstName}</IonText>
-                      </IonItem>
-                    </IonCol>
-                    <IonCol size-xs="6" size-md="3" size-lg="2">
-                      <IonItem lines="none">
-                        <IonLabel position="stacked">
-                          <p>Telefono:</p>
-                        </IonLabel>
-                        <IonText><small>{bill.user.phone}</small></IonText>
-                      </IonItem>
-                    </IonCol>
+                  <IonItem lines="none">
+                    <IonLabel position="stacked">
+                      <p>Nombre:</p>
+                    </IonLabel>
+                    <IonText>{bill.user.firstName}</IonText>
+                  </IonItem>
+                </IonCol>
+                <IonCol size-xs="6" size-md="3" size-lg="2">
+                  <IonItem lines="none">
+                    <IonLabel position="stacked">
+                      <p>Telefono:</p>
+                    </IonLabel>
+                    <IonText>
+                      <small>{bill.user.phone}</small>
+                    </IonText>
+                  </IonItem>
+                </IonCol>
               </IonRow>
-              <IonRow
-                class="ion-justify-content-end"
-              >
+              <IonRow class="ion-justify-content-end">
                 <IonCol
                   size-xs="6"
                   size-md="3"
@@ -159,8 +147,11 @@ const PendingShoppingContainer: FC<componentData> = ({
                   </IonItem>
                 </IonCol>
                 <IonCol
-                hidden={bill.deliveryExtraCharge + bill.deliveryCharge <= 0}
-                 size-xs="6" size-md="3" size-lg="2">
+                  hidden={bill.deliveryExtraCharge + bill.deliveryCharge <= 0}
+                  size-xs="6"
+                  size-md="3"
+                  size-lg="2"
+                >
                   <IonItem lines="none">
                     <IonLabel position="stacked">
                       <p>Envio</p>
@@ -245,6 +236,7 @@ const PendingShoppingContainer: FC<componentData> = ({
 };
 interface componentData {
   [id: string]: any;
+  bills:Array<Bill>;
 }
 
 export default PendingShoppingContainer;

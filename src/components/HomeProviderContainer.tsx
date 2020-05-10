@@ -6,7 +6,16 @@ import {
   IonToolbar,
   IonSegment,
   IonSegmentButton,
-  IonIcon
+  IonIcon,
+  IonBadge,
+  IonLoading,
+  IonTitle,
+  IonContent,
+  IonImg,
+  IonThumbnail,
+  IonItem,
+  IonCardHeader,
+  IonText,
 } from "@ionic/react";
 import { HttpRequest } from "../hooks/HttpRequest";
 import ListContainer from "./Product/ListContainer";
@@ -14,6 +23,9 @@ import { Storages } from "../hooks/Storage";
 import { timeOutline, pricetagsOutline } from "ionicons/icons";
 import config from "../config";
 import PendingShoppingContainer from "./Provider/PendingShoppingContainer";
+import { refByIdFirebase } from "../config/firebase";
+import { Bill } from "../entities";
+import { createLocalNotification } from "../hooks/LocalNotification";
 
 interface ContainerProps {
   [id: string]: any;
@@ -22,53 +34,66 @@ interface ContainerProps {
 const HomeProviderContainer: React.FC<ContainerProps> = ({
   history,
   currentUser,
-  handlerDataSide
+  handlerDataSide,
 }) => {
   const [hiddenBar, setHiddenBar] = useState(false);
   const [loadData, setLoadData] = useState(false);
   const user: any = useRef<any>(currentUser);
+  const [pending, setPending] = useState(0);
   const [showAlert1, setShowAlert1] = useState(false);
   const [message, setMessage] = useState("");
-  const [productsArray, setProductsArray] = useState<any>([{}]);
+  const [productsArray, setProductsArray] = useState<any>();
   const [segmentValue, setSegmentValue] = useState<any>("product");
+  const [bills, setBills] = useState<Array<Bill>>();
+  useEffect(() => {
+    refByIdFirebase("providers", currentUser._id).on("value", (snapshot) => {
+      setPending(0);
+      const pendingData: any[] = [];
+      snapshot.forEach((snap) => {
+        pendingData.push(snap.val());
+        setHiddenBar(true);
+      });
+      if (pendingData.length > 0) {
+        setPending(pendingData.length);
+        createLocalNotification(
+          "Nuevo pedido" + pendingData[pendingData.length - 1].code,
+          "Se encuentra pendiente"
+        );
 
+        setBills(pendingData);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser._id]);
   const httpRequest = useCallback(async () => {
     try {
       let pathUrl;
       if (segmentValue === "product") {
         pathUrl = `/${config.ProductContext}?pageSize=100&providerId=${user.current._id}`;
-      } else {
-        pathUrl = `/${config.ParkingSpaceContext}/${segmentValue}`;
-      }
-      if (segmentValue === "pendingShop") {
-        return;
-      }
-      await HttpRequest(pathUrl, "GET", "", true)
-        .then(async (resultado: any) => {
-          try {
-            if (resultado.status) {
-              setMessage("No se encontro ningun");
-              setShowAlert1(true);
+        await HttpRequest(pathUrl, "GET", "", true)
+          .then(async (resultado: any) => {
+            if (Array.isArray(resultado)) {
+              setProductsArray(resultado);
             }
-          } catch (e) {
-            console.error(e);
-            history.go(0);
-          }
-          if (Array.isArray(resultado)) {
-            setProductsArray(resultado);
-          }
-          setHiddenBar(true);
-
-          setLoadData(true);
-        })
-        .catch(error => {
-          if (error.message.includes("404")) {
             setHiddenBar(true);
             setLoadData(true);
-          } else {
-            throw error;
-          }
-        });
+          })
+          .catch((error) => {
+            if (error.message.includes("Error de conexion")) {
+              setTimeout(() => {
+                history.go(0);
+              }, 10000);
+            } else {
+              if (error.message.includes("404")) {
+                setHiddenBar(true);
+                setLoadData(true);
+              } else {
+                throw error;
+              }
+            }
+          });
+      }
+      setHiddenBar(true);
     } catch (e) {
       const { removeItem } = await Storages();
       await removeItem("token");
@@ -84,7 +109,6 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
   useEffect(() => {
     setHiddenBar(false);
     setLoadData(false);
-    setProductsArray([{}]);
     httpRequest();
   }, [httpRequest, segmentValue]);
 
@@ -97,7 +121,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
       <IonCard class="home-card-center">
         <IonToolbar>
           <IonSegment
-            onIonChange={e => {
+            onIonChange={(e) => {
               setSegmentValue(e.detail.value);
             }}
             value={segmentValue}
@@ -110,6 +134,7 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
               />
             </IonSegmentButton>
             <IonSegmentButton value="pendingShop">
+              <IonBadge hidden={pending <= 0}>{pending}</IonBadge>
               <IonIcon class="icons-segment" size="medium" icon={timeOutline} />
             </IonSegmentButton>
           </IonSegment>
@@ -117,27 +142,49 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
         {segmentValue ? (
           <>
             {segmentValue === "product" && hiddenBar ? (
-              <ListContainer
-              history={history}
-                loadData={loadData}
-                inputs={productsArray}
-                currentUser={currentUser}
-                provider={currentUser}
-                refreshData={(reset: boolean) => {
-                  if (reset) {
-                    httpRequest();
-                  }
-                }}
-              ></ListContainer>
-            ) : segmentValue === "pendingShop"  ?(
+              loadData ? (
+                <ListContainer
+                  history={history}
+                  loadData={loadData}
+                  inputs={productsArray}
+                  currentUser={currentUser}
+                  provider={currentUser}
+                  refreshData={(reset: boolean) => {
+                    if (reset) {
+                      httpRequest();
+                    }
+                  }}
+                ></ListContainer>
+              ) : (
+                <IonLoading
+                  isOpen={!loadData}
+                  spinner="bubbles"
+                  onDidDismiss={() => setLoadData(true)}
+                  message={"Por favor espere"}
+                  duration={5000}
+                />
+              )
+            ) : segmentValue === "pendingShop" && bills ? (
               <PendingShoppingContainer
                 dataTrigger={handlerDataSideContainer}
-                currentUser={currentUser}
-                hideLoadBar={(response: boolean) => {
-                  setHiddenBar(response);
-                }}
+                bills={bills}
               ></PendingShoppingContainer>
-            ):null}
+            ) : (
+              <IonCard>
+                <IonCardHeader>
+                  <IonTitle class="ion-text-center ion-margin-top">
+                  <strong>!Bien hecho!</strong>
+                  </IonTitle>
+                    <IonText>
+                   
+                      <p> Completaste todos 
+                        tus pedidos pendientes.</p>
+                    </IonText>
+                 
+                </IonCardHeader>
+                <IonImg class="justImage " src={"/assets/img/Finish.png"} />
+              </IonCard>
+            )}
           </>
         ) : (
           <></>

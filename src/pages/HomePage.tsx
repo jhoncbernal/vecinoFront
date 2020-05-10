@@ -13,6 +13,7 @@ import {
   IonFab,
   IonFabButton,
   IonIcon,
+  IonLoading,
 } from "@ionic/react";
 import HomeAdminPageContainer from "../components/HomeAdminContainer";
 import HomeProviderContainer from "../components/HomeProviderContainer";
@@ -33,6 +34,7 @@ export class Home extends React.Component<
     showAlert: boolean;
     errorMessage: string;
     showModal: boolean;
+    loadData:boolean;
   }
 > {
   constructor(props: any) {
@@ -43,8 +45,10 @@ export class Home extends React.Component<
       showAlert: false,
       errorMessage: "",
       showModal: false,
+      loadData:false
     };
     this.preValues();
+    
     this.handlerDataSide = this.handlerDataSide.bind(this);
   }
 
@@ -64,6 +68,7 @@ export class Home extends React.Component<
         if (!user.obj.acceptPolicity) {
           this.setState({ showModal: true });
         }
+        this.setState({loadData:true})
       }
     } catch (e) {
       console.error(e);
@@ -98,6 +103,13 @@ export class Home extends React.Component<
 
     return (
       <IonPage>
+        <IonLoading
+              isOpen={!this.state.loadData}
+              spinner="bubbles"
+              onDidDismiss={() =>  this.setState({loadData:true})}
+              message={"Por favor espere"}
+              duration={5000}
+            />
         <IonContent class="bg-image">
           <IonRefresher
             slot="fixed"

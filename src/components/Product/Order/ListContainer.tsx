@@ -15,39 +15,30 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonImg,
 } from "@ionic/react";
 import { arrowBackOutline } from "ionicons/icons";
 import { HttpRequest } from "../../../hooks/HttpRequest";
 import config from "../../../config";
 import * as H from "history";
 import { Bill } from "../../../entities";
-import { refUserBillsFirebase } from "../../../config/firebase";
 import { StatesDictionary } from "../../../hooks/OrderStates";
 import DetailsOrder from "./DetailsOrder";
 interface ContainerProps {
   history: H.History;
-  currentUser: any;
+  fireData:any;
 }
 
-const ListContainer: React.FC<ContainerProps> = ({ history, currentUser }) => {
+const ListContainer: React.FC<ContainerProps> = ({ history,fireData }) => {
 
 
   const [data, setdata] = useState<Array<Bill>>();
-  const [fireData, setFireData] = useState<any[]>();
   const [showModal, setShowModal] = useState(false);
   const [billSelected, setBillSelected] = useState<Bill>();
   const [statesSelected, setSetStatesSelected] = useState<Array<{state:string,start:string}>>();
   const [hideLoadBar, setHideLoadBar] = useState(false);
   const states = StatesDictionary().states;
-  useEffect(() => {
-    refUserBillsFirebase(currentUser._id).on("value", (snapshot) => {
-      const pendingData: any[] = [];
-      snapshot.forEach((snap) => {
-        pendingData.push({ code: snap.key, states: snap.val() });
-      });
-      setFireData(pendingData);
-    });
-  }, [currentUser._id]);
+  
   useEffect(() => {
     async function fetchData() {
       setHideLoadBar(false);
@@ -80,7 +71,7 @@ const ListContainer: React.FC<ContainerProps> = ({ history, currentUser }) => {
 
             if (bill.enabled) {
               const fireStates = fireData
-                ? fireData.find((element) => element.code === bill.code)
+                ? fireData.find((element:any) => element.code === bill.code)
                 : null;
               if (fireStates && fireStates.states) {
                 billstate = states.get(
@@ -148,7 +139,17 @@ const ListContainer: React.FC<ContainerProps> = ({ history, currentUser }) => {
                 </IonCard>
             );
           })
-        : null}
+        : <IonCard>
+          <IonTitle class="ion-text-center ion-margin-top">
+          <strong>!No tienes ningun pedido!</strong>
+          </IonTitle>
+            <IonText>
+           
+              <p> Encuentra los que necesecitas en la seccion tiendas.</p>
+            </IonText>
+         
+        <IonImg class="justImage " src={"/assets/img/emptyCart.png"} />
+      </IonCard>}
         <IonModal
                   onDidDismiss={(e) => setShowModal(false)}
                   isOpen={showModal}

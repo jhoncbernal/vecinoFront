@@ -159,6 +159,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
 
   const closeBill = useCallback(
     async (states: Array<{ state: string; start: string }>) => {
+      setTimeout(async() => {
       const pathUrl = `${config.BillsContext}/${dataSide._id}`;
       await HttpRequest(
         pathUrl,
@@ -175,6 +176,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
         .catch((error) => {
           console.error("error", error);
         });
+      }, 10000);
     },
     [dataSide]
   );
@@ -193,11 +195,10 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
             }),
           },
         ];
+        updateStateFirebase(mStates);
         if (actualState.next === "finished") {
-          closeBill(mStates);
-        } else {
-          updateStateFirebase(mStates);
-        }
+            closeBill(mStates);
+        } 
       }
     }
   }, [closeBill, dataSide.states, states, updateStateFirebase]);
@@ -229,6 +230,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
         ];
       }
     }
+    updateStateFirebase(mStates);
     closeBill(mStates);
     //updateStateFirebase(mStates);
   };
