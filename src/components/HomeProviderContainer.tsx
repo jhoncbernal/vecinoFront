@@ -10,10 +10,7 @@ import {
   IonBadge,
   IonLoading,
   IonTitle,
-  IonContent,
   IonImg,
-  IonThumbnail,
-  IonItem,
   IonCardHeader,
   IonText,
 } from "@ionic/react";
