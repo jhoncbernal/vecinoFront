@@ -11,8 +11,16 @@ apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
 
     implementation "com.squareup.okhttp3:okhttp-urlconnection:3.10.0"
+    implementation "com.android.support:support-v4:26.+"
+    implementation "com.android.support:support-v13:23+"
+    implementation "com.android.support:support-v13:27.+"
+    implementation "me.leolin:ShortcutBadger:1.1.17@aar"
+    implementation "com.google.firebase:firebase-messaging:17.0.+"
 }
-
+apply from: "../../node_modules/cordova-plugin-badge/src/android/badge.gradle"
+apply from: "../../node_modules/cordova-plugin-local-notification/src/android/build/localnotification.gradle"
+apply from: "../../node_modules/cordova-support-google-services/build.gradle"
+apply from: "../../node_modules/phonegap-plugin-multidex/multidex.gradle"
 
 if (hasProperty('postBuildExtras')) {
   postBuildExtras()

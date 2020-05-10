@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
+signingConfigs {
         debug {
             storeFile file('/Users/jhoncasallas/Documents/OwnCode/VecinoIonic/Untitled')
             keyAlias = 'migatito'
@@ -13,7 +13,7 @@ android {
         applicationId "io.ionic.vecinoo"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 3
+        versionCode 6
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
