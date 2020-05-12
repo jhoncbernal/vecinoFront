@@ -1,4 +1,4 @@
-import React, { FormEvent } from "react";
+import React from "react";
 import { Storages } from "../../hooks/Storage";
 
 import {
@@ -13,20 +13,23 @@ import {
   IonProgressBar,
   IonImg,
   IonToggle,
+  IonText,
 } from "@ionic/react";
-import { personOutline, keyOutline, bulbOutline } from "ionicons/icons";
-import { HttpRequest } from "../../hooks/HttpRequest";
-import  {updateToken}  from "../../hooks/UpdateToken";
-import config from "../../config";
 import {
-  Plugins,
-  PushNotification,
-  PushNotificationToken,
-  PushNotificationActionPerformed,
-} from "@capacitor/core";
-import * as H from 'history';
-import { login } from "../../hooks/Auth";
-const { PushNotifications } = Plugins;
+  personOutline,
+  keyOutline,
+  bulbOutline,
+  fingerPrint,
+} from "ionicons/icons";
+import { HttpRequest } from "../../hooks/HttpRequest";
+
+import config from "../../config";
+
+import * as H from "history";
+import { login, setFingerLogin, getFingerLogin } from "../../hooks/Auth";
+import { witchDevice } from "../../hooks/WitchDevice";
+import { push } from "../../hooks/Push";
+
 const notifications = [
   { id: "id", title: "Test Push", body: "This is my first push notification" },
 ];
@@ -38,21 +41,25 @@ export class LoginPage extends React.Component<
     checked: boolean;
     showToast1: boolean;
     loginMessage: string;
+    fingerToken: string;
+    device: string;
     hiddenbar: boolean;
-    toastColor:string;
+    toastColor: string;
     notification: { id: string; title: string; body: string }[];
   }
 > {
-  constructor(props: any, private storage: Storage) {
+  constructor(props: any) {
     super(props);
 
     this.state = {
-      toastColor:"warning",
+      toastColor: "warning",
       email: "",
       password: "",
-      checked: false,
+      checked: true,
       showToast1: false,
       loginMessage: "",
+      fingerToken: "",
+      device: "",
       hiddenbar: true,
       notification: notifications,
     };
@@ -61,21 +68,61 @@ export class LoginPage extends React.Component<
   async preValues() {
     try {
       const { getObject } = Storages();
+      let device = await witchDevice();
+      this.setState({ device: device });
+      if (device === "android") {
+        let fingerToken = await getObject("fingerToken");
+        this.setState({ fingerToken: fingerToken.obj });
+      }
       let rememberme = await getObject("rememberme");
-      this.setState({ email: rememberme.obj.username });
-      this.setState({ checked: rememberme.obj.checked });
+      if (rememberme) {
+        this.setState({ email: rememberme.obj.username });
+        this.setState({ checked: rememberme.obj.checked });
+      }
       let user = await getObject("user");
       if (user) {
         this.props.history.push("/home");
+      } else {
+        if (
+          this.state.device === "android" &&
+          this.state.fingerToken &&
+          this.state.email
+        ) {
+          await this.fingerLogin();
+        }
       }
     } catch (e) {
       console.error(e);
     }
   }
-  async handleSubmit(e: FormEvent) {
-    e.preventDefault();
-
+  async fingerLogin() {
+    console.log(this.state.fingerToken);
+    if (this.state.fingerToken) {
+      let pass = await getFingerLogin(this.state.fingerToken, this.state.email)
+        .then((result) => {
+          return result;
+        })
+        .catch((e) => console.error(e));
+      console.log(pass);
+      if (pass) {
+        this.setState({ password: pass });
+        this.handleSubmit();
+      }
+    } else {
+      this.setState({ toastColor: "warning" });
+      this.setState({
+        loginMessage: "Debe ingresar almenos una vez para usar esta funcion!",
+      });
+      this.setState({ showToast1: true });
+    }
+  }
+  async handleSubmit(e?: any) {
+    if (e) {
+      e.preventDefault();
+    }
     try {
+      console.log("start login");
+
       const { setObject, removeItem } = Storages();
       let pathUrl = `${config.LoginContext}`;
       let data = { email: this.state.email, password: this.state.password };
@@ -83,11 +130,18 @@ export class LoginPage extends React.Component<
       await HttpRequest(pathUrl, "POST", data)
         .then(async (resultado: any) => {
           try {
-            await this.push();
+            if (
+              this.state.device === "android" ||
+              this.state.device === "ios"
+            ) {
+              await push();
+            }
           } catch (e) {
             console.error("Login: push", e);
           }
-          login(resultado.user,resultado.token)
+          login(resultado.user, resultado.token);
+          if (this.state.device === "android" && !this.state.fingerToken)
+            await setFingerLogin(this.state.email, this.state.password);
           if (this.state.checked) {
             let rememberme = {
               checked: this.state.checked,
@@ -112,66 +166,12 @@ export class LoginPage extends React.Component<
       this.setState({ hiddenbar: true });
       this.setState({ showToast1: true });
     } catch (e) {
-
       this.setState({ password: "" });
       this.setState({ hiddenbar: true });
       console.error("Login: " + e);
     }
   }
 
-  async push() {
-    try {
-      // Register with Apple / Google to receive push via APNS/FCM
-      PushNotifications.register();
-
-      // On succcess, we should be able to receive notifications
-      PushNotifications.addListener(
-        "registration",
-        async (token: PushNotificationToken) => {
-          updateToken(token.value);
-        }
-      );
-
-      // Some issue with your setup and push will not work
-      PushNotifications.addListener("registrationError", (error: any) => {
-        alert("Error on registration: " + JSON.stringify(error));
-      });
-
-      // Show us the notification paylo ad if the app is open on our device
-      PushNotifications.addListener(
-        "pushNotificationReceived",
-        (notification: PushNotification) => {
-          let notif = this.state.notification;
-          notif.push({
-            id: notification.id,
-            title: notification.title as string,
-            body: notification.body as string,
-          });
-          this.setState({
-            notification: notif,
-          });
-        }
-      );
-
-      // Method called when tapping on a notification
-      PushNotifications.addListener(
-        "pushNotificationActionPerformed",
-        (notification: PushNotificationActionPerformed) => {
-          let notif = this.state.notification;
-          notif.push({
-            id: notification.notification.data.id,
-            title: notification.notification.data.title,
-            body: notification.notification.data.body,
-          });
-          this.setState({
-            notification: notif,
-          });
-        }
-      );
-    } catch (e) {
-      console.error(e);
-    }
-  }
   render() {
     return (
       <>
@@ -193,7 +193,7 @@ export class LoginPage extends React.Component<
                   type="text"
                   value={this.state.email}
                   onInput={(email: any) =>
-                    this.setState({ email: email.target.value })
+                    this.setState({ email: email.target.value.trim() })
                   }
                 />
               </IonItem>
@@ -214,10 +214,13 @@ export class LoginPage extends React.Component<
                 />
               </IonItem>
 
-              <IonItem>
+              <IonItem lines="none">
                 <IonIcon color="primary" icon={bulbOutline} slot="start" />
-                <IonLabel>Recordar usuario:</IonLabel>
+                <IonText color="steel">
+                  <small>Recordar usuario:</small>
+                </IonText>
                 <IonToggle
+                  slot="end"
                   checked={this.state.checked}
                   onIonChange={(e) =>
                     this.setState({ checked: e.detail.checked })
@@ -244,6 +247,19 @@ export class LoginPage extends React.Component<
           />
 
           <div id="btn-auth">
+            {this.state.device === "android" &&
+            this.state.fingerToken &&
+            this.state.email ? (
+              <IonButton
+                class="btn-auth"
+                onClick={async () => {
+                  await this.fingerLogin();
+                }}
+              >
+                <IonIcon slot="start" icon={fingerPrint} />
+                Ingresar con huella
+              </IonButton>
+            ) : null}
             <IonButton class="btn-auth" routerLink="/recover">
               ¿Olvidaste tu usuario o contraseña?
             </IonButton>
