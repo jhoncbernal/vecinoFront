@@ -102,13 +102,12 @@ export class SignUpPage extends React.Component<
           loginMessage: "la confirmacion de contraseña no coincide",
         });
         this.setState({ showToast1: true });
-      } else if(!this.state.city){
+      } else if (!this.state.city) {
         this.setState({
           loginMessage: "Se debe seleccionar una ciudad",
         });
         this.setState({ showToast1: true });
-      }
-      else if (!this.state.uniquecode) {
+      } else if (!this.state.uniquecode) {
         const complement = this.state.whereIlive
           ? this.state.whereIlive
           : "sector";
@@ -194,12 +193,12 @@ export class SignUpPage extends React.Component<
                   maxlength={12}
                   color="dark"
                   required={true}
-                  autocomplete="on"
+                  autocomplete="off"
                   type="text"
                   value={this.state.username}
-                  onIonChange={(e: any) =>
-                    this.setState({ username: e.target.value.trim() })
-                  }
+                  onIonChange={(e: any) => {
+                    this.setState({ username: e.target.value.trim().replace(/[^a-z0-9]/gi, '') });
+                  }}
                 />
               </IonItem>
               <IonItem>
@@ -291,7 +290,7 @@ export class SignUpPage extends React.Component<
                   if (response.whereIlive) {
                     this.setState({ whereIlive: response.whereIlive });
                     this.setState({ uniquecode: response.uniquecode });
-                    this.setState({city:response.city});
+                    this.setState({ city: response.city });
                     if (response.homeNumber && response.blockNumber) {
                       this.setState({ homeNumber: response.homeNumber });
                       this.setState({ blockNumber: response.blockNumber });

@@ -42,7 +42,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
     try {
       let pathUrl;
       if (segmentValue === "provider") {
-        pathUrl = `${config.ProviderContext}/names/1`;
+        pathUrl = `${config.ProviderContext}/names/${currentUser.city}`;
 
         await HttpRequest(pathUrl, "GET", "", true)
           .then(async (resultado: any) => {
@@ -78,7 +78,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
       setHiddenBar(true);
       history.push("/login");
     }
-  }, [history, segmentValue]);
+  }, [currentUser.city, history, segmentValue]);
 
   useEffect(() => {
     setHiddenBar(false);
