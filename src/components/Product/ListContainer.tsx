@@ -187,6 +187,7 @@ const ListContainer: React.FC<ContainerProps> = ({
         >
           <IonContent>
             <CreateComponent
+            provider={provider}
               prod={dataModal}
               action={handleCloseModal}
             ></CreateComponent>
