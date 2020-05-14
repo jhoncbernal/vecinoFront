@@ -96,14 +96,12 @@ export class LoginPage extends React.Component<
     }
   }
   async fingerLogin() {
-    console.log(this.state.fingerToken);
     if (this.state.fingerToken) {
       let pass = await getFingerLogin(this.state.fingerToken, this.state.email)
         .then((result) => {
           return result;
         })
         .catch((e) => console.error(e));
-      console.log(pass);
       if (pass) {
         this.setState({ password: pass });
         this.handleSubmit();
@@ -121,7 +119,6 @@ export class LoginPage extends React.Component<
       e.preventDefault();
     }
     try {
-      console.log("start login");
 
       const { setObject, removeItem } = Storages();
       let pathUrl = `${config.LoginContext}`;

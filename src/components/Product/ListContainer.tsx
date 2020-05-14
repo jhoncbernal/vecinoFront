@@ -366,7 +366,6 @@ const ListContainer: React.FC<ContainerProps> = ({
                                     feature[input._id] = true;
                                     setHiddenFeatures(feature);
                                   }
-                                  console.log(hiddenFeatures);
                                 }}
                                 class="ion-float-left"
                                 fill="clear"

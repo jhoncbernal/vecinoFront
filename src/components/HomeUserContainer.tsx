@@ -96,8 +96,6 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
           
         });
         if (pendingData && pendingData.length > 0) {
-         
-          console.log(pendingData);
           const states: any = {
             start: "Esta siendo procesado",
             prepare: "Se esta alistado",

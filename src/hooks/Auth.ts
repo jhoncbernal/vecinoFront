@@ -36,18 +36,14 @@ export const setFingerLogin = async (username: string, password: string) => {
           })
             .then(async (result) => {
               if (result.withFingerprint) {
-                console.log("Successfully encrypted credentials.");
-                console.log("Encrypted credentials: " + result.token);
                 await setObject("fingerToken", result.token);
               } else if (result.withBackup) {
-                console.log("Successfully authenticated with backup password!");
-              } else console.log("Didn't authenticate!");
+              } else console.error("Didn't authenticate!");
             })
             .catch((error) => {
               if (
                 error === AndroidFingerprintAuth.ERRORS.FINGERPRINT_CANCELLED
               ) {
-                console.log("Fingerprint authentication cancelled");
               } else console.error(error);
             });
         } else {
