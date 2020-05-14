@@ -19,6 +19,7 @@ export interface Provider {
   paymentMethod:Array<string>;
   schedule: Array<ProviderSchedule>;
   categories:Array<string>
+  promoBanner?:string;
   billType: string;
   createdAt: Date;
   updatedAt: Date;
@@ -34,6 +35,8 @@ export interface ProviderListItem {
   schedule: [ProviderSchedule];
   billType: string;
   urlImage: string;
+  paymentMethod:string;
+  promoBanner:string;
 }
 
 interface ProviderSchedule

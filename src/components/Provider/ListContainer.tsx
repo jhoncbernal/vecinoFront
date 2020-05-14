@@ -24,6 +24,7 @@ import ListContainerProduct from "../Product/ListContainer";
 import { HttpRequest } from "../../hooks/HttpRequest";
 import config from "../../config";
 import * as H from "history";
+import {  ProviderListItem } from "../../entities";
 interface ContainerProps {
   history: H.History;
   loaddata: boolean;
@@ -42,6 +43,7 @@ const ListContainer: React.FC<ContainerProps> = ({
   const [showModal, setShowModal] = useState(false);
   const [productsArray, setProductsArray] = useState<any>([{}]);
   const [loadData, setloadData] = useState(false);
+  const [provider, setProvider] = useState<ProviderListItem>();
 
   useEffect(() => {
     setdata(inputs);
@@ -69,20 +71,22 @@ const ListContainer: React.FC<ContainerProps> = ({
           ></IonSearchbar>
 
           {data
-            ? data.map((input: any, index: number) => {
+            ? data.map((input: ProviderListItem, index: number) => {
                 return (
-                  <IonCard key={index} id="card">
+                  <IonCard key={index} id="card" >
                     <IonCardHeader color="primary">
                       <IonText>
                         <strong>{input.firstName?.toUpperCase()}</strong>
                       </IonText>
                     </IonCardHeader>
                     <IonCardContent
-                      onClick={async () => {
+                      onClick={async (e) => {
+                        e.preventDefault();
                         let pathUrl = `/${config.ProductContext}?providerId=${input._id}&pageSize=100`;
                         await HttpRequest(pathUrl, "GET", "", true)
                           .then(async (resultado: any) => {
                             setProductsArray(resultado);
+                            setProvider(input);
                             setloadData(true);
                             setShowModal(true);
                           })
@@ -98,7 +102,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                           slot="start"
                         >
                           <IonImg
-                            src={input.urlImage ? input.urlImage : null}
+                            src={input.urlImage }
                           />
                         </IonThumbnail>
                         <IonText
@@ -114,7 +118,12 @@ const ListContainer: React.FC<ContainerProps> = ({
                         </IonText>
                       </IonItem>
                     </IonCardContent>
-                    <IonModal
+                  
+                  </IonCard>
+                );
+              })
+            : null}
+              <IonModal
                       onDidDismiss={(e) => setShowModal(false)}
                       isOpen={showModal}
                       animated={true}
@@ -126,7 +135,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                           loaddata={loadData}
                           inputs={productsArray}
                           currentUser={currentUser}
-                          provider={input}
+                          provider={provider}
                         ></ListContainerProduct>
                         <IonFab
                           vertical="bottom"
@@ -142,10 +151,6 @@ const ListContainer: React.FC<ContainerProps> = ({
                         </IonFab>
                       </IonContent>
                     </IonModal>
-                  </IonCard>
-                );
-              })
-            : null}
         </>
       );
     } else {

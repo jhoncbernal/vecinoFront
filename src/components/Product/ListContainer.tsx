@@ -21,6 +21,7 @@ import {
   IonContent,
   IonCardContent,
   IonItemDivider,
+  IonAlert,
 } from "@ionic/react";
 import {
   addSharp,
@@ -62,6 +63,24 @@ const ListContainer: React.FC<ContainerProps> = ({
   const [device, setDevice] = useState("");
   const [hiddenFeatures, setHiddenFeatures] = useState<any>({});
   var today = new Date().toLocaleString();
+  const [showAlert, setShowAlert] = useState(false);
+  
+  const alert = (<IonAlert
+    isOpen={showAlert}
+    onDidDismiss={() => setShowAlert(false)}
+    header={"Promoción"}
+    message={`<img src="${provider?.promoBanner}" alt="g-maps" style="border-radius: 2px">`}
+    buttons={[
+      {
+        text: "Cancelar",
+        role: "cancel",
+        cssClass: "secondary",
+      },
+      {
+        text: "Confirmar",
+      },
+    ]}
+  />)
   const addNewProduct = () => {
     setDataModal(emptyProduct);
     setShowModal(true);
@@ -130,6 +149,7 @@ const ListContainer: React.FC<ContainerProps> = ({
   }, [shoppingCart]);
 
   useEffect(() => {
+    setShowAlert(provider.promoBanner&&currentUser.roles.includes(config.RolUserAccess)?true:false)
     async function fetchData() {
       const device = await witchDevice();
       setDevice(device);
@@ -179,6 +199,7 @@ const ListContainer: React.FC<ContainerProps> = ({
   try {
     return (
       <>
+      {alert}
         {renderAddButton()}
         <IonModal
           isOpen={showModal}
