@@ -118,6 +118,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                       onDidDismiss={(e) => setShowModal(false)}
                       isOpen={showModal}
                       animated={true}
+                      id="productModal"
                     >
                       <IonContent>
                         <ListContainerProduct
