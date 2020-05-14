@@ -57,6 +57,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
 }) => {
   const [address, setAddress] = useState<Address>();
   const [newAddres, setNewAddres] = useState<string>();
+  const [cities, setCities] = useState<Array<string>>();
   useEffect(() => {
     async function fetchData() {
       let pathUrl = `${config.AllNeighborhoodsContext}`;
@@ -84,6 +85,11 @@ const AddressContainer: React.FC<ContainerProps> = ({
           }
         })
         .catch((error) => console.error("Error:", error));
+      await HttpRequest(`${config.ProviderContext}/cities/1`, "GET", "")
+        .then((response: any) => {
+          setCities(response);
+        })
+        .catch((error) => console.error("Error:", error));
     }
     fetchData();
   }, [currentAddress]);
@@ -92,9 +98,19 @@ const AddressContainer: React.FC<ContainerProps> = ({
       let addressTemp: string = "";
       if (address.whereIlive === "Conjunto") {
         addressTemp = `${address.neighborhood ? address.neighborhood : ""} 
-                      ${address.blockNumber && address.neighborhood ? address.blockNumber: ""} 
-                      ${address.homeNumber && address.neighborhood ? address.homeNumber: ""}
-                      ${address.city&&address.homeNumber ? address.city : ""}`;
+                      ${
+                        address.blockNumber && address.neighborhood
+                          ? address.blockNumber
+                          : ""
+                      } 
+                      ${
+                        address.homeNumber && address.neighborhood
+                          ? address.homeNumber
+                          : ""
+                      }
+                      ${
+                        address.city && address.homeNumber ? address.city : ""
+                      }`;
       } else {
         addressTemp = `${address.neighborhood ? address.neighborhood : ""} ${
           address.kind ? address.kind : ""
@@ -131,26 +147,32 @@ const AddressContainer: React.FC<ContainerProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
   useEffect(() => {
-    let whereIlive=currentAddress?.address ? "Barrio" : "Conjunto"
-    if(currentAddress&&address&&address.whereIlive&&address.whereIlive!==whereIlive){
-    setAddress((prevState: any) => ({
-      ...prevState,
-      ...{
-        uniquecode: undefined,
-        address: undefined,
-        number: undefined,
-        post: undefined,
-        number2: undefined,
-        number3: undefined,
-        post2: undefined,
-        neighborhoodId: undefined,
-        blockNumber: undefined,
-        homeNumber: undefined,
-        neighborhood: undefined,
-        kind: undefined,
-      },
-    }));
-    setNewAddres('');}
+    let whereIlive = currentAddress?.address ? "Barrio" : "Conjunto";
+    if (
+      currentAddress &&
+      address &&
+      address.whereIlive &&
+      address.whereIlive !== whereIlive
+    ) {
+      setAddress((prevState: any) => ({
+        ...prevState,
+        ...{
+          uniquecode: undefined,
+          address: undefined,
+          number: undefined,
+          post: undefined,
+          number2: undefined,
+          number3: undefined,
+          post2: undefined,
+          neighborhoodId: undefined,
+          blockNumber: undefined,
+          homeNumber: undefined,
+          neighborhood: undefined,
+          kind: undefined,
+        },
+      }));
+      setNewAddres("");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address?.whereIlive]);
 
@@ -181,9 +203,13 @@ const AddressContainer: React.FC<ContainerProps> = ({
                     }))
                   }
                 >
-                  <IonSelectOption value={"Madrid Cundinamarca"}>
-                    Madrid Cundinamarca
-                  </IonSelectOption>
+                  {cities?.map((city: string, index: number) => {
+                    return (
+                      <IonSelectOption key={index} value={city}>
+                        {city}
+                      </IonSelectOption>
+                    );
+                  })}
                 </IonSelect>
               </IonItem>
             </IonCol>
@@ -191,7 +217,15 @@ const AddressContainer: React.FC<ContainerProps> = ({
           <IonRow>
             <IonCol>
               <IonItem>
-            <IonIcon color="primary" icon={address.whereIlive==="Conjunto"?businessOutline:homeOutline} slot="start" />
+                <IonIcon
+                  color="primary"
+                  icon={
+                    address.whereIlive === "Conjunto"
+                      ? businessOutline
+                      : homeOutline
+                  }
+                  slot="start"
+                />
                 <IonLabel position="stacked">
                   Seleccione en que tipo de sector vive:
                 </IonLabel>
@@ -213,22 +247,22 @@ const AddressContainer: React.FC<ContainerProps> = ({
                     }));
                   }}
                 >
-                  <IonSelectOption value="Conjunto">
-                    Conjunto
-                  </IonSelectOption>
-                  <IonSelectOption value="Barrio">
-                    Barrio
-                  </IonSelectOption>
+                  <IonSelectOption value="Conjunto">Conjunto</IonSelectOption>
+                  <IonSelectOption value="Barrio">Barrio</IonSelectOption>
                 </IonSelect>
-                </IonItem>
+              </IonItem>
             </IonCol>
           </IonRow>
           {address.whereIlive ? (
             <>
-            {address.whereIlive==='Conjunto'?
-  <IonToolbar color="secondary">
-    <IonText class='ion-padding-horizontal'>Solo selecciona el nombre del conjunto nosotros tenemos la dirección</IonText>
-  </IonToolbar>:null}
+              {address.whereIlive === "Conjunto" ? (
+                <IonToolbar color="secondary">
+                  <IonText class="ion-padding-horizontal">
+                    Solo selecciona el nombre del conjunto nosotros tenemos la
+                    dirección
+                  </IonText>
+                </IonToolbar>
+              ) : null}
               <IonRow>
                 <IonCol>
                   <IonItem>
