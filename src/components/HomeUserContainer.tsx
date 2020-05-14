@@ -57,7 +57,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
             if (error.message.includes("Error de conexion")) {
               setTimeout(() => {
                 history.go(0);
-              }, 10000);
+              }, 7000);
             } else {
               if (error.message.includes("404")) {
                 setHiddenBar(true);
