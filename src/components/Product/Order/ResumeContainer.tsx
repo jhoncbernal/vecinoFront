@@ -86,7 +86,6 @@ const ResumeContainer: React.FC<ContainerProps> = ({
   );
   let openHour: number =0;
   let closeHour: number=0;
-  console.log( todayschedule,tomorrowschedule)
   if(todayschedule.length>0){
  openHour = new Date(todayschedule[0].open).getHours() + 5;
  closeHour = new Date(todayschedule[0].close).getHours() + 5;
@@ -268,21 +267,21 @@ if(tomorrowschedule.length>0){
               }}
             >
               <IonSelectOption>
-                {today.getHours() <= openHour - 1
+                {today.getHours() < openHour - 1
                   ?((openHour!==0)?`Hoy de ${openHour}:00  a ${openHour + 1}:00 `:'Cerrado')
                   : (openHourTomorrow!==0)?`${tomorrow} de ${openHourTomorrow}:00  a ${
                       openHourTomorrow + 1
                     }:00 `:'Cerrado'}
               </IonSelectOption>
               <IonSelectOption>
-                {today.getHours() <= openHour + 4
+                {today.getHours() < openHour + 4
                   ? ((openHour!==0)?`Hoy de ${openHour + 4}:00  a ${openHour + 5}:00 `:'Cerrado')
                   : (openHourTomorrow!==0)?`${tomorrow} de ${openHourTomorrow + 4}:00  a ${
                       openHourTomorrow + 5
                     }:00 `:'Cerrado'}
               </IonSelectOption>
               <IonSelectOption>
-                {today.getHours() <= closeHour - 1
+                {today.getHours() < closeHour - 1
                   ?((openHour!==0)? `Hoy de ${closeHour - 1}:00  a ${closeHour}:00 `:'Cerrado')
                   : (openHourTomorrow!==0)?`${tomorrow} de ${
                       closeHourTomorrow - 1
