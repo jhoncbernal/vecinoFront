@@ -16,7 +16,9 @@ export interface Provider {
   isVerified?: string;
   deliveryCharge: number;
   deliveryExtraCharge: number;
-  schedule: [ProviderSchedule];
+  paymentMethod:Array<string>;
+  schedule: Array<ProviderSchedule>;
+  categories:Array<string>
   billType: string;
   createdAt: Date;
   updatedAt: Date;

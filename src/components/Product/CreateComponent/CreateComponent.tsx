@@ -21,18 +21,11 @@ import {
 import config from "../../../config";
 import { HttpRequest } from "../../../hooks/HttpRequest";
 import { arrowBack } from "ionicons/icons";
-import { Product } from "../../../entities";
+import { Product, Provider } from "../../../entities";
 
-const CreateComponent: FC<componentData> = ({ prod, action }) => {
-  const productType = [
-    "Limpieza",
-    "Comida",
-    "Salud",
-    "Carne",
-    "Pollo",
-    "Pescado",
-    "Cerdo",
-    "Queso"
+const CreateComponent: FC<componentData> = ({ prod, action,provider }) => {
+  const productType =provider&&provider.categories?provider.categories: [
+    "Limpieza"
   ];
   
   const measureType = ["Lb", "Kg", "Und"];
@@ -287,6 +280,7 @@ useEffect(() => {
 interface componentData {
   [id: string]: any;
   prod: Product;
+  provider:Provider;
 }
 
 export default CreateComponent;

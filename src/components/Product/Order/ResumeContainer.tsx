@@ -20,6 +20,9 @@ import {
   IonItemOption,
   IonItemDivider,
   IonSpinner,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from "@ionic/react";
 import {
   cashOutline,
@@ -75,20 +78,26 @@ const ResumeContainer: React.FC<ContainerProps> = ({
     obj.days.includes(daysOfWeek[numDayOfWeek])
   );
   let tomorrow: string = daysOfWeek[numDayOfWeek + 1];
-  if (daysOfWeek[numDayOfWeek] === "sabado") {
-    tomorrow = "domingo";
+  if (daysOfWeek[numDayOfWeek] === daysOfWeek[daysOfWeek.length-1]) {
+    tomorrow =daysOfWeek[0];
   }
   const tomorrowschedule: any = provider.schedule.filter((obj) =>
-    obj.days.includes(daysOfWeek[tomorrow === "domingo" ? 0 : numDayOfWeek + 1])
+    obj.days.includes(daysOfWeek[tomorrow === daysOfWeek[0]? 0 : numDayOfWeek + 1])
   );
-  const openHour: number =
-    new Date(todayschedule[0].open).getHours() + 5;
-  const closeHour: number =
-    new Date(todayschedule[0].close).getHours() + 5;
-  const openHourTomorrow: number =
-    new Date(tomorrowschedule[0].open).getHours() + 5;
-  const closeHourTomorrow: number =
-    new Date(tomorrowschedule[0].close).getHours() + 5;
+  let openHour: number =0;
+  let closeHour: number=0;
+  console.log( todayschedule,tomorrowschedule)
+  if(todayschedule.length>0){
+ openHour = new Date(todayschedule[0].open).getHours() + 5;
+ closeHour = new Date(todayschedule[0].close).getHours() + 5;
+}
+let openHourTomorrow: number =0;
+let closeHourTomorrow: number=0;
+if(tomorrowschedule.length>0){
+  openHourTomorrow = new Date(tomorrowschedule[0].open).getHours() + 5;
+  closeHourTomorrow = new Date(tomorrowschedule[0].close).getHours() + 5;
+}
+
   const flagDeliveryRighNow: boolean =
     openHour <= today.getHours() && today.getHours() <= closeHour - 1;
   const [paymentMethod, setPaymentMethod] = useState<string>("efectivo");
@@ -97,7 +106,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
   const [address, setAddress] = useState<string>(
     currentUser.neighborhood.address === "NO APLICA"
       ? currentUser.address
-      : currentUser.neighborhood.address
+      : `${currentUser.neighborhood.address} T${currentUser.blockNumber}Apt${currentUser.homeNumber}`
   );
   const [tip, setTip] = useState<string>("1000");
   const [flagExtraCharge, setFlagExtraCharge] = useState<boolean>(false);
@@ -209,31 +218,34 @@ const ResumeContainer: React.FC<ContainerProps> = ({
         <IonToolbar color={"white"}>
           <IonTitle color={"primary"}>Orden de compra</IonTitle>
         </IonToolbar>
-        <IonItemDivider>
-          <IonItem lines="none">
-            <IonIcon color="primary" icon={mapOutline} slot="start" />
-            <IonLabel position="floating">Direccion:</IonLabel>
-            <IonInput
-              disabled={!flagExtraCharge}
-              type={"text"}
-              value={address}
-              onInput={(e: any) => setAddress(e.target.value)}
-            ></IonInput>
-          </IonItem>
-          <IonButton
-            hidden={flagExtraCharge}
-            color={"secondary"}
-            size="default"
-            onClick={() => {
-              if (!flagExtraCharge) {
-                setShowAlert(true);
-              }
-            }}
-          >
-            cambiar
-          </IonButton>
-        </IonItemDivider>
-
+        
+        <IonGrid>
+          <IonRow>
+            <IonCol size={'10'}>
+              <IonItem lines='none'>
+            <IonLabel position='stacked'>Direccion donde se recibe:</IonLabel>
+              <IonIcon color="primary" icon={mapOutline} slot="start" />
+              <IonInput
+                disabled={!flagExtraCharge}
+                type={"text"}
+                value={address}
+                onIonInput={(e: any) => setAddress(e.target.value)}
+              />
+              </IonItem>
+              </IonCol>
+              <IonCol  size={'2'}>
+              <IonButton class="ion-float-right"  size="default" hidden={flagExtraCharge}
+              color={"secondary"}
+              onClick={() => {
+                if (!flagExtraCharge) {
+                  setShowAlert(true);
+                }
+              }}>
+                cambiar
+              </IonButton>
+              </IonCol>
+              </IonRow>
+            </IonGrid>
         <IonItemDivider>
           <IonItem>
             <IonIcon
@@ -248,29 +260,33 @@ const ResumeContainer: React.FC<ContainerProps> = ({
               placeholder="En que horario desea su pedido"
               onIonChange={(e) => {
                 e.preventDefault();
+                if(!e.detail.value.includes("Cerrado")){
                 deliverySchedule(e.detail.value);
+              }else{
+                deliverySchedule('');
+              }
               }}
             >
               <IonSelectOption>
                 {today.getHours() <= openHour - 1
-                  ? `Hoy de ${openHour}:00  a ${openHour + 1}:00 `
-                  : `${tomorrow} de ${openHourTomorrow}:00  a ${
+                  ?((openHour!==0)?`Hoy de ${openHour}:00  a ${openHour + 1}:00 `:'Cerrado')
+                  : (openHourTomorrow!==0)?`${tomorrow} de ${openHourTomorrow}:00  a ${
                       openHourTomorrow + 1
-                    }:00 `}
+                    }:00 `:'Cerrado'}
               </IonSelectOption>
               <IonSelectOption>
                 {today.getHours() <= openHour + 4
-                  ? `Hoy de ${openHour + 4}:00  a ${openHour + 5}:00 `
-                  : `${tomorrow} de ${openHourTomorrow + 4}:00  a ${
+                  ? ((openHour!==0)?`Hoy de ${openHour + 4}:00  a ${openHour + 5}:00 `:'Cerrado')
+                  : (openHourTomorrow!==0)?`${tomorrow} de ${openHourTomorrow + 4}:00  a ${
                       openHourTomorrow + 5
-                    }:00 `}
+                    }:00 `:'Cerrado'}
               </IonSelectOption>
               <IonSelectOption>
                 {today.getHours() <= closeHour - 1
-                  ? `Hoy de ${closeHour - 1}:00  a ${closeHour}:00 `
-                  : `${tomorrow} de ${
+                  ?((openHour!==0)? `Hoy de ${closeHour - 1}:00  a ${closeHour}:00 `:'Cerrado')
+                  : (openHourTomorrow!==0)?`${tomorrow} de ${
                       closeHourTomorrow - 1
-                    }:00  a ${closeHourTomorrow}:00 `}
+                    }:00  a ${closeHourTomorrow}:00 `:'Cerrado'}
               </IonSelectOption>
               {flagDeliveryRighNow ? (
                 <IonSelectOption value="Ahora mismo">
@@ -289,15 +305,19 @@ const ResumeContainer: React.FC<ContainerProps> = ({
               value={paymentMethod}
               placeholder="Select One"
               onIonChange={(e) => {
-                paymentMethod !== "efectivo"
-                  ? setCashValue(0)
-                  : setPaymentMethod(e.detail.value);
+                if (paymentMethod !== "efectivo") {
+                  setCashValue(0);
+                }
+                setPaymentMethod(e.detail.value);
               }}
             >
-              <IonSelectOption value="efectivo">Efectivo</IonSelectOption>
-              <IonSelectOption disabled value="tarjeta">
-                Tarjeta
-              </IonSelectOption>
+              {provider.paymentMethod.map((kind: string, index: number) => {
+                return (
+                  <IonSelectOption key={index} value={kind}>
+                    {kind.toUpperCase()}
+                  </IonSelectOption>
+                );
+              })}
             </IonSelect>
           </IonItem>
         </IonItemDivider>
