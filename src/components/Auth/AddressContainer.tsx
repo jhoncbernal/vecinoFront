@@ -9,8 +9,6 @@ import {
   IonIcon,
   IonSelect,
   IonSelectOption,
-  IonSegment,
-  IonSegmentButton,
   IonInput,
   IonText,
   IonToolbar,
@@ -20,6 +18,7 @@ import {
   homeOutline,
   locationOutline,
   mapOutline,
+  businessOutline,
 } from "ionicons/icons";
 import {
   TypesPosStreets,
@@ -30,7 +29,7 @@ import { HttpRequest } from "../../hooks/HttpRequest";
 import config from "../../config";
 
 interface Address {
-  address?:string;
+  address?: string;
   number?: number;
   post?: string;
   number2?: number;
@@ -40,10 +39,10 @@ interface Address {
   homeNumber?: number;
   whereIlive?: string;
   city: string;
-  uniquecode: string|undefined;
-  neighborhood?: string|undefined;
+  uniquecode: string | undefined;
+  neighborhood?: string | undefined;
   kind?: string;
-  neighborhoodId:string;
+  neighborhoodId: string;
   neighborhoods: Array<{
     firstName: string;
     uniquecode: string;
@@ -52,7 +51,10 @@ interface Address {
 interface ContainerProps {
   [id: string]: any;
 }
-const AddressContainer: React.FC<ContainerProps> = ({ accionTrigger,currentAddress }) => {
+const AddressContainer: React.FC<ContainerProps> = ({
+  accionTrigger,
+  currentAddress,
+}) => {
   const [address, setAddress] = useState<Address>();
   const [newAddres, setNewAddres] = useState<string>();
   useEffect(() => {
@@ -60,32 +62,39 @@ const AddressContainer: React.FC<ContainerProps> = ({ accionTrigger,currentAddre
       let pathUrl = `${config.AllNeighborhoodsContext}`;
       await HttpRequest(pathUrl, "GET", "")
         .then((response: any) => {
-          if(currentAddress){
+          if (currentAddress) {
             setAddress((prevState: any) => ({
               ...prevState,
-              ...{neighborhoods: response , neighborhood: currentAddress.neighborhood,blockNumber:currentAddress.blockNumber,homeNumber:currentAddress.homeNumber,whereIlive:currentAddress.address?'Barrio':'Conjunto',uniquecode:currentAddress.uniquecode,city:currentAddress.city,address:currentAddress.address },
+              ...{
+                neighborhoods: response,
+                neighborhood: currentAddress.neighborhood,
+                blockNumber: currentAddress.blockNumber,
+                homeNumber: currentAddress.homeNumber,
+                whereIlive: currentAddress.address ? "Barrio" : "Conjunto",
+                uniquecode: currentAddress.uniquecode,
+                city: currentAddress.city,
+                address: currentAddress.address,
+              },
+            }));
+          } else {
+            setAddress((prevState: any) => ({
+              ...prevState,
+              ...{ neighborhoods: response },
             }));
           }
-          else{
-          setAddress((prevState: any) => ({
-            ...prevState,
-            ...{ neighborhoods: response },
-          }));}
         })
         .catch((error) => console.error("Error:", error));
     }
     fetchData();
-    
   }, [currentAddress]);
   useEffect(() => {
     if (address) {
-      let addressTemp:string='';
+      let addressTemp: string = "";
       if (address.whereIlive === "Conjunto") {
         addressTemp = `${address.neighborhood ? address.neighborhood : ""} 
-                      ${address.blockNumber&&address.neighborhood ? address.blockNumber : ""} 
-                      ${address.homeNumber&&address.neighborhood ? address.homeNumber : ""}
-                      ${address.city ? address.city : ""}`;
-     
+                      ${address.blockNumber && address.neighborhood ? address.blockNumber: ""} 
+                      ${address.homeNumber && address.neighborhood ? address.homeNumber: ""}
+                      ${address.city&&address.homeNumber ? address.city : ""}`;
       } else {
         addressTemp = `${address.neighborhood ? address.neighborhood : ""} ${
           address.kind ? address.kind : ""
@@ -96,15 +105,17 @@ const AddressContainer: React.FC<ContainerProps> = ({ accionTrigger,currentAddre
         } ${address.number2 ? "-" : ""} ${
           address.number3 ? address.number3 : ""
         } ${address.post2 ? address.post2 : ""} ${
-          address.city&&address.number3 ? address.city : ""
+          address.city && address.number3 ? address.city : ""
         }`;
       }
-      
-      if(addressTemp.trim()!==''){
-      setNewAddres(addressTemp);}
+
+      if (addressTemp.trim() !== "") {
+        setNewAddres(addressTemp);
+      }
       if (
         address.whereIlive &&
-        ((address.blockNumber && address.homeNumber) ||( address.number3&&address.kind))
+        ((address.blockNumber && address.homeNumber) ||
+          (address.number3 && address.kind))
       ) {
         accionTrigger({
           whereIlive: address.whereIlive,
@@ -112,14 +123,36 @@ const AddressContainer: React.FC<ContainerProps> = ({ accionTrigger,currentAddre
           blockNumber: address.blockNumber,
           homeNumber: address.homeNumber,
           address: addressTemp,
-          city:address.city,
-          neighborhoodId:address.neighborhoodId
+          city: address.city,
+          neighborhoodId: address.neighborhoodId,
         });
       }
-    
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
+  useEffect(() => {
+    let whereIlive=currentAddress?.address ? "Barrio" : "Conjunto"
+    if(currentAddress&&address&&address.whereIlive&&address.whereIlive!==whereIlive){
+    setAddress((prevState: any) => ({
+      ...prevState,
+      ...{
+        uniquecode: undefined,
+        address: undefined,
+        number: undefined,
+        post: undefined,
+        number2: undefined,
+        number3: undefined,
+        post2: undefined,
+        neighborhoodId: undefined,
+        blockNumber: undefined,
+        homeNumber: undefined,
+        neighborhood: undefined,
+        kind: undefined,
+      },
+    }));
+    setNewAddres('');}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address?.whereIlive]);
 
   return (
     <>
@@ -130,11 +163,17 @@ const AddressContainer: React.FC<ContainerProps> = ({ accionTrigger,currentAddre
             <IonCol>
               <IonItem>
                 <IonIcon color="primary" icon={mapOutline} slot="start" />
-                <IonLabel position='stacked'>Ciudad</IonLabel>
+                <IonLabel position="stacked">Ciudad</IonLabel>
                 <IonSelect
                   interface="popover"
                   color="dark"
-                  placeholder={currentAddress?currentAddress.city?currentAddress.city:"Ciudad de recidencia":''}
+                  placeholder={
+                    currentAddress
+                      ? currentAddress.city
+                        ? currentAddress.city
+                        : "Ciudad de recidencia"
+                      : ""
+                  }
                   onIonChange={(e: any) =>
                     setAddress((prevState: any) => ({
                       ...prevState,
@@ -142,77 +181,88 @@ const AddressContainer: React.FC<ContainerProps> = ({ accionTrigger,currentAddre
                     }))
                   }
                 >
-                  <IonSelectOption value={'Madrid Cundinamarca'}>Madrid Cundinamarca</IonSelectOption>
+                  <IonSelectOption value={"Madrid Cundinamarca"}>
+                    Madrid Cundinamarca
+                  </IonSelectOption>
                 </IonSelect>
               </IonItem>
             </IonCol>
           </IonRow>
           <IonRow>
             <IonCol>
-              <IonToolbar>
+              <IonItem>
+            <IonIcon color="primary" icon={address.whereIlive==="Conjunto"?businessOutline:homeOutline} slot="start" />
                 <IonLabel position="stacked">
                   Seleccione en que tipo de sector vive:
                 </IonLabel>
-                <IonSegment
+                <IonSelect
+                  interface="popover"
                   value={address.whereIlive}
                   onIonChange={(e: any) => {
                     setAddress((prevState: any) => ({
                       ...prevState,
-                      ...{ whereIlive: e.detail.value },
-                    }));
-                    setAddress((prevState: any) => ({
-                      ...prevState,
                       ...{
+                        whereIlive: e.detail.value,
                         uniquecode: undefined,
-                      },
-                    }));
-                    setAddress((prevState: any) => ({
-                      ...prevState,
-                      ...{
                         neighborhood: undefined,
+                        neighborhoodId: undefined,
+                        address: undefined,
+                        blockNumber: undefined,
+                        homeNumber: undefined,
                       },
                     }));
                   }}
                 >
-                  <IonSegmentButton value="Conjunto">
-                    <IonLabel>Conjunto</IonLabel>
-                  </IonSegmentButton>
-                  <IonSegmentButton value="Barrio">
-                    <IonLabel>Barrio</IonLabel>
-                  </IonSegmentButton>
-                </IonSegment>
-              </IonToolbar>
+                  <IonSelectOption value="Conjunto">
+                    Conjunto
+                  </IonSelectOption>
+                  <IonSelectOption value="Barrio">
+                    Barrio
+                  </IonSelectOption>
+                </IonSelect>
+                </IonItem>
             </IonCol>
           </IonRow>
           {address.whereIlive ? (
             <>
+            {address.whereIlive==='Conjunto'?
+  <IonToolbar color="secondary">
+    <IonText class='ion-padding-horizontal'>Solo selecciona el nombre del conjunto nosotros tenemos la dirección</IonText>
+  </IonToolbar>:null}
               <IonRow>
                 <IonCol>
                   <IonItem>
                     <IonIcon color="primary" icon={bookOutline} slot="start" />
-                    <IonLabel position='stacked'>{"Seleccione un " + address.whereIlive}</IonLabel>
+                    <IonLabel position="stacked">
+                      {"Seleccione un " + address.whereIlive}
+                    </IonLabel>
                     <IonSelect
                       interface="popover"
                       color="dark"
-                      placeholder={currentAddress&&address.whereIlive==='Conjunto'?currentAddress.neighborhood:""}
+                      placeholder={
+                        currentAddress && address.whereIlive === "Conjunto"
+                          ? currentAddress.neighborhood
+                          : ""
+                      }
                       onIonChange={(e: any) => {
-                        setAddress((prevState: any) => ({
-                          ...prevState,
-                          ...{
-                            uniquecode: e.target.value.uniquecode,
-                          },
-                        }));
-                        setAddress((prevState: any) => ({
-                          ...prevState,
-                          ...{
-                            neighborhood: e.target.value.firstName,
-                          },
-                        }));
-                        if(e.target.value._id){
+                        if (
+                          address.whereIlive === "Conjunto" &&
+                          e.target.value?._id
+                        ) {
                           setAddress((prevState: any) => ({
                             ...prevState,
                             ...{
-                              neighborhoodId: e.target.value._id,
+                              neighborhoodId: e.target.value?._id,
+                              uniquecode: e.target.value?.uniquecode,
+                              neighborhood: e.target.value?.firstName,
+                            },
+                          }));
+                        } else {
+                          setAddress((prevState: any) => ({
+                            ...prevState,
+                            ...{
+                              uniquecode: e.target.value?.uniquecode,
+                              neighborhood: e.target.value?.firstName,
                             },
                           }));
                         }
@@ -241,7 +291,7 @@ const AddressContainer: React.FC<ContainerProps> = ({ accionTrigger,currentAddre
                     <IonItem>
                       <IonIcon
                         color="primary"
-                        icon={homeOutline}
+                        icon={businessOutline}
                         slot="start"
                       />
                       <IonLabel position="floating">Torre</IonLabel>
@@ -452,7 +502,13 @@ const AddressContainer: React.FC<ContainerProps> = ({ accionTrigger,currentAddre
                       slot="start"
                     />
                     <IonLabel position="stacked">Dirección Generada:</IonLabel>
-                    <IonText>{currentAddress?currentAddress.address&&!newAddres!?currentAddress.address: newAddres:newAddres}</IonText>
+                    <IonText>
+                      {currentAddress
+                        ? currentAddress.address && !newAddres!
+                          ? currentAddress.address
+                          : newAddres
+                        : newAddres}
+                    </IonText>
                   </IonItem>
                 </IonCol>
               </IonRow>
