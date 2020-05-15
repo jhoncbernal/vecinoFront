@@ -199,6 +199,7 @@ const ListContainer: React.FC<ContainerProps> = ({
           isOpen={showModal}
           onDidDismiss={(e) => setShowModal(false)}
           animated={true}
+          backdropDismiss={false}
         >
           <IonContent>
             <CreateComponent
@@ -307,7 +308,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                           </IonItem>
                         ) : null}
                         <IonCardHeader class="ion-no-margin ion-no-padding">
-                          <IonImg class="cardSlideImage" src={input.urlImage} />
+                          <IonImg class="cardSlideImage" src={input.urlImage}/>
                           <IonToolbar
                             color={
                               input.totalAmount <= 0

@@ -22,16 +22,17 @@ import config from "../../../config";
 import { HttpRequest } from "../../../hooks/HttpRequest";
 import { arrowBack } from "ionicons/icons";
 import { Product, Provider } from "../../../entities";
+import Axios from "axios";
 
-const CreateComponent: FC<componentData> = ({ prod, action,provider }) => {
-  const productType =provider&&provider.categories?provider.categories: [
-    "Limpieza"
-  ];
-  
+const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
+  const productType =
+    provider && provider.categories ? provider.categories : ["Limpieza"];
+
   const measureType = ["Lb", "Kg", "Und"];
   let temp: { [id: string]: any } = {};
   const [dataToast, setDataToast] = useState({ show: false, message: "" });
   const [product, setProduct] = useState<{ [id: string]: any }>();
+  const [flagImageUpload, setFlagImageUpload] = useState<boolean>(false);
   const handleValueChange = (key: string, value: any) => {
     temp[key] = value;
     setProduct((prevState: any) => ({
@@ -39,67 +40,70 @@ const CreateComponent: FC<componentData> = ({ prod, action,provider }) => {
       ...temp,
     }));
   };
-useEffect(() => {
- if(prod&&prod._id){
-  setProduct(prod);
- }
-}, [prod])
+
+  useEffect(() => {
+    if (prod && prod._id) {
+      setProduct(prod);
+    }
+  }, [prod]);
   const submitData = async (e: FormEvent) => {
     e.preventDefault();
-    if(product){
-    let error: boolean = false;
-    
-    const method = product._id ? "PATCH" : "POST";
-    const pathUrl = product._id
-      ? `${config.ProductContext}/${product._id}`
-      : `${config.ProductContext}`;
-    if (Object.keys(product).length === 0) {
-      action({ hasChanges: false });
-      return;
-    }
-    if (method === "POST") {
-      if (!product["code"]) {
-        product["code"] = new Date().getTime();
+    if (product) {
+      let error: boolean = false;
+
+      const method = product._id ? "PATCH" : "POST";
+      const pathUrl = product._id
+        ? `${config.ProductContext}/${product._id}`
+        : `${config.ProductContext}`;
+      if (Object.keys(product).length === 0) {
+        action({ hasChanges: false });
+        return;
       }
-      if (!product["keyImage"]) {
-        error = true;
-        setDataToast({ show: true, message: "se debe agregar una imagen" });
+      if (method === "POST") {
+        if (!product["code"]) {
+          product["code"] = new Date().getTime();
+        }
+        if (!product["keyImage"]) {
+          error = true;
+          setDataToast({ show: true, message: "se debe agregar una imagen" });
+        }
+        if (product["price"] === 0) {
+          error = true;
+          setDataToast({
+            show: true,
+            message: "el precio debe ser superior a 0",
+          });
+        }
+
+        if (product["totalAmount"] === 0) {
+          error = true;
+          return setDataToast({
+            show: true,
+            message: "las unidades en stock deben ser mayores a 0",
+          });
+        }
       }
-      if (product["price"] === 0) {
+      if (
+        product["promotionPrice"] &&
+        product.price &&
+        product["promotionPrice"] > product.price
+      ) {
         error = true;
         setDataToast({
           show: true,
-          message: "el precio debe ser superior a 0",
+          message: "el precio en promocion debe ser inferior al precio normal",
         });
       }
-
-      if (product["totalAmount"] === 0) {
-        error = true;
-        return setDataToast({
-          show: true,
-          message: "las unidades en stock deben ser mayores a 0",
-        });
+      if (!error) {
+        await HttpRequest(pathUrl, method, product, true)
+          .then(async (response: any) => {
+            action({ hasChanges: true });
+          })
+          .catch((error) => {
+            setDataToast({ show: true, message: error.message });
+            console.error(error);
+          });
       }
-    }
-    if (product["promotionPrice"]&&product.price&&(product["promotionPrice"]>product.price)) {
-      error = true;
-      setDataToast({
-        show: true,
-        message: "el precio en promocion debe ser inferior al precio normal",
-      });
-    }
-    if (!error) {
-      
-
-      await HttpRequest(pathUrl, method, product, true)
-        .then(async (response: any) => {
-          action({ hasChanges: true });
-        })
-        .catch((error) => {
-          setDataToast({ show: true, message: error.message });
-          console.error(error);
-        });
-    }
     }
   };
 
@@ -110,7 +114,10 @@ useEffect(() => {
         <IonButton
           slot="start"
           buttonType=""
-          onClick={() => {
+          onClick={async (e) => {
+            if (flagImageUpload) {
+              await submitData(e);
+            }
             const resp = { hasChanges: false };
             action(resp);
           }}
@@ -123,10 +130,28 @@ useEffect(() => {
           <IonRow>
             <IonCol size="4" offset="4">
               <UploadComponent
-                srcInitial={product?product.urlImage:''}
-                output={(value: any) => {
+                srcInitial={product ? product.urlImage : ""}
+                output={async (value: any) => {
+                  try {
+                    setFlagImageUpload(false);
+                    let header = {
+                      "Access-Control-Allow-Origin": "*",
+                      "Access-Control-Allow-Methods":
+                        "GET, PUT, POST, DELETE, OPTIONS",
+                    };
+                    if (product) {
+                      await Axios.delete(
+                        `${config.BASE_URL}${config.API_VERSION}${config.FileDeleteImageContext}/${product.keyImage}`,
+                        { headers: header }
+                      );
+                    }
+                  } catch (error) {
+                    setDataToast({ show: true, message: error.message });
+                    console.error(error);
+                  }
                   handleValueChange("urlImage", value.Location);
                   handleValueChange("keyImage", value.key);
+                  setFlagImageUpload(true);
                 }}
               ></UploadComponent>
             </IonCol>
@@ -139,7 +164,7 @@ useEffect(() => {
               >
                 <label>Nombre del producto</label>
                 <IonInput
-                type='text'
+                  type="text"
                   required={true}
                   name="productName"
                   value={product?.productName}
@@ -167,7 +192,7 @@ useEffect(() => {
                 </IonSelect>
                 <label>Precio</label>
                 <IonInput
-                type='number'
+                  type="number"
                   required={true}
                   name="price"
                   value={product?.price}
@@ -195,7 +220,7 @@ useEffect(() => {
                 </IonSelect>
                 <label>Unidades en stock</label>
                 <IonInput
-                type='number'
+                  type="number"
                   required={true}
                   value={product?.totalAmount}
                   name="totalAmount"
@@ -205,7 +230,7 @@ useEffect(() => {
                 ></IonInput>
                 <label>Marca</label>
                 <IonInput
-                type='text'
+                  type="text"
                   required={true}
                   value={product?.brand}
                   name="brand"
@@ -224,7 +249,7 @@ useEffect(() => {
                 ></IonInput>
                 <label>Precio en promoción </label>
                 <IonInput
-                type='number'
+                  type="number"
                   value={product?.promotionPrice}
                   name="promotionPrice"
                   onIonChange={(e: any) => {
@@ -280,7 +305,7 @@ useEffect(() => {
 interface componentData {
   [id: string]: any;
   prod: Product;
-  provider:Provider;
+  provider: Provider;
 }
 
 export default CreateComponent;
