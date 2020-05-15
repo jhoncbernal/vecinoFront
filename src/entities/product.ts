@@ -1,5 +1,5 @@
 export interface Product {
-  _id?: string;
+  _id: string;
   enabled: boolean;
   keyImage: string;
   measureType: "Lb" | "Kg" | "Und" | "notSet";

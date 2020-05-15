@@ -172,12 +172,6 @@ const ListContainer: React.FC<ContainerProps> = ({
     speed: 400,
     nested: true,
     cssMode: true,
-    loop: true,
-    navigation: {
-      hideOnClick: true,
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    },
   };
 
   const renderAddButton = () => {
@@ -312,10 +306,9 @@ const ListContainer: React.FC<ContainerProps> = ({
                             </IonBadge>
                           </IonItem>
                         ) : null}
-                        <IonCardHeader>
+                        <IonCardHeader class="ion-no-margin ion-no-padding">
                           <IonImg class="cardSlideImage" src={input.urlImage} />
                           <IonToolbar
-                            class="ion-float-right"
                             color={
                               input.totalAmount <= 0
                                 ? "danger"
@@ -330,14 +323,14 @@ const ListContainer: React.FC<ContainerProps> = ({
                                 ? "  Agotado"
                                 : input.totalAmount < 10
                                 ? "¡Quedan Pocas Unidades!"
-                                : ""}
+                                : null}
                             </strong>
                           </IonToolbar>
                         </IonCardHeader>
                         <IonCardContent
                          class="ion-no-margin ion-no-padding"
                         >
-                          <IonItem slot='start' lines="none">
+                          <IonItem  lines="none">
                             <IonText color={"dark"}>
                               
                                 <div>
@@ -354,10 +347,10 @@ const ListContainer: React.FC<ContainerProps> = ({
                                       </IonText></small>
                                     </strong>
                                   ) : (
-                                    ""
+                                    null
                                   )}
                                 </div>
-                              {input ? (
+                              {
                                 input.promotionPrice &&
                                 DatePromotion >= today ? (
                                   <IonLabel color="secundary">
@@ -371,9 +364,8 @@ const ListContainer: React.FC<ContainerProps> = ({
                                       </strong>
                                     </h6>
                                   </IonLabel>
-                                ) : null
-                              ) : null}
-                              <h6>{input ? input.productName : ""}</h6>
+                                ) : null}
+                              <h6>{input.productName}</h6>
                               {`1 (${input.measureType})`}
 
                               <IonButton
@@ -431,6 +423,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                         </IonCardContent>
 
                         <div
+                        className= "ion-justify-content-center ion-margin-bottom"
                           hidden={
                             currentUser.roles.includes(config.RolUserAccess)
                               ? false
@@ -439,7 +432,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                         >
                           {!shoppingCart[`${input._id}`] ? (
                             <IonButton
-                              class="ion-justify-content-center"
+                              class="ion-justify-content-center ion-margin-bottom" 
                               size={"small"}
                               hidden={input.totalAmount !== 0 ? false : true}
                               fill="outline"
@@ -451,7 +444,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                   input.totalAmount !== 0
                                 ) {
                                   let products = handleProducts(
-                                    input._id ? input._id : "",
+                                    input._id ,
                                     "Add",
                                     shoppingCart
                                   );
@@ -470,13 +463,14 @@ const ListContainer: React.FC<ContainerProps> = ({
                               Agregar
                             </IonButton>
                           ) : (
-                            <IonItemDivider class="ion-no-padding ion-justify-content-center">
+                            <div className="ion-justify-content-center ion-margin-bottom">
+                            <IonItemDivider>
                               <IonButton
                                 size={"small"}
                                 fill="outline"
                                 onClick={() => {
                                   let products = handleProducts(
-                                    input._id ? input._id : "",
+                                    input._id ,
                                     "Less",
                                     shoppingCart
                                   );
@@ -497,8 +491,6 @@ const ListContainer: React.FC<ContainerProps> = ({
                                 <IonText color={"primary"}>
                                   <strong>{`${
                                     shoppingCart[`${input._id}`]
-                                      ? shoppingCart[`${input._id}`]
-                                      : ""
                                   }`}</strong>
                                 </IonText>
                               </IonButton>
@@ -511,7 +503,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                     shoppingCart[`${input._id}`]
                                   ) {
                                     let products = handleProducts(
-                                      input._id ? input._id : "",
+                                      input._id,
                                       "Add",
                                       shoppingCart
                                     );
@@ -526,6 +518,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                 <IonIcon slot="icon-only" icon={addSharp} />
                               </IonButton>
                             </IonItemDivider>
+                            </div>
                           )}
                         </div>
                       </IonCard>
