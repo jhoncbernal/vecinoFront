@@ -109,8 +109,8 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
 
   return (
     <IonCard>
-      <IonToolbar style={{ textAlign: "center" }}>
-        <IonTitle>Carniceria</IonTitle>
+      <IonToolbar class='ion-text-center'>
+  <IonTitle >{provider.category.toUpperCase()}</IonTitle>
         <IonButton
           slot="start"
           buttonType=""
