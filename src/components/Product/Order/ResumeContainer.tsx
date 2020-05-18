@@ -98,15 +98,11 @@ if(tomorrowschedule.length>0){
 }
 
   const flagDeliveryRighNow: boolean =
-    openHour <= today.getHours() && today.getHours() <= closeHour - 1;
+    openHour <= today.getHours() && today.getHours() <= closeHour - 2;
   const [paymentMethod, setPaymentMethod] = useState<string>("efectivo");
   const [schedule, setSchedule] = useState<string>();
   const [cashValue, setCashValue] = useState<number>(0);
-  const [address, setAddress] = useState<string>(
-    currentUser.neighborhood.address === "NO APLICA"
-      ? currentUser.address
-      : `${currentUser.neighborhood.address} T${currentUser.blockNumber}Apt${currentUser.homeNumber}`
-  );
+  const [address, setAddress] = useState<string>();
   const [tip, setTip] = useState<string>("1000");
   const [flagExtraCharge, setFlagExtraCharge] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -227,8 +223,12 @@ if(tomorrowschedule.length>0){
               <IonInput
                 disabled={!flagExtraCharge}
                 type={"text"}
-                value={address}
-                onIonInput={(e: any) => setAddress(e.target.value)}
+                value={address?address:
+                  currentUser.neighborhood.address === "NO APLICA"
+                    ? currentUser.address
+                    : `${currentUser.neighborhood.address} T${currentUser.blockNumber}Apt${currentUser.homeNumber}`
+                }
+                onIonChange={(e: any) => setAddress(e.target.value)}
               />
               </IonItem>
               </IonCol>
@@ -267,25 +267,25 @@ if(tomorrowschedule.length>0){
               }}
             >
               <IonSelectOption>
-                {today.getHours() < openHour - 1
+                {today.getHours() < openHour - 2
                   ?((openHour!==0)?`Hoy de ${openHour}:00  a ${openHour + 1}:00 `:'Cerrado')
                   : (openHourTomorrow!==0)?`${tomorrow} de ${openHourTomorrow}:00  a ${
                       openHourTomorrow + 1
-                    }:00 `:'Cerrado'}
+                    }:00 `:`El ${tomorrow} no abrimos`}
               </IonSelectOption>
               <IonSelectOption>
                 {today.getHours() < openHour + 4
                   ? ((openHour!==0)?`Hoy de ${openHour + 4}:00  a ${openHour + 5}:00 `:'Cerrado')
                   : (openHourTomorrow!==0)?`${tomorrow} de ${openHourTomorrow + 4}:00  a ${
                       openHourTomorrow + 5
-                    }:00 `:'Cerrado'}
+                    }:00 `:`El ${tomorrow} no abrimos`}
               </IonSelectOption>
               <IonSelectOption>
-                {today.getHours() < closeHour - 1
+                {today.getHours() < closeHour - 2
                   ?((openHour!==0)? `Hoy de ${closeHour - 1}:00  a ${closeHour}:00 `:'Cerrado')
                   : (openHourTomorrow!==0)?`${tomorrow} de ${
                       closeHourTomorrow - 1
-                    }:00  a ${closeHourTomorrow}:00 `:'Cerrado'}
+                    }:00  a ${closeHourTomorrow}:00 `:`El ${tomorrow} no abrimos`}
               </IonSelectOption>
               {flagDeliveryRighNow ? (
                 <IonSelectOption value="Ahora mismo">
