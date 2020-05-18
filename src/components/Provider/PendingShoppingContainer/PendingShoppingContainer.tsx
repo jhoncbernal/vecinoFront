@@ -1,4 +1,4 @@
-import React, { FC} from "react";
+import React, { FC } from "react";
 import {
   IonTitle,
   IonItem,
@@ -19,11 +19,10 @@ import { Bill } from "../../../entities";
 import { StatesDictionary } from "../../../hooks/OrderStates";
 
 const PendingShoppingContainer: FC<componentData> = ({
-  dataTrigger,bills
+  dataTrigger,
+  bills,
 }) => {
-
   const statesStyle = StatesDictionary().states;
-
 
   const handlerSide = (request: any) => {
     dataTrigger(request);
@@ -166,32 +165,36 @@ const PendingShoppingContainer: FC<componentData> = ({
                     </IonText>
                   </IonItem>
                 </IonCol>
-                <IonCol
-                  size-xs="6"
-                  size-md="3"
-                  size-lg="2"
-                  hidden={bill.change <= 0}
-                >
-                  <IonItem lines="none">
-                    <IonLabel position="stacked">
-                      <p>Cambio</p>
-                    </IonLabel>
-                    <IonText>${bill.change.toLocaleString()}</IonText>
-                  </IonItem>
-                </IonCol>
-                <IonCol
-                  size-xs="6"
-                  size-md="3"
-                  size-lg="2"
-                  hidden={bill.cashValue <= 0}
-                >
-                  <IonItem lines="none">
-                    <IonLabel position="stacked">
-                      <p>Efectivo</p>
-                    </IonLabel>
-                    <IonText>${bill.cashValue.toLocaleString()}</IonText>
-                  </IonItem>
-                </IonCol>
+                {bill.MethodOfPayment === "efectivo" ? (
+                  <>
+                    <IonCol
+                      size-xs="6"
+                      size-md="3"
+                      size-lg="2"
+                      hidden={bill.change <= 0}
+                    >
+                      <IonItem lines="none">
+                        <IonLabel position="stacked">
+                          <p>Cambio</p>
+                        </IonLabel>
+                        <IonText>${bill.change?bill.change.toLocaleString():0}</IonText>
+                      </IonItem>
+                    </IonCol>
+                    <IonCol
+                      size-xs="6"
+                      size-md="3"
+                      size-lg="2"
+                      hidden={bill.cashValue <= 0}
+                    >
+                      <IonItem lines="none">
+                        <IonLabel position="stacked">
+                          <p>Efectivo</p>
+                        </IonLabel>
+                        <IonText>${bill.cashValue?bill.cashValue.toLocaleString():0}</IonText>
+                      </IonItem>
+                    </IonCol>
+                  </>
+                ) : null}
                 <IonCol size-xs="6" size-md="3" size-lg="2">
                   <IonItem lines="none">
                     <IonLabel position="stacked">
@@ -236,7 +239,7 @@ const PendingShoppingContainer: FC<componentData> = ({
 };
 interface componentData {
   [id: string]: any;
-  bills:Array<Bill>;
+  bills: Array<Bill>;
 }
 
 export default PendingShoppingContainer;
