@@ -180,7 +180,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
     <>
       {address ? (
         <IonGrid>
-          <IonLabel>Info de recidencia</IonLabel>
+          <IonLabel>Info de residencia</IonLabel>
           <IonRow>
             <IonCol>
               <IonItem>
@@ -193,7 +193,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                     currentAddress
                       ? currentAddress.city
                         ? currentAddress.city
-                        : "Ciudad de recidencia"
+                        : "Ciudad de residencia"
                       : ""
                   }
                   onIonChange={(e: any) =>
