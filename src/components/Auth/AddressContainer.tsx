@@ -227,7 +227,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                   slot="start"
                 />
                 <IonLabel position="stacked">
-                  Seleccione en que tipo de sector vive:
+                  Seleccione el tipo de vivienda en el que reside:
                 </IonLabel>
                 <IonSelect
                   interface="popover"
@@ -247,8 +247,8 @@ const AddressContainer: React.FC<ContainerProps> = ({
                     }));
                   }}
                 >
-                  <IonSelectOption value="Conjunto">Conjunto</IonSelectOption>
-                  <IonSelectOption value="Barrio">Barrio</IonSelectOption>
+                  <IonSelectOption value="Conjunto">Apartamento</IonSelectOption>
+                  <IonSelectOption value="Barrio">Casa</IonSelectOption>
                 </IonSelect>
               </IonItem>
             </IonCol>
