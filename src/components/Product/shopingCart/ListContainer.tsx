@@ -15,6 +15,9 @@ import {
   IonFooter,
   IonSegment,
   IonSegmentButton,
+  IonItemSliding,
+  IonItemOptions,
+  IonItemOption,
 } from "@ionic/react";
 import { ShoppingOrder, ShoppingProduct } from "../../../entities";
 import { HttpRequest } from "../../../hooks/HttpRequest";
@@ -26,6 +29,7 @@ import {
   cartOutline,
   arrowBack,
   trashBinOutline,
+  trashBinSharp,
 } from "ionicons/icons";
 import { pushCartFirebase } from "../../../config/firebase";
 import ResumeContainer from "../Order/ResumeContainer";
@@ -141,79 +145,17 @@ const ListContainer: React.FC<ContainerProps> = ({
                           shoppingProduct.price * shoppingProduct.quantity;
                         let percent = Math.round((1 - price / oldprice) * 100);
                         return (
-                          <IonItem key={shoppingProduct._id}>
-                            <IonThumbnail class="ion-align-self-start">
-                              <IonImg src={shoppingProduct.urlImage}></IonImg>
-                            </IonThumbnail>
-                            {shoppingProduct.quantity === 0 ||
-                            shoppingCart[shoppingProduct._id] === 0 ? (
-                              <>
-                                <IonLabel class="ion-padding-self-start ion-margin-vertical">
-                                  Producto Agotado
-                                </IonLabel>
-                                <IonButton
-                                  color={"white"}
-                                  class="cartBtn"
-                                  size="small"
-                                  fill="outline"
-                                  onClick={() => {
-                                    let products = handleProducts(
-                                      shoppingProduct._id!,
-                                      "Less",
-                                      shoppingCart
-                                    );
-                                    setShoppingCart((prevState: any) => ({
-                                      ...prevState,
-                                      ...products,
-                                    }));
-                                  }}
-                                >
-                                  <IonIcon
-                                    size={"large"}
-                                    color={"primary"}
-                                    slot="icon-only"
-                                    icon={trashBinOutline}
-                                  />
-                                </IonButton>
-                              </>
-                            ) : (
-                              <>
-                                <IonLabel class="ion-align-self-center">
-                                  <IonText color={"steel"}>
-                                    <p>{shoppingProduct.productName}</p>
-                                  </IonText>
-                                  <IonText color="dark">
-                                    <p>
-                                      <strong>
-                                        ${price.toLocaleString()}
-                                        {shoppingProduct.salving > 0 ? (
-                                          <IonText color="steel">
-                                            &nbsp;
-                                            <s>{`$${oldprice.toLocaleString()}`}</s>
-                                          </IonText>
-                                        ) : null}
-                                      </strong>
-                                    </p>
-                                  </IonText>
-                                  {shoppingProduct.salving > 0 ? (
-                                    <IonLabel class="ion-align-self-center">
-                                      <IonButton
-                                        disabled={true}
-                                        shape={"round"}
-                                        color={"secondary"}
-                                      >
-                                        -{percent}%
-                                      </IonButton>
-                                    </IonLabel>
-                                  ) : null}
-                                  {shoppingCart[shoppingProduct._id] ===
-                                  shoppingProduct.totalAmount ? (
-                                    <IonLabel class="ion-align-self-start">
-                                      <p>Max (Und) permitidas</p>
-                                    </IonLabel>
-                                  ) : null}
-                                </IonLabel>
-                                <IonLabel class="ion-align-self-end ion-margin-vertical">
+                          <IonItemSliding key={shoppingProduct._id}>
+                            <IonItem>
+                              <IonThumbnail class="ion-align-self-start">
+                                <IonImg src={shoppingProduct.urlImage}></IonImg>
+                              </IonThumbnail>
+                              {shoppingProduct.quantity === 0 ||
+                              shoppingCart[shoppingProduct._id] === 0 ? (
+                                <>
+                                  <IonLabel class="ion-padding-self-start ion-margin-vertical">
+                                    Producto Agotado
+                                  </IonLabel>
                                   <IonButton
                                     color={"white"}
                                     class="cartBtn"
@@ -235,50 +177,144 @@ const ListContainer: React.FC<ContainerProps> = ({
                                       size={"large"}
                                       color={"primary"}
                                       slot="icon-only"
-                                      icon={removeSharp}
+                                      icon={trashBinOutline}
                                     />
                                   </IonButton>
-                                  <IonButton color={"white"} fill="outline">
-                                    <IonText color={"primary"}>
-                                      {shoppingProduct.quantity !==
-                                      shoppingCart[shoppingProduct._id]
-                                        ? shoppingCart[shoppingProduct._id]
-                                        : shoppingProduct.quantity}
+                                </>
+                              ) : (
+                                <>
+                                  <IonLabel class="ion-align-self-center">
+                                    <IonText color={"steel"}>
+                                      <p>{shoppingProduct.productName}</p>
                                     </IonText>
-                                  </IonButton>
-                                  <IonButton
-                                    color={"white"}
-                                    class="cartBtn"
-                                    size="small"
-                                    fill="outline"
-                                    onClick={() => {
-                                      if (
-                                        shoppingCart[shoppingProduct._id] <
-                                        shoppingProduct.totalAmount
-                                      ) {
+                                    <IonText color="dark">
+                                      <p>
+                                        <strong>
+                                          ${price.toLocaleString()}
+                                          {shoppingProduct.salving > 0 ? (
+                                            <IonText color="steel">
+                                              &nbsp;
+                                              <s>{`$${oldprice.toLocaleString()}`}</s>
+                                            </IonText>
+                                          ) : null}
+                                        </strong>
+                                      </p>
+                                    </IonText>
+                                    {shoppingProduct.salving > 0 ? (
+                                      <IonLabel class="ion-align-self-center">
+                                        <IonButton
+                                          disabled={true}
+                                          shape={"round"}
+                                          color={"secondary"}
+                                        >
+                                          -{percent}%
+                                        </IonButton>
+                                      </IonLabel>
+                                    ) : null}
+                                    {shoppingCart[shoppingProduct._id] ===
+                                    shoppingProduct.totalAmount ? (
+                                      <IonLabel class="ion-align-self-start">
+                                        <p>Max (Und) permitidas</p>
+                                      </IonLabel>
+                                    ) : null}
+                                  </IonLabel>
+                                  <IonLabel class="ion-align-self-end ion-margin-vertical">
+                                    <IonButton
+                                      color={"white"}
+                                      class="cartBtn"
+                                      size="small"
+                                      fill="outline"
+                                      onClick={() => {
                                         let products = handleProducts(
                                           shoppingProduct._id!,
-                                          "Add",
+                                          "Less",
                                           shoppingCart
                                         );
                                         setShoppingCart((prevState: any) => ({
                                           ...prevState,
                                           ...products,
                                         }));
-                                      }
-                                    }}
-                                  >
-                                    <IonIcon
-                                      size={"large"}
-                                      color={"primary"}
-                                      slot="icon-only"
-                                      icon={addSharp}
-                                    />
-                                  </IonButton>
-                                </IonLabel>
-                              </>
-                            )}
-                          </IonItem>
+                                      }}
+                                    >
+                                      <IonIcon
+                                        size={"large"}
+                                        color={"primary"}
+                                        slot="icon-only"
+                                        icon={removeSharp}
+                                      />
+                                    </IonButton>
+                                    <IonButton color={"white"} fill="outline">
+                                      <IonText color={"primary"}>
+                                        {shoppingProduct.quantity !==
+                                        shoppingCart[shoppingProduct._id]
+                                          ? shoppingCart[shoppingProduct._id]
+                                          : shoppingProduct.quantity}
+                                      </IonText>
+                                    </IonButton>
+                                    <IonButton
+                                      color={"white"}
+                                      class="cartBtn"
+                                      size="small"
+                                      fill="outline"
+                                      onClick={() => {
+                                        if (
+                                          shoppingCart[shoppingProduct._id] <
+                                          shoppingProduct.totalAmount
+                                        ) {
+                                          let products = handleProducts(
+                                            shoppingProduct._id!,
+                                            "Add",
+                                            shoppingCart
+                                          );
+                                          setShoppingCart((prevState: any) => ({
+                                            ...prevState,
+                                            ...products,
+                                          }));
+                                        }
+                                      }}
+                                    >
+                                      <IonIcon
+                                        size={"large"}
+                                        color={"primary"}
+                                        slot="icon-only"
+                                        icon={addSharp}
+                                      />
+                                    </IonButton>
+                                  </IonLabel>
+                                </>
+                              )}
+                            </IonItem>
+                            <IonItemOptions
+                              onIonSwipe={() => {
+                                let pendingShopingCar = shoppingCart;
+                                delete pendingShopingCar[
+                                  `${shoppingProduct?._id}`
+                                ];
+                                setShoppingCart((prevState: any) => ({
+                                  ...prevState,
+                                  ...pendingShopingCar,
+                                }));
+                              }}
+                            >
+                              <IonItemOption color="danger"
+                               onClick={() => {
+                                let pendingShopingCar = shoppingCart;
+                                delete pendingShopingCar[
+                                  `${shoppingProduct?._id}`
+                                ];
+                                setShoppingCart((prevState: any) => ({
+                                  ...prevState,
+                                  ...pendingShopingCar,
+                                }));
+                              }}>
+                                <IonIcon
+                                  slot="top"
+                                  src={trashBinSharp}
+                                ></IonIcon>
+                                Eliminar
+                              </IonItemOption>
+                            </IonItemOptions>
+                          </IonItemSliding>
                         );
                       }
                     )
