@@ -155,7 +155,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
                 value={dataModall ? dataModall.phone : ""}
                 name="phone"
                 onIonChange={(e: any) => {
-                  handleValueChange(e.target.name, Number(e.target.value));
+                  handleValueChange(e.target.name, Number(e.target.value?.trim().replace(/[^0-9]/gi, '')));
                 }}
               />
             </IonItem>
@@ -178,7 +178,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
                       value={dataModall ? dataModall.firstName : ""}
                       name="firstName"
                       onIonChange={(e: any) => {
-                        handleValueChange(e.target.name, e.target.value);
+                        handleValueChange(e.target.name, e.target.value.replace(/[^A-Za-z ñ]/gi, ''));
                       }}
                     />
                   </IonItem>
@@ -206,7 +206,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
                       value={dataModall ? dataModall.lastName : ""}
                       name="lastName"
                       onIonChange={(e: any) => {
-                        handleValueChange(e.target.name, e.target.value);
+                        handleValueChange(e.target.name, e.target.value.replace(/[^A-Za-z ñ]/gi, ''));
                       }}
                     />
                   </IonItem>
@@ -285,7 +285,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
                 value={dataModall ? dataModall.documentId : ""}
                 name="documentId"
                 onIonChange={(e: any) => {
-                  handleValueChange(e.target.name, Number(e.target.value));
+                  handleValueChange(e.target.name, Number(e.target.value.trim().replace(/[^0-9]/gi, '')));
                 }}
               />
             </IonItem>

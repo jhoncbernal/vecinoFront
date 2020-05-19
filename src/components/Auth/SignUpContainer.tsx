@@ -18,6 +18,7 @@ import {
   IonFab,
   IonFabButton,
   IonCheckbox,
+  IonText,
 } from "@ionic/react";
 import {
   mailOpenOutline,
@@ -189,6 +190,7 @@ export class SignUpPage extends React.Component<
                 <IonIcon color="primary" icon={personOutline} slot="start" />
                 <IonLabel position="floating">Nombre de usuario</IonLabel>
                 <IonInput
+                  min={'8'}
                   minlength={8}
                   maxlength={12}
                   color="dark"
@@ -232,7 +234,7 @@ export class SignUpPage extends React.Component<
                   type="tel"
                   value={this.state.phone}
                   onIonChange={(phone: any) =>
-                    this.setState({ phone: phone.target.value })
+                    this.setState({ phone: phone.target.value?.trim().replace(/[^0-9]/gi, '') })
                   }
                 />
               </IonItem>
@@ -248,6 +250,7 @@ export class SignUpPage extends React.Component<
                       />
                       <IonLabel position="floating">Nombre</IonLabel>
                       <IonInput
+                      min={'4'}
                         minlength={4}
                         maxlength={20}
                         color="dark"
@@ -256,7 +259,7 @@ export class SignUpPage extends React.Component<
                         type="text"
                         value={this.state.firstName}
                         onIonChange={(e: any) =>
-                          this.setState({ firstName: e.target.value })
+                          this.setState({ firstName: e.target.value.replace(/[^A-Za-z ñ]/gi, '') })
                         }
                       />
                     </IonItem>
@@ -270,6 +273,7 @@ export class SignUpPage extends React.Component<
                       />
                       <IonLabel position="floating">Apellido</IonLabel>
                       <IonInput
+                       min={'4'}
                         minlength={4}
                         maxlength={20}
                         color="dark"
@@ -278,7 +282,7 @@ export class SignUpPage extends React.Component<
                         type="text"
                         value={this.state.lastName}
                         onIonChange={(e: any) =>
-                          this.setState({ lastName: e.target.value })
+                          this.setState({ lastName: e.target.value.replace(/[^A-Za-z ñ]/gi, '') })
                         }
                       />
                     </IonItem>
@@ -307,6 +311,7 @@ export class SignUpPage extends React.Component<
                   Numero de identificación
                 </IonLabel>
                 <IonInput
+                min={'8'}
                   minlength={8}
                   maxlength={20}
                   color="dark"
@@ -315,7 +320,7 @@ export class SignUpPage extends React.Component<
                   type="tel"
                   value={this.state.documentId}
                   onIonChange={(e: any) =>
-                    this.setState({ documentId: e.target.value })
+                    this.setState({ documentId: e.target.value.trim().replace(/[^0-9]/gi, '') })
                   }
                 />
               </IonItem>
@@ -323,6 +328,7 @@ export class SignUpPage extends React.Component<
                 <IonIcon color="primary" icon={keyOutline} slot="start" />
                 <IonLabel position="floating">Contraseña</IonLabel>
                 <IonInput
+                min={'8'}
                   color="dark"
                   required={true}
                   minlength={8}
@@ -335,23 +341,26 @@ export class SignUpPage extends React.Component<
                   }
                 />
               </IonItem>
-              <IonItem>
+              {this.state.confirmpassword!==this.state.password&&this.state.confirmpassword.length>=8?<IonText color='danger'>La contraseña no coincide</IonText>:null}
+              <IonItem >
                 <IonIcon color="primary" icon={keyOutline} slot="start" />
                 <IonLabel position="floating">Confirmar contraseña</IonLabel>
                 <IonInput
-                  color="dark"
+                  color={this.state.confirmpassword!==this.state.password&&this.state.confirmpassword.length>=8?'danger':'dark'}
                   required={true}
+                  min={'8'}
                   minlength={8}
                   maxlength={12}
-                  name="password"
+                  name="password2"
                   type="password"
                   value={this.state.confirmpassword}
-                  onIonChange={(confirmpassword: any) =>
+                  onIonChange={(confirmpassword: any) =>{
                     this.setState({
                       confirmpassword: confirmpassword.target.value,
-                    })
+                    })}
                   }
                 />
+                
               </IonItem>
               <IonItem>
                 <IonLabel>
@@ -370,7 +379,7 @@ export class SignUpPage extends React.Component<
               ></IonProgressBar>
               <br />
             </IonCard>
-            <IonButton class="btn-login" type="submit">
+            <IonButton disabled={(this.state.confirmpassword===this.state.password)&&this.state.confirmpassword?.length>=8?false:true} class="btn-login" type="submit">
               Registrarse
             </IonButton>
           </form>

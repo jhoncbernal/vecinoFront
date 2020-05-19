@@ -339,7 +339,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                         onIonChange={(e: any) =>
                           setAddress((prevState: any) => ({
                             ...prevState,
-                            ...{ blockNumber: e.target.value },
+                            ...{ blockNumber: e.target.value?.trim().replace(/[^0-9]/gi, '') },
                           }))
                         }
                       />
@@ -364,7 +364,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                         onIonChange={(e: any) =>
                           setAddress((prevState: any) => ({
                             ...prevState,
-                            ...{ homeNumber: e.target.value },
+                            ...{ homeNumber: e.target.value?.trim().replace(/[^0-9]/gi, '')  },
                           }))
                         }
                       />
@@ -416,7 +416,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                           onIonChange={(e: any) => {
                             setAddress((prevState: any) => ({
                               ...prevState,
-                              ...{ number: e.target.value },
+                              ...{ number: e.target.value?.trim().replace(/[^A-Za-z ñ 0-9]/gi, '') },
                             }));
                           }}
                         />
@@ -466,7 +466,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                           onIonChange={(e: any) => {
                             setAddress((prevState: any) => ({
                               ...prevState,
-                              ...{ number2: e.target.value },
+                              ...{ number2: e.target.value?.trim().replace(/[^A-Za-z ñ 0-9]/gi, '') },
                             }));
                           }}
                         />
@@ -489,7 +489,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                           onIonChange={(e: any) => {
                             setAddress((prevState: any) => ({
                               ...prevState,
-                              ...{ number3: e.target.value },
+                              ...{ number3: e.target.value?.trim().replace(/[^A-Za-z ñ 0-9]/gi, '') },
                             }));
                           }}
                         />
