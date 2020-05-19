@@ -71,7 +71,6 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal, dataChange }) => {
           setShowProgressBar(true);
           await HttpRequest(pathUrl, "PATCH", data, true)
             .then(async (response: any) => {
-              console.log(response, dataModall.current.available);
               if (
                 dataModall.current.available === "true" &&
                 response.status !== "the position: 1 now is available"

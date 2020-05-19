@@ -76,7 +76,6 @@ const UpdateUser: React.FC<ContainerProps> = ({
           pathUrl = `${config.ProviderContext}/${dataModal._id}`;
         }
         let data = dataSend;
-        console.log(data)
         if (!bodyChange) {
           setMessage("No se modifico ningun campo");
         } else {
