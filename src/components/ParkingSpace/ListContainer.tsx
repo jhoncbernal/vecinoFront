@@ -10,9 +10,10 @@ interface ContainerProps {
   loaddata: boolean;
   inputs: Array<any>;
   history: H.History;
+  dataChanges:any;
 }
 
-const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs, history }) => {
+const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs, history,dataChanges }) => {
   const [searchText, setSearchText] = useState('');
   const [data, setdata] = useState([{}]);
   const [showModal, setShowModal] = useState(false);
@@ -91,14 +92,11 @@ const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs
                     }
                   </IonItemDivider>
                 </IonCardContent>
-                <IonModal backdropDismiss={false} isOpen={showModal} animated={true}  >
-                  <ChosePosition dataModal={positionData} ></ChosePosition>
+                <IonModal  isOpen={showModal} animated={true}  onDidDismiss={(e) => setShowModal(false)} >
+                  <ChosePosition dataModal={positionData} dataChange={(dat:boolean)=>{setShowModal(false);dataChanges(dat);setSearchText(''); setdata([{}])}}></ChosePosition>
                   <IonFab vertical="bottom" horizontal="start" slot="fixed">
                     <IonFabButton onClick={() => {
                       setShowModal(false); 
-                      setSearchText('');
-                      history.push(
-                        '/home')
                     }} >
                     <IonIcon icon={arrowBackOutline} /></IonFabButton>
                   </IonFab>
@@ -113,14 +111,11 @@ const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs
         Crear Parqueadero
       <IonIcon slot="end" icon={checkmarkCircle} />
       </IonButton>
-        <IonModal backdropDismiss={false} isOpen={showModal2} animated={true}  >
+        <IonModal isOpen={showModal2} animated={true}   onDidDismiss={(e) => setShowModal2(false)} >
           <CreateContainer parkingType={parkingType}></CreateContainer>
           <IonFab vertical="bottom" horizontal="start" slot="fixed">
                     <IonFabButton onClick={() => {
                       setShowModal2(false); 
-                      history.push(
-                        '/home'
-                      )
                     }} >
                     <IonIcon icon={arrowBackOutline} /></IonFabButton>
                   </IonFab>

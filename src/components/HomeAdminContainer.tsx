@@ -29,12 +29,14 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
   const [hiddenBar, setHiddenBar] = useState(false);
   const [loadData, setloadData] = useState(false);
   const [showAlert1, setShowAlert1] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [message, setMessage] = useState("");
   const [usersArray, setUsersArray] = useState<any>([{}]);
   const [vehiclesArray, setVehiclesArray] = useState<any>([{}]);
   const [segmentValue, setSegmentValue] = useState<any>("user");
   const httpRequest = useCallback(async () => {
     try {
+      setRefresh(false);
       let pathUrl;
       if (segmentValue === "user") {
         pathUrl = `${config.UserContext}`;
@@ -63,7 +65,8 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
             const err = new Error();
             err.message = "sus credenciales vencieron";
             throw err;
-          } else {
+          } else if(refresh){
+
             //setCurrentUser(user.obj);
           }
           setloadData(true);
@@ -86,7 +89,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
       setHiddenBar(true);
       history.push("/login");
     }
-  }, [history, segmentValue]);
+  }, [history, segmentValue,refresh]);
 
   useEffect(() => {
     setHiddenBar(false);
@@ -106,8 +109,9 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
             }}
             value={segmentValue}
           >
-            <IonSegmentButton value="dashboard">
+            <IonSegmentButton value="dashboard" disabled hidden>
               <IonIcon
+              
                 class="icons-segment"
                 size="medium"
                 icon={barChartSharp}
@@ -151,6 +155,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
               <ChartsContainer></ChartsContainer>
             ) : segmentValue === "Cars" ? (
               <ParkingListContainer
+              dataChanges={(change:boolean)=>{if(change){setRefresh(change)}}}
                 history={history}
                 parkingType={segmentValue}
                 loaddata={loadData}
@@ -158,6 +163,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
               ></ParkingListContainer>
             ) :  segmentValue === "Motorcycles" ? (
               <ParkingListContainer
+              dataChanges={(change:boolean)=>{if(change){setRefresh(change)}}}
                 history={history}
                 parkingType={segmentValue}
                 loaddata={loadData}
@@ -165,6 +171,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
               ></ParkingListContainer>
             ): segmentValue === "Bikes" ? (
               <ParkingListContainer
+              dataChanges={(change:boolean)=>{if(change){setRefresh(change)}}}
                 history={history}
                 parkingType={segmentValue}
                 loaddata={loadData}
