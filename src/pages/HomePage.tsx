@@ -142,6 +142,7 @@ export class Home extends React.Component<
           {this.state.currentUser.roles ? (
             this.state.currentUser.roles.includes(config.RolAdminAccess) ? (
               <HomeAdminPageContainer
+              currentUser={this.state.currentUser}
                 history={history}
               ></HomeAdminPageContainer>
             ) : this.state.currentUser.roles.includes(

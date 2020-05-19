@@ -27,6 +27,7 @@ import {
 } from "./neighborhoodsNotExist";
 import { HttpRequest } from "../../hooks/HttpRequest";
 import config from "../../config";
+import { User } from "../../entities";
 
 interface Address {
   address?: string;
@@ -50,8 +51,10 @@ interface Address {
 }
 interface ContainerProps {
   [id: string]: any;
+  currentUser?: User;
 }
 const AddressContainer: React.FC<ContainerProps> = ({
+  currentUser,
   accionTrigger,
   currentAddress,
 }) => {
@@ -92,7 +95,8 @@ const AddressContainer: React.FC<ContainerProps> = ({
         .catch((error) => console.error("Error:", error));
     }
     fetchData();
-  }, [currentAddress]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     if (address) {
       let addressTemp: string = "";
@@ -187,6 +191,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                 <IonIcon color="primary" icon={mapOutline} slot="start" />
                 <IonLabel position="stacked">Ciudad</IonLabel>
                 <IonSelect
+                  disabled={currentUser?.roles.includes(config.RolAdminAccess)}
                   interface="popover"
                   color="dark"
                   placeholder={
@@ -247,7 +252,9 @@ const AddressContainer: React.FC<ContainerProps> = ({
                     }));
                   }}
                 >
-                  <IonSelectOption value="Conjunto">Apartamento</IonSelectOption>
+                  <IonSelectOption value="Conjunto">
+                    Apartamento
+                  </IonSelectOption>
                   <IonSelectOption value="Barrio">Casa</IonSelectOption>
                 </IonSelect>
               </IonItem>
@@ -339,7 +346,11 @@ const AddressContainer: React.FC<ContainerProps> = ({
                         onIonChange={(e: any) =>
                           setAddress((prevState: any) => ({
                             ...prevState,
-                            ...{ blockNumber: e.target.value?.trim().replace(/[^0-9]/gi, '') },
+                            ...{
+                              blockNumber: e.target.value
+                                ? e.target.value.toString().replace(/[^0-9]/gi, "")
+                                : "",
+                            },
                           }))
                         }
                       />
@@ -364,7 +375,11 @@ const AddressContainer: React.FC<ContainerProps> = ({
                         onIonChange={(e: any) =>
                           setAddress((prevState: any) => ({
                             ...prevState,
-                            ...{ homeNumber: e.target.value?.trim().replace(/[^0-9]/gi, '')  },
+                            ...{
+                              homeNumber: e.target.value
+                                ? e.target.value.toString().replace(/[^0-9]/gi, "")
+                                : "",
+                            },
                           }))
                         }
                       />
@@ -416,7 +431,13 @@ const AddressContainer: React.FC<ContainerProps> = ({
                           onIonChange={(e: any) => {
                             setAddress((prevState: any) => ({
                               ...prevState,
-                              ...{ number: e.target.value?.trim().replace(/[^A-Za-z ñ 0-9]/gi, '') },
+                              ...{
+                                number: e.target.value
+                                  ? e.target.value
+                                      ?.trim()
+                                      .replace(/[^A-Za-z ñ 0-9]/gi, "")
+                                  : "",
+                              },
                             }));
                           }}
                         />
@@ -466,7 +487,13 @@ const AddressContainer: React.FC<ContainerProps> = ({
                           onIonChange={(e: any) => {
                             setAddress((prevState: any) => ({
                               ...prevState,
-                              ...{ number2: e.target.value?.trim().replace(/[^A-Za-z ñ 0-9]/gi, '') },
+                              ...{
+                                number2: e.target.value
+                                  ? e.target.value
+                                      ?.trim()
+                                      .replace(/[^A-Za-z ñ 0-9]/gi, "")
+                                  : "",
+                              },
                             }));
                           }}
                         />
@@ -489,7 +516,13 @@ const AddressContainer: React.FC<ContainerProps> = ({
                           onIonChange={(e: any) => {
                             setAddress((prevState: any) => ({
                               ...prevState,
-                              ...{ number3: e.target.value?.trim().replace(/[^A-Za-z ñ 0-9]/gi, '') },
+                              ...{
+                                number3: e.target.value
+                                  ? e.target.value
+                                      ?.trim()
+                                      .replace(/[^A-Za-z ñ 0-9]/gi, "")
+                                  : "",
+                              },
                             }));
                           }}
                         />

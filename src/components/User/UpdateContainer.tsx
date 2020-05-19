@@ -23,6 +23,8 @@ import {
   cardOutline,
   bulbOutline,
   pushOutline,
+  businessOutline,
+  homeOutline,
 } from "ionicons/icons";
 import { HttpRequest } from "../../hooks/HttpRequest";
 import { Storages } from "../../hooks/Storage";
@@ -31,30 +33,35 @@ import { User } from "../../entities";
 import AddressContainer from "../Auth/AddressContainer";
 
 interface ContainerProps {
-  dataModal: any;
+  dataModal: User;
   triggerChange: any;
+  currentUser?: User;
 }
 
-const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
-  let body: any = {};
+const UpdateUser: React.FC<ContainerProps> = ({
+  dataModal,
+  triggerChange,
+  currentUser,
+}) => {
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState("");
   const [dataModall, setdataModall] = useState<User>(dataModal);
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [bodyChange, setbodyChange] = useState(false);
-  const handleValueChange = useCallback(
-    (property: string, value) => {
-      try {
-        if (value !== undefined || value !== "") {
-          setbodyChange(true);
-          body[property] = value;
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [body]
-  );
+  const [dataSend, setDataSend] = useState();
+  const handleValueChange = useCallback((property: string, value:any) => {
+    try {
+      setbodyChange(true);
+      let body: any = {};
+      body[property] = value;
+      setDataSend((prevState: any) => ({
+        ...prevState,
+        ...body,
+      }));
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
   const handleSubmit = useCallback(
     async (e: any) => {
       try {
@@ -68,7 +75,8 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
         } else {
           pathUrl = `${config.ProviderContext}/${dataModal._id}`;
         }
-        let data = body;
+        let data = dataSend;
+        console.log(data)
         if (!bodyChange) {
           setMessage("No se modifico ningun campo");
         } else {
@@ -78,7 +86,10 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
               setMessage("Actualizacion Exitosa");
               setbodyChange(false);
               setdataModall(response);
-              await setObject("user", response);
+              if(!currentUser){
+                await setObject("user", response);
+              }
+            
             })
             .catch((error) => {
               throw error;
@@ -93,7 +104,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
         console.error(e);
       }
     },
-    [dataModal.roles, dataModal._id, body, bodyChange]
+    [dataModal.roles, dataModal._id, dataSend, bodyChange, currentUser]
   );
   useEffect(() => {
     setdataModall(dataModal);
@@ -133,7 +144,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
                 required={true}
                 autocomplete="off"
                 type="email"
-                value={dataModall ? dataModall.email : ""}
+                value={dataSend?.email ? dataSend["email"] : dataModall?.email}
                 name="email"
                 onIonChange={(e: any) => {
                   handleValueChange(e.target.name, e.target.value);
@@ -152,10 +163,13 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
                 required={true}
                 autocomplete="off"
                 type="number"
-                value={dataModall ? dataModall.phone : ""}
+                value={dataSend?.phone ? dataSend["phone"] : dataModall?.phone}
                 name="phone"
                 onIonChange={(e: any) => {
-                  handleValueChange(e.target.name, Number(e.target.value?.trim().replace(/[^0-9]/gi, '')));
+                  handleValueChange(
+                    e.target.name,
+                    Number(e.target.value?.toString().replace(/[^0-9]/gi, ""))
+                  );
                 }}
               />
             </IonItem>
@@ -175,10 +189,17 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
                       required={true}
                       autocomplete="off"
                       type="text"
-                      value={dataModall ? dataModall.firstName : ""}
+                      value={
+                        dataSend?.firstName
+                          ? dataSend["firstName"]
+                          : dataModall?.firstName
+                      }
                       name="firstName"
                       onIonChange={(e: any) => {
-                        handleValueChange(e.target.name, e.target.value.replace(/[^A-Za-z ñ]/gi, ''));
+                        handleValueChange(
+                          e.target.name,
+                          e.target.value.replace(/[^A-Za-z ñ]/gi, "")
+                        );
                       }}
                     />
                   </IonItem>
@@ -203,10 +224,17 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
                       color="dark"
                       autocomplete="off"
                       type="text"
-                      value={dataModall ? dataModall.lastName : ""}
+                      value={
+                        dataSend?.lastName
+                          ? dataSend["lastName"]
+                          : dataModall?.lastName
+                      }
                       name="lastName"
                       onIonChange={(e: any) => {
-                        handleValueChange(e.target.name, e.target.value.replace(/[^A-Za-z ñ]/gi, ''));
+                        handleValueChange(
+                          e.target.name,
+                          e.target.value.replace(/[^A-Za-z ñ]/gi, "")
+                        );
                       }}
                     />
                   </IonItem>
@@ -222,57 +250,132 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
                   : false
               }
             >
-              <AddressContainer
-                currentAddress={
-                  dataModall
-                    ? {
-                        homeNumber: dataModall.homeNumber,
-                        blockNumber: dataModall.blockNumber,
-                        neighborhood: dataModall.neighborhood&&!dataModall.address?dataModall.neighborhood.firstName:'',
-                        uniquecode: dataModall.uniquecode,
-                        address: dataModall.address,
-                        city: dataModall.city,
+              {currentUser?.roles.includes(config.RolAdminAccess) ? (
+                <IonGrid>
+                  <IonRow>
+                    <IonCol>
+                      <IonItem>
+                        <IonIcon
+                          color="primary"
+                          icon={businessOutline}
+                          slot="start"
+                        />
+                        <IonLabel position="floating">Torre</IonLabel>
+                        <IonInput
+                          minlength={1}
+                          maxlength={3}
+                          color="dark"
+                          required={true}
+                          type="tel"
+                          name={"blockNumber"}
+                          value={
+                            dataSend?.blockNumber
+                              ? dataSend["blockNumber"]
+                              : dataModall?.blockNumber
+                          }
+                          onIonChange={(e: any) => {
+                            handleValueChange(
+                              e.target.name,
+                              e.target.value.toString().replace(/[^0-9]/gi, "")
+                            );
+                          }}
+                        />
+                      </IonItem>
+                    </IonCol>
+                    <IonCol>
+                      <IonItem>
+                        <IonIcon
+                          color="primary"
+                          icon={homeOutline}
+                          slot="start"
+                        />
+                        <IonLabel position="floating">Apartamento</IonLabel>
+                        <IonInput
+                          minlength={2}
+                          maxlength={6}
+                          color="dark"
+                          required={true}
+                          autocomplete="on"
+                          type="tel"
+                          name={"homeNumber"}
+                          value={
+                            dataSend?.homeNumber
+                              ? dataSend["homeNumber"]
+                              : dataModall?.homeNumber
+                          }
+                          onIonChange={(e: any) => {
+                            handleValueChange(
+                              e.target.name,
+                              e.target.value.toString().replace(/[^0-9]/gi, "")
+                            );
+                          }}
+                        />
+                      </IonItem>
+                    </IonCol>
+                  </IonRow>
+                </IonGrid>
+              ) : (
+                <AddressContainer
+                  currentAddress={
+                    dataModall
+                      ? {
+                          homeNumber: dataModall.homeNumber,
+                          blockNumber: dataModall.blockNumber,
+                          neighborhood:
+                            dataModall.neighborhood && !dataModall.address
+                              ? dataModall.neighborhood.firstName
+                              : "",
+                          uniquecode: dataModall.uniquecode,
+                          address: dataModall.address,
+                          city: dataModall.city,
+                        }
+                      : null
+                  }
+                  accionTrigger={(response: any) => {
+                    if (response.whereIlive) {
+                      if (response.city !== dataModall.city) {
+                        handleValueChange("city", response.city);
                       }
-                    : null
-                }
-                accionTrigger={(response: any) => {
-                  if (response.whereIlive) {
-                    if (response.city !== dataModall.city) {
-                      handleValueChange("city", response.city);
-                    }
-                    if (response.uniquecode !== dataModall.uniquecode) {
-                      handleValueChange("uniquecode", response.uniquecode);
-                    }
-                    if (
-                      response.homeNumber &&
-                      response.blockNumber &&
-                      response.whereIlive === "Conjunto"
-                    ) {
-                      if (response.homeNumber !== dataModall.homeNumber) {
-                        handleValueChange("homeNumber", response.homeNumber);
-                      }
-                      if (response.blockNumber !== dataModall.blockNumber) {
-                        handleValueChange("blockNumber", response.blockNumber);
+                      if (response.uniquecode !== dataModall.uniquecode) {
+                        handleValueChange("uniquecode", response.uniquecode);
                       }
                       if (
-                        response.neighborhoodId !== dataModall.neighborhood &&
-                        response.neighborhoodId
+                        response.homeNumber &&
+                        response.blockNumber &&
+                        response.whereIlive === "Conjunto"
                       ) {
-                        handleValueChange(
-                          "neighborhood",
+                        if (response.homeNumber !== dataModall.homeNumber) {
+                          handleValueChange("homeNumber", response.homeNumber);
+                        }
+                        if (response.blockNumber !== dataModall.blockNumber) {
+                          handleValueChange(
+                            "blockNumber",
+                            response.blockNumber
+                          );
+                        }
+                        if (
+                          response.neighborhoodId !== dataModall.neighborhood &&
                           response.neighborhoodId
-                        );
-                        handleValueChange("address", '');
+                        ) {
+                          handleValueChange(
+                            "neighborhood",
+                            response.neighborhoodId
+                          );
+                          handleValueChange("address", "");
+                        }
+                      }
+                      if (
+                        response.address &&
+                        response.whereIlive === "Barrio"
+                      ) {
+                        if (response.address !== dataModall.address) {
+                          handleValueChange("address", response.address);
+                        }
                       }
                     }
-                    if (response.address && response.whereIlive === "Barrio") {
-                      if (response.address !== dataModall.address) {
-                        handleValueChange("address", response.address);
-                      }
-                    }
-                  }
-                }}
-              ></AddressContainer>
+                  }}
+                ></AddressContainer>
+              )}
             </IonGrid>
             <IonItem>
               <IonIcon color="primary" icon={cardOutline} slot="start" />
@@ -282,24 +385,30 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
                 required={true}
                 autocomplete="off"
                 type="number"
-                value={dataModall ? dataModall.documentId : ""}
+                value={
+                  dataSend?.documentId
+                    ? dataSend["documentId"]
+                    : dataModall?.documentId
+                }
                 name="documentId"
                 onIonChange={(e: any) => {
-                  handleValueChange(e.target.name, Number(e.target.value.trim().replace(/[^0-9]/gi, '')));
+                  handleValueChange(
+                    e.target.name,
+                    Number(e.target.value.toString().replace(/[^0-9]/gi, ""))
+                  );
                 }}
               />
             </IonItem>
-            <IonItem
-              hidden={true
-              }
-            >
+            <IonItem hidden={currentUser?.roles.includes(config.RolAdminAccess)?false:true}>
               <IonIcon color="primary" icon={bulbOutline} slot="start" />
               <IonLabel>Habilitar usuario</IonLabel>
               <IonToggle
-                checked={dataModall ? dataModall.enabled : false}
+                checked={dataSend?.enabled!==undefined
+                  ? dataSend["enabled"]
+                  : dataModall?.enabled}
                 name="enabled"
                 onIonChange={(e: any) => {
-                  handleValueChange(e.target.name.toString(), e.detail.checked);
+                  handleValueChange(e.target.name, e.detail.checked);
                 }}
               />
             </IonItem>
@@ -330,7 +439,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal, triggerChange }) => {
               text: "Confirmar",
               handler: async () => {
                 try {
-                 triggerChange(true)
+                  triggerChange(true);
                 } catch (e) {
                   console.error("HomePage.handler: " + e);
                 }

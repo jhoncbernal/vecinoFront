@@ -22,10 +22,12 @@ import {
 import ChartsContainer from "./Dashboard/ChartsContainer";
 import config from "../config";
 import * as H from 'history';
+import { User } from "../entities";
 interface ContainerProps {
+  currentUser:User;
   history: H.History;
 }
-const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
+const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history,currentUser }) => {
   const [hiddenBar, setHiddenBar] = useState(false);
   const [loadData, setloadData] = useState(false);
   const [showAlert1, setShowAlert1] = useState(false);
@@ -147,6 +149,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history }) => {
           <>
             {segmentValue === "user" && hiddenBar ? (
               <ListContainer
+              currentUser={currentUser}
                 history={history}
                 loaddata={loadData}
                 inputs={usersArray}

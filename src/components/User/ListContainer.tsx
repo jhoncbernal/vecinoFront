@@ -25,13 +25,15 @@ import {
 } from "ionicons/icons";
 import UpdateUser from "./UpdateContainer";
 import * as H from 'history';
+import { User } from "../../entities";
 interface ContainerProps {
+  currentUser:User;
   loaddata: boolean;
   inputs: Array<any>;
   history:H.History;
 }
 
-const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs,history }) => {
+const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs,history,currentUser }) => {
   const dataModalIni: any = {};
   const [searchText, setSearchText] = useState("");
   const [data, setdata] = useState(inputs);
@@ -143,7 +145,7 @@ const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs,history }) =
                   isOpen={showModal}
                   animated={true}
                 >
-                  <UpdateUser dataModal={dataModal} triggerChange={(response:boolean)=>{response?history.go(0):console.error(response)}}></UpdateUser>
+                  <UpdateUser currentUser={currentUser} dataModal={dataModal} triggerChange={(response:boolean)=>{response?history.go(0):console.error(response)}}></UpdateUser>
                   <IonFab vertical="bottom" horizontal="start" slot="fixed">
                     <IonFabButton
                       onClick={() => setShowModal(false)}
