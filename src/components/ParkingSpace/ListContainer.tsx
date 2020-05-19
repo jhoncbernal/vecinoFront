@@ -112,7 +112,7 @@ const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs
       <IonIcon slot="end" icon={checkmarkCircle} />
       </IonButton>
         <IonModal isOpen={showModal2} animated={true}   onDidDismiss={(e) => setShowModal2(false)} >
-          <CreateContainer parkingType={parkingType}></CreateContainer>
+          <CreateContainer parkingType={parkingType} dataChange={(dat:boolean)=>{setShowModal(false);dataChanges(dat);setSearchText(''); setdata([{}])}}></CreateContainer>
           <IonFab vertical="bottom" horizontal="start" slot="fixed">
                     <IonFabButton onClick={() => {
                       setShowModal2(false); 

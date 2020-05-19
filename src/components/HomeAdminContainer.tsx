@@ -74,7 +74,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history,currentUser 
           setloadData(true);
         })
         .catch((error) => {
-          if (error.message.includes("404")) {
+          if (error.message.includes("404")||error.message.includes("parkingSpace")) {
             setHiddenBar(true);
             setloadData(true);
           } else {

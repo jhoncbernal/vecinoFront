@@ -25,9 +25,10 @@ import config from "../../config";
 
 interface ContainerProps {
   parkingType: string;
+  dataChange:any;
 }
 
-const CreateContainer: React.FC<ContainerProps> = ({ parkingType }) => {
+const CreateContainer: React.FC<ContainerProps> = ({ parkingType,dataChange }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [LVStart, setLVStart] = useState<string>("00:00");
   const [LVEnd, setLVEnd] = useState<string>("00:00");
@@ -81,7 +82,8 @@ const CreateContainer: React.FC<ContainerProps> = ({ parkingType }) => {
             setShowProgressBar(true);
             await HttpRequest(pathUrl, "POST", data, true)
               .then(async (response: any) => {
-                setMessage("Se creo Exitosamente el parqueadero");
+                if(response){
+                setMessage("Se creo Exitosamente el parqueadero");}
               })
               .catch(error => {
                 throw error;
@@ -254,7 +256,24 @@ const CreateContainer: React.FC<ContainerProps> = ({ parkingType }) => {
           header={"Actualizacion"}
           subHeader={"respuesta:"}
           message={message}
-          buttons={["OK"]}
+          buttons={[
+            {
+              text: "cancel",
+              handler: async () => {
+                if (!message.includes("No")) {
+                  dataChange(true);
+                }
+              },
+            },
+            {
+              text: "ok",
+              handler: async () => {
+                if (!message.includes("No")) {
+                  dataChange(true);
+                }
+              },
+            },
+          ]}
         />
       </IonContent>
     </>
