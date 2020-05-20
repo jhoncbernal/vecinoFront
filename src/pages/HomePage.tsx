@@ -87,7 +87,7 @@ export class Home extends React.Component<
   }
 
   renderSideMenu(roles: string) {
-    if (roles && roles.includes(config.RolProviderAccess)) {
+    if (roles && roles?.includes(config.RolProviderAccess)) {
       return (
         <SideMenuCar dataSide={this.state.pendingShoppingCar}></SideMenuCar>
       );
@@ -140,12 +140,12 @@ export class Home extends React.Component<
           </IonToolbar>
 
           {this.state.currentUser.roles ? (
-            this.state.currentUser.roles.includes(config.RolAdminAccess) ? (
+            this.state.currentUser.roles?.includes(config.RolAdminAccess) ? (
               <HomeAdminPageContainer
               currentUser={this.state.currentUser}
                 history={history}
               ></HomeAdminPageContainer>
-            ) : this.state.currentUser.roles.includes(
+            ) : this.state.currentUser.roles?.includes(
                 config.RolProviderAccess
               ) ? (
               <HomeProviderContainer

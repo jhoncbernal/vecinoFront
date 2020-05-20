@@ -5,15 +5,18 @@ import './ListContainer.css';
 import CreateContainer from './CreateContainer';
 import ChosePosition from './ChosePositionContainer';
 import * as H from 'history';
+import config from '../../config';
+import { User } from '../../entities';
 interface ContainerProps {
   parkingType: string;
   loaddata: boolean;
   inputs: Array<any>;
   history: H.History;
   dataChanges:any;
+  currentUser:User;
 }
 
-const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs, history,dataChanges }) => {
+const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs, history,dataChanges,currentUser }) => {
   const [searchText, setSearchText] = useState('');
   const [data, setdata] = useState([{}]);
   const [showModal, setShowModal] = useState(false);
@@ -107,7 +110,7 @@ const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs
         </>
       );
     } else {
-      return (<> <IonButton expand="block" hidden={!loaddata} onClick={() => { setShowModal2(true) }}>
+      return (<> <IonButton expand="block" hidden={!loaddata} onClick={() => { if(!currentUser.roles?.includes(config.RolSecurityAccess)){setShowModal2(true)} }}>
         Crear Parqueadero
       <IonIcon slot="end" icon={checkmarkCircle} />
       </IonButton>

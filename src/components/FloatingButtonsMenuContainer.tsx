@@ -27,7 +27,7 @@ import BestListContainer from "./User/BestListContainer";
 import { updateToken } from "../hooks/UpdateToken";
 import config from "../config";
 import { User } from "../entities";
-import * as H from 'history';
+import * as H from "history";
 import { logout } from "../hooks/Auth";
 interface ContainerProps {
   history: H.History;
@@ -51,9 +51,11 @@ const FloatingButtonsMenu: React.FC<ContainerProps> = ({
           </IonFabButton>
           <IonFabList side="bottom">
             {currentUser.roles ? (
-              currentUser.roles.includes(config.RolAdminAccess) ? (
+              currentUser.roles?.includes(config.RolAdminAccess) &&
+              !currentUser.roles?.includes(config.RolSecurityAccess) ? (
                 <>
                   <IonFabButton
+                    hidden={true}
                     color="primary"
                     onClick={() => {
                       setFabButtonValue("bestPoints");
@@ -71,9 +73,7 @@ const FloatingButtonsMenu: React.FC<ContainerProps> = ({
                   >
                     <IonIcon icon={documentTextSharp} />
                   </IonFabButton>
-                  <IonFabButton
-                    color="primary"
-                  >
+                  <IonFabButton color="primary">
                     <IonIcon
                       icon={cardSharp}
                       onClick={() => {
@@ -86,15 +86,15 @@ const FloatingButtonsMenu: React.FC<ContainerProps> = ({
               ) : null
             ) : null}
             <IonFabButton
-                    onClick={() => {
-                      setFabButtonValue("config");
-                      setShowModal(true);
-                      setdataModal(currentUser);
-                    }}
-                    color="primary"
-                  >
-                    <IonIcon icon={buildSharp} />
-                  </IonFabButton>
+              onClick={() => {
+                setFabButtonValue("config");
+                setShowModal(true);
+                setdataModal(currentUser);
+              }}
+              color="primary"
+            >
+              <IonIcon icon={buildSharp} />
+            </IonFabButton>
             <IonFabButton color="dark" onClick={() => setShowAlert(true)}>
               <IonIcon color="primary" icon={logOutSharp} />
             </IonFabButton>
@@ -132,7 +132,12 @@ const FloatingButtonsMenu: React.FC<ContainerProps> = ({
           {fabButtonValue === "document" ? (
             <FileFormPage history={history}></FileFormPage>
           ) : fabButtonValue === "config" ? (
-            <UpdateUser dataModal={dataModal} triggerChange={(response:boolean)=>{response?history.go(0):console.error(response)}}></UpdateUser>
+            <UpdateUser
+              dataModal={dataModal}
+              triggerChange={(response: boolean) => {
+                response ? history.go(0) : console.error(response);
+              }}
+            ></UpdateUser>
           ) : fabButtonValue === "bestPoints" ? (
             <BestListContainer dataModal={dataModal}></BestListContainer>
           ) : fabButtonValue === "payment" ? (

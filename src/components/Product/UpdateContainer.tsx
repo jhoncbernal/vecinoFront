@@ -57,7 +57,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
         const { setObject } = Storages();
         e.preventDefault();
         let pathUrl = `${config.AdminContext}/${dataModal._id}`;
-        if (dataModal.roles.includes("ROLE_USER_ACCESS")) {
+        if (dataModal.roles?.includes("ROLE_USER_ACCESS")) {
           pathUrl = `${config.UserContext}/${dataModal._id}`;
         } else {
           pathUrl = `${config.AdminContext}/${dataModal._id}`;
@@ -72,7 +72,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
               setMessage("Actualizacion Exitosa");
               setbodyChange(false);
               setdataModall(response);
-              if (!dataModal.roles.includes("ROLE_USER_ACCESS")) {
+              if (!dataModal.roles?.includes("ROLE_USER_ACCESS")) {
                 await setObject("user", response);
               }
             })
@@ -182,7 +182,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
                 <IonCol
                   hidden={
                     dataModall
-                      ? dataModal.roles.includes("ROLE_USER_ACCESS")
+                      ? dataModal.roles?.includes("ROLE_USER_ACCESS")
                         ? false
                         : true
                       : false
@@ -212,7 +212,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
             <IonGrid
               hidden={
                 dataModall
-                  ? dataModal.roles.includes("ROLE_USER_ACCESS")
+                  ? dataModal.roles?.includes("ROLE_USER_ACCESS")
                     ? false
                     : true
                   : false
@@ -278,7 +278,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
             <IonItem
               hidden={
                 dataModall
-                  ? dataModal.roles.includes("ROLE_USER_ACCESS")
+                  ? dataModal.roles?.includes("ROLE_USER_ACCESS")
                     ? false
                     : true
                   : false

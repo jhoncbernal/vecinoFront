@@ -68,9 +68,9 @@ const UpdateUser: React.FC<ContainerProps> = ({
         const { setObject } = Storages();
         e.preventDefault();
         let pathUrl = ``;
-        if (dataModal.roles.includes(config.RolUserAccess)) {
+        if (dataModal.roles?.includes(config.RolUserAccess)||dataModal.roles?.includes(config.RolSecurityAccess)) {
           pathUrl = `${config.UserContext}/${dataModal._id}`;
-        } else if (dataModal.roles.includes(config.RolAdminAccess)) {
+        } else if (dataModal.roles?.includes(config.RolAdminAccess)) {
           pathUrl = `${config.AdminContext}/${dataModal._id}`;
         } else {
           pathUrl = `${config.ProviderContext}/${dataModal._id}`;
@@ -206,7 +206,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
                 <IonCol
                   hidden={
                     dataModall
-                      ? dataModal.roles.includes("ROLE_USER_ACCESS")
+                      ? dataModal.roles?.includes("ROLE_USER_ACCESS")
                         ? false
                         : true
                       : false
@@ -243,13 +243,13 @@ const UpdateUser: React.FC<ContainerProps> = ({
             <IonGrid
               hidden={
                 dataModall
-                  ? dataModal.roles.includes(config.RolUserAccess)
+                  ? dataModal.roles?.includes(config.RolUserAccess)
                     ? false
                     : true
                   : false
               }
             >
-              {currentUser?.roles.includes(config.RolAdminAccess) ? (
+              {currentUser?.roles?.includes(config.RolAdminAccess) ? (
                 <IonGrid>
                   <IonRow>
                     <IonCol>
@@ -398,7 +398,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
                 }}
               />
             </IonItem>
-            <IonItem hidden={currentUser?.roles.includes(config.RolAdminAccess)?false:true}>
+            <IonItem hidden={currentUser?.roles?.includes(config.RolAdminAccess)?false:true}>
               <IonIcon color="primary" icon={bulbOutline} slot="start" />
               <IonLabel>Habilitar usuario</IonLabel>
               <IonToggle

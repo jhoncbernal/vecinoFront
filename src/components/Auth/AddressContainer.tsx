@@ -191,7 +191,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                 <IonIcon color="primary" icon={mapOutline} slot="start" />
                 <IonLabel position="stacked">Ciudad</IonLabel>
                 <IonSelect
-                  disabled={currentUser?.roles.includes(config.RolAdminAccess)}
+                  disabled={currentUser?.roles?.includes(config.RolAdminAccess)}
                   interface="popover"
                   color="dark"
                   placeholder={

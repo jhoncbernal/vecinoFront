@@ -6,7 +6,6 @@ import {
   IonCard,
   IonCardContent,
   IonAvatar,
-  IonToggle,
   IonRow,
   IonGrid,
   IonCol,
@@ -24,16 +23,22 @@ import {
   warningOutline,
 } from "ionicons/icons";
 import UpdateUser from "./UpdateContainer";
-import * as H from 'history';
+import * as H from "history";
 import { User } from "../../entities";
+import config from "../../config";
 interface ContainerProps {
-  currentUser:User;
+  currentUser: User;
   loaddata: boolean;
   inputs: Array<any>;
-  history:H.History;
+  history: H.History;
 }
 
-const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs,history,currentUser }) => {
+const ListContainer: React.FC<ContainerProps> = ({
+  loaddata,
+  inputs,
+  history,
+  currentUser,
+}) => {
   const dataModalIni: any = {};
   const [searchText, setSearchText] = useState("");
   const [data, setdata] = useState(inputs);
@@ -67,42 +72,43 @@ const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs,history,curr
             hidden={!loaddata}
           ></IonSearchbar>
 
-          {data.map((input: any, index) => {
+          {data.map((input: User, index) => {
+            if(!input?.roles?.includes(currentUser.uniquecode)){
+              return null
+            }
+            let debt = input.debt ? input.debt.toLocaleString() : 0;
             return (
               <IonCard key={index} id="card">
-                <IonCardHeader color={input.debt > 0 ? "danger" : "primary"}>
+                <IonCardHeader color={debt > 0 ? "danger" : "primary"}>
                   <IonTitle>
                     <strong>
                       T{input.blockNumber} {input.homeNumber}
-                      {input.debt > 0 ? "  ¡Usuario en mora!" : ""}
+                      {debt > 0 ? "  ¡Usuario en mora!" : ""}
                     </strong>
                   </IonTitle>
                 </IonCardHeader>
                 <IonCardContent
                   onClick={() => {
-                    setShowModal(true);
-                    setdataModal(input);
+                    if (!currentUser.roles?.includes(config.RolSecurityAccess)) {
+                      setShowModal(true);
+                      setdataModal(input);
+                    }
                   }}
                 >
                   <IonGrid>
-                    <IonItem>
-                      <IonLabel>Habilidar o deshabilitar usuario:</IonLabel>
-                      <IonToggle
-                        checked={input.enabled}
-                        onClick={() => setShowModal(true)}
-                      />
+                    <IonItem lines='none'>
+                      <IonLabel>Estado del usuario:</IonLabel>
+                      <IonText color={'steel'}>{input.enabled?"Activo":"Inactivo"}</IonText>
                     </IonItem>
                     <IonRow>
                       <IonCol>
-                        <IonItem>
+                        <IonItem lines='none'>
                           <IonAvatar slot="start">
                             <IonIcon
                               class="icon-avatar"
                               size="large"
-                              color={input.debt > 0 ? "danger" : "primary"}
-                              src={
-                                input.debt > 0 ? warningOutline : personOutline
-                              }
+                              color={debt > 0 ? "danger" : "primary"}
+                              src={debt > 0 ? warningOutline : personOutline}
                             />
                           </IonAvatar>
                           <IonLabel>
@@ -116,7 +122,7 @@ const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs,history,curr
                         </IonItem>
                       </IonCol>
                       <IonCol>
-                        <IonItem>
+                        <IonItem lines='none'>
                           <IonLabel>
                             <h2>{`Points:    ${input.points}`}</h2>
                             <h3>
@@ -140,24 +146,29 @@ const ListContainer: React.FC<ContainerProps> = ({ loaddata, inputs,history,curr
                     </IonItem>
                   </IonGrid>
                 </IonCardContent>
-                <IonModal
+              </IonCard>
+            );
+          })}
+           <IonModal
                   backdropDismiss={false}
                   isOpen={showModal}
                   animated={true}
                 >
-                  <UpdateUser currentUser={currentUser} dataModal={dataModal} triggerChange={(response:boolean)=>{response?history.go(0):console.error(response)}}></UpdateUser>
+                  <UpdateUser
+                    currentUser={currentUser}
+                    dataModal={dataModal}
+                    triggerChange={(response: boolean) => {
+                      response ? history.go(0) : console.error(response);
+                    }}
+                  ></UpdateUser>
                   <IonFab vertical="bottom" horizontal="start" slot="fixed">
                     <IonFabButton
-                      onClick={() => setShowModal(false)}
-                      routerLink="/home"
+                      onClick={() => {setShowModal(false)}}
                     >
                       <IonIcon icon={arrowBackOutline} />
                     </IonFabButton>
                   </IonFab>
                 </IonModal>
-              </IonCard>
-            );
-          })}
         </>
       );
     } else {

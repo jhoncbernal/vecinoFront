@@ -30,9 +30,9 @@ export const TermsCondContainer: React.FC<ContainerProps> = ({
     class='ion-float-right'
     onClick={async () => {
       let pathUrl = ``;
-      if (currentUser.roles.includes(config.RolUserAccess)) {
+      if (currentUser.roles?.includes(config.RolUserAccess)) {
         pathUrl = `${config.UserContext}/${currentUser._id}`;
-      } else if (currentUser.roles.includes(config.RolAdminAccess)) {
+      } else if (currentUser.roles?.includes(config.RolAdminAccess)) {
         pathUrl = `${config.AdminContext}/${currentUser._id}`;
       } else {
         pathUrl = `${config.ProviderContext}/${currentUser._id}`;

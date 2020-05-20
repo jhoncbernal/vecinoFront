@@ -158,6 +158,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history,currentUser 
               <ChartsContainer></ChartsContainer>
             ) : segmentValue === "Cars" ? (
               <ParkingListContainer
+              currentUser={currentUser}
               dataChanges={(change:boolean)=>{if(change){setRefresh(change)}}}
                 history={history}
                 parkingType={segmentValue}
@@ -166,6 +167,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history,currentUser 
               ></ParkingListContainer>
             ) :  segmentValue === "Motorcycles" ? (
               <ParkingListContainer
+              currentUser={currentUser}
               dataChanges={(change:boolean)=>{if(change){setRefresh(change)}}}
                 history={history}
                 parkingType={segmentValue}
@@ -174,6 +176,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history,currentUser 
               ></ParkingListContainer>
             ): segmentValue === "Bikes" ? (
               <ParkingListContainer
+              currentUser={currentUser}
               dataChanges={(change:boolean)=>{if(change){setRefresh(change)}}}
                 history={history}
                 parkingType={segmentValue}

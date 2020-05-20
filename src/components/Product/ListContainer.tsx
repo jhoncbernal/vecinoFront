@@ -152,7 +152,7 @@ const ListContainer: React.FC<ContainerProps> = ({
 
   useEffect(() => {
     setShowAlert(
-      provider.promoBanner && currentUser.roles.includes(config.RolUserAccess)
+      provider.promoBanner && currentUser.roles?.includes(config.RolUserAccess)
         ? true
         : false
     );
@@ -181,7 +181,7 @@ const ListContainer: React.FC<ContainerProps> = ({
   };
 
   const renderAddButton = () => {
-    if (currentUser.roles.includes(config.RolProviderAccess)) {
+    if (currentUser.roles?.includes(config.RolProviderAccess)) {
       return (
         <IonButton
           expand="full"
@@ -294,7 +294,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                           onClick={() => {
                             if (currentUser) {
                               if (
-                                currentUser.roles.includes(
+                                currentUser.roles?.includes(
                                   config.RolProviderAccess
                                 )
                               ) {
@@ -414,7 +414,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                             <IonItem
                             lines='none'
                               hidden={
-                                currentUser.roles.includes(
+                                currentUser.roles?.includes(
                                   config.RolProviderAccess
                                 )
                                   ? false
@@ -434,7 +434,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                           <div
                             className="ion-justify-content-center ion-margin-bottom"
                             hidden={
-                              currentUser.roles.includes(config.RolUserAccess)
+                              currentUser.roles?.includes(config.RolUserAccess)
                                 ? false
                                 : true
                             }
