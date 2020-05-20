@@ -125,7 +125,7 @@ export class SignUpPage extends React.Component<
     await HttpRequest(`${config.FileContext}/${this.state.params}`, "GET")
       .then((response: any) => {
         this.setState({ hiddenbar: true });
-        this.setState({ headerText: "Perfecto" });
+        this.setState({ headerText: "Bienvenido" });
         if (response) {
           console.log(response)
           this.setState({ paramsId: response?._id });
@@ -226,7 +226,12 @@ export class SignUpPage extends React.Component<
                   "se envio un correo de verificacion de cuenta a " +
                   response.emailResult.email.result.accepted[0],
               });
-            } else {
+            } else if(response?.userService?.enabled){
+              this.ClearState();
+              this.setState({ loginMessage: "Ya pudes ingresar a tu cuenta Vecinoo" });
+              ///username or email already exists
+            }else {
+              this.setState({ headerText: "Error" });
               this.setState({ loginMessage: response.message });
               console.error(response.message);
             }
@@ -545,7 +550,15 @@ export class SignUpPage extends React.Component<
               cssClass: "secondary",
             },
             {
-              text: "Confirmar"
+              text: "Confirmar",
+              handler: async () => {
+                try {
+                  if(this.state.headerText==='Perfecto')
+                  this.props.history.push("/login");
+                } catch (e) {
+                  console.error("HomePage.handler: " + e);
+                }
+              },
             },
           ]}
         />

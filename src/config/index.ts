@@ -16,7 +16,8 @@ const dev = {
   ProviderContext: "/provider",
   RolProviderAccess: "ROLE_PROVIDER_ACCESS",
   RolUserAccess: "ROLE_USER_ACCESS",
-  RolAdminAccess: "ROLE_ADMINISTRATION_ACCESS"
+  RolAdminAccess: "ROLE_ADMINISTRATION_ACCESS",
+  RolSecurityAccess: "ROLE_SECURITY"
 };
 
 const prod = {
@@ -37,7 +38,8 @@ const prod = {
   ProviderContext: "/provider",
   RolProviderAccess: "ROLE_PROVIDER_ACCESS",
   RolUserAccess: "ROLE_USER_ACCESS",
-  RolAdminAccess: "ROLE_ADMINISTRATION_ACCESS"
+  RolAdminAccess: "ROLE_ADMINISTRATION_ACCESS",
+  RolSecurityAccess: "ROLE_SECURITY"
 };
 
 const config = process.env.REACT_APP_STAGE === "prod" ? prod : dev;
