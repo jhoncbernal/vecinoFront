@@ -12,6 +12,7 @@ import {
   IonCol,
   IonIcon,
   IonBadge,
+  IonButton,
 } from "@ionic/react";
 import style from "./style.module.css";
 import { menuController } from "@ionic/core";
@@ -125,9 +126,16 @@ const PendingShoppingContainer: FC<componentData> = ({
                     <IonLabel position="stacked">
                       <p>Telefono:</p>
                     </IonLabel>
-                    <IonText>
-                      <small>{bill.user.phone}</small>
-                    </IonText>
+                    <IonButton
+                      color={"dark"}
+                      type="button"
+                      fill="clear"
+                      data-toggle="collapse"
+                      href={`https://api.whatsapp.com/send?phone=57${bill.user.phone}`}
+                      data-target="#landx-navigation"
+                    >
+                      {bill.user.phone}
+                    </IonButton>
                   </IonItem>
                 </IonCol>
               </IonRow>
@@ -177,7 +185,9 @@ const PendingShoppingContainer: FC<componentData> = ({
                         <IonLabel position="stacked">
                           <p>Cambio</p>
                         </IonLabel>
-                        <IonText>${bill.change?bill.change.toLocaleString():0}</IonText>
+                        <IonText>
+                          ${bill.change ? bill.change.toLocaleString() : 0}
+                        </IonText>
                       </IonItem>
                     </IonCol>
                     <IonCol
@@ -190,7 +200,10 @@ const PendingShoppingContainer: FC<componentData> = ({
                         <IonLabel position="stacked">
                           <p>Efectivo</p>
                         </IonLabel>
-                        <IonText>${bill.cashValue?bill.cashValue.toLocaleString():0}</IonText>
+                        <IonText>
+                          $
+                          {bill.cashValue ? bill.cashValue.toLocaleString() : 0}
+                        </IonText>
                       </IonItem>
                     </IonCol>
                   </>
