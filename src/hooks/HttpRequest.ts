@@ -10,10 +10,13 @@ export async function HttpRequest(
   authorization: boolean = false,
   headers: any = ""
 ) {
-  let jsonheader = {
+  let jsonheader:any = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
   };
+  if(method==='DELETE'){
+    jsonheader={};
+  }
   if (authorization) {
     const { getObject } = await Storages();
     const token: any = await getObject("token");
@@ -27,7 +30,7 @@ export async function HttpRequest(
   }
 
   let url = `${config.BASE_URL}${config.API_VERSION}${pathUrl}`;
-
+  
   const options = {
     url: url,
     method: method,
@@ -37,11 +40,12 @@ export async function HttpRequest(
   if (method === "GET") {
     delete options.data;
   }
+  
   const result: any = async () => {
     try {
       return await Axios(options)
         .then((response: any) => {
-          if (response.status === 200) {
+          if (response.status !== 500) {
             return response.data;
           } else {
             const err = new Error();

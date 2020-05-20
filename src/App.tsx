@@ -7,7 +7,7 @@ import {
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
-  IonTabs
+  IonTabs,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { ellipse, square, triangle } from "ionicons/icons";
@@ -43,9 +43,14 @@ const App: React.FC = () => {
           <IonRouterOutlet>
             <Route path="/login" component={LoginPage} exact={true} />
             <Route path="/signup" component={SignUpPage} exact={true} />
+            <Route path="/signup/:id" component={SignUpPage} exact={true} />
             <Route path="/recover" component={RecoveryPage} />
             <Route path="/home" component={HomePage} exact={true} />
-            <Route path="/PrivacyPolicy" component={PrivacyPolicy} exact={true} />
+            <Route
+              path="/PrivacyPolicy"
+              component={PrivacyPolicy}
+              exact={true}
+            />
             <Route
               path="/"
               render={() => <Redirect to="/login" />}
