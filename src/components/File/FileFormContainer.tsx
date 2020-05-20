@@ -15,6 +15,9 @@ import {
   IonCardHeader,
   IonCardContent,
   IonText,
+  IonSegmentButton,
+  IonSegment,
+  IonTitle,
 } from "@ionic/react";
 import { documentTextOutline } from "ionicons/icons";
 import axios from "axios";
@@ -26,6 +29,7 @@ export class FileFormPage extends React.Component<
     showToast1: boolean;
     message: string;
     hiddenbar: boolean;
+    segmentValue: string;
   }
 > {
   constructor(props: any) {
@@ -35,6 +39,7 @@ export class FileFormPage extends React.Component<
       showToast1: false,
       message: "",
       hiddenbar: true,
+      segmentValue: "",
     };
   }
 
@@ -55,14 +60,22 @@ export class FileFormPage extends React.Component<
         "Access-Control-Allow-Origin": "*",
         encType: "multipart/form-data",
       };
-      let url = `${config.BASE_URL}${config.API_VERSION}/file`;
+      let url;
+      if (this.state.segmentValue === "cartera") {
+        url = `${config.BASE_URL}${config.API_VERSION}/${config.FileContext}`;
+      } else {
+        url = `${config.BASE_URL}${config.API_VERSION}/${config.FileContext}/FileUsers`;
+      }
+
       const data = new FormData();
       data.append("file", this.state.file);
       await axios
         .post(url, data, { headers: header })
         .then((response: any) => {
           if (response.status === 200) {
-            this.setState({ message: "Cartera actualizada" });
+            this.setState({
+              message: `los datos de ${this.state.segmentValue} fueron actualizados`,
+            });
             this.setState({ hiddenbar: true });
             this.setState({ showToast1: true });
           } else {
@@ -102,43 +115,69 @@ export class FileFormPage extends React.Component<
           <form onSubmit={(e) => this.handleSubmit(e)} action="post">
             <IonCard class="card-center">
               <IonCardHeader>
-                <h3> Actualizar cartera</h3>
+                <IonTitle class="ion-text-center">Actualizar</IonTitle>
+                <IonLabel
+                  hidden={!!this.state.segmentValue}
+                  class="ion-text-center"
+                >
+                  Seleccion un campo:
+                </IonLabel>
+                <IonSegment
+                  onIonChange={(e: any) => {
+                    this.setState({ segmentValue: e.target.value });
+                  }}
+                  value={this.state.segmentValue}
+                >
+                  <IonSegmentButton value={"cartera"}>cartera</IonSegmentButton>
+                  <IonSegmentButton value={"usuarios"}>
+                    usuarios
+                  </IonSegmentButton>
+                </IonSegment>
               </IonCardHeader>
-              <IonCardContent>
-                <IonText color="primary">
-                  <h3>
-                    Por favor agrege el documento con la cartera actualizada
-                  </h3>
-                </IonText>
-                <IonItem>
-                  <IonLabel color="dark" position="stacked">
-                    Documento excel:
-                  </IonLabel>
-                  <IonIcon
-                    color="primary"
-                    icon={documentTextOutline}
-                    slot="start"
-                  />
 
-                  <input
-                    color="dark"
-                    required={true}
-                    name="file"
-                    type="file"
-                    accept="*.xlsx"
-                    onChange={(file: any) =>
-                      this.setState({ file: file.target.files[0] })
-                    }
-                  />
-                </IonItem>
-              </IonCardContent>
+              {this.state.segmentValue ? (
+                <IonCardContent>
+                  <IonText color="primary">
+                    <h3>
+                      {`Por favor agrege el documento con los datos de ${this.state.segmentValue} actualizados`}
+                    </h3>
+                  </IonText>
+                  <IonItem lines='none' >
+                    <IonLabel color="dark" position="stacked" >
+                      Documento excel:
+                    </IonLabel>
+                    <IonIcon
+                      color={this.state.file?'success':'primary'}
+                      icon={documentTextOutline}
+                      slot="start"
+                    />
+                    <div className="ion-magin">
+                      <input
+                      required={true}
+                        type="file"
+                        className="custom-file-input "
+                        id="customFile"
+                        accept="*.xlsx"
+                        onChange={(file: any) =>
+                          this.setState({ file: file.target.files[0] })
+                        }
+                      />
+                    </div>
+                  </IonItem>
+
+                </IonCardContent>
+              ) : null}
               <IonProgressBar
                 hidden={this.state.hiddenbar}
                 type="indeterminate"
               ></IonProgressBar>
               <br />
             </IonCard>
-            <IonButton class="btn-login" type="submit">
+            <IonButton
+              disabled={!this.state.file}
+              class="btn-login"
+              type="submit"
+            >
               Subir
             </IonButton>
           </form>
