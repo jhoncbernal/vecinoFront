@@ -207,7 +207,21 @@ const PendingShoppingContainer: FC<componentData> = ({
                       </IonItem>
                     </IonCol>
                   </>
-                ) : null}
+                ) : (
+                  <IonCol
+                    size-xs="6"
+                    size-md="3"
+                    size-lg="2"
+                    hidden={bill.cashValue <= 0}
+                  >
+                    <IonItem lines="none">
+                      <IonLabel position="stacked">
+                        <p>Metodo de pago</p>
+                      </IonLabel>
+                      <IonText>{bill.MethodOfPayment}</IonText>
+                    </IonItem>
+                  </IonCol>
+                )}
                 <IonCol size-xs="6" size-md="3" size-lg="2">
                   <IonItem lines="none">
                     <IonLabel position="stacked">
