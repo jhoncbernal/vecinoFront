@@ -1,7 +1,7 @@
 const dev = {
   API_VERSION: "/v1/api",
   BASE_URL: "http://localhost:4000",
-  AdminContext: "admin",
+  AdminContext: "/admin",
   AllNeighborhoodsContext: "/admin/names/1",
   AuthSignUp: "/auth/signup",
   FileUploadImageContext: "/file/images/upload",
