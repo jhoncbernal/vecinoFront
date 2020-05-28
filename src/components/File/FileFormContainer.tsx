@@ -174,7 +174,7 @@ export class FileFormPage extends React.Component<
               <br />
             </IonCard>
             <IonButton
-              disabled={!this.state.file}
+              disabled={!this.state.file||!this.state.hiddenbar}
               class="btn-login"
               type="submit"
             >

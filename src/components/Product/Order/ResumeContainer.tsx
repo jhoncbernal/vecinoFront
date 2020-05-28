@@ -266,21 +266,21 @@ if(tomorrowschedule.length>0){
               }
               }}
             >
-              <IonSelectOption>
+              <IonSelectOption disabled={openHourTomorrow===0}>
                 {today.getHours() < openHour - 2
                   ?((openHour!==0)?`Hoy de ${openHour}:00  a ${openHour + 1}:00 `:'Cerrado')
                   : (openHourTomorrow!==0)?`${tomorrow} de ${openHourTomorrow}:00  a ${
                       openHourTomorrow + 1
                     }:00 `:`El ${tomorrow} no abrimos`}
               </IonSelectOption>
-              <IonSelectOption>
+              <IonSelectOption disabled={openHourTomorrow===0}>
                 {today.getHours() < openHour + 4
                   ? ((openHour!==0)?`Hoy de ${openHour + 4}:00  a ${openHour + 5}:00 `:'Cerrado')
                   : (openHourTomorrow!==0)?`${tomorrow} de ${openHourTomorrow + 4}:00  a ${
                       openHourTomorrow + 5
                     }:00 `:`El ${tomorrow} no abrimos`}
               </IonSelectOption>
-              <IonSelectOption>
+              <IonSelectOption disabled={openHourTomorrow===0}>
                 {today.getHours() < closeHour - 2
                   ?((openHour!==0)? `Hoy de ${closeHour - 1}:00  a ${closeHour}:00 `:'Cerrado')
                   : (openHourTomorrow!==0)?`${tomorrow} de ${
