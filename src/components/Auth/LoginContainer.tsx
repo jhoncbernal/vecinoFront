@@ -268,7 +268,7 @@ export class LoginPage extends React.Component<
               Quiero registrarme
               <IonIcon slot ='start' src={personAddOutline}></IonIcon>
             </IonButton>
-            <IonButton   type="button" fill='clear' data-toggle="collapse" href="https://api.whatsapp.com/send?phone=573204485942"
+            <IonButton   type="button" fill='clear' data-toggle="collapse" target='_blank' href="https://api.whatsapp.com/send?phone=573204485942"
             data-target="#landx-navigation"> 
             Contactanos <IonIcon slot ='start' src={helpBuoyOutline}></IonIcon></IonButton>
           </div>

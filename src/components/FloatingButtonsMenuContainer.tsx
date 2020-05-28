@@ -96,7 +96,7 @@ const FloatingButtonsMenu: React.FC<ContainerProps> = ({
             >
               <IonIcon icon={buildSharp} />
             </IonFabButton>
-            <IonFabButton   color="primary" type="button"  data-toggle="collapse" href="https://api.whatsapp.com/send?phone=573204485942"
+            <IonFabButton   color="primary" type="button"  data-toggle="collapse"target='_blank' href="https://api.whatsapp.com/send?phone=573204485942"
             data-target="#landx-navigation"> <IonIcon src={helpBuoy}></IonIcon></IonFabButton>
             <IonFabButton color="dark"  onClick={() => setShowAlert(true)}>
               <IonIcon color="primary" icon={logOutSharp} />

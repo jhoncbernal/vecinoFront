@@ -133,6 +133,8 @@ const PendingShoppingContainer: FC<componentData> = ({
                       data-toggle="collapse"
                       href={`https://api.whatsapp.com/send?phone=57${bill.user.phone}`}
                       data-target="#landx-navigation"
+                      routerDirection='none'
+                      target='_blank'
                     >
                       {bill.user.phone}
                     </IonButton>
