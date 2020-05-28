@@ -236,13 +236,14 @@ const ListContainer: React.FC<ContainerProps> = ({
               }
             >
               <IonFabButton
+              color="secondary"
                 ion-menu-toggle={showPopover}
                 onClick={() => {
                   setShowPopover(true);
                 }}
               >
                 <IonIcon icon={cart} />
-                <IonBadge color="primary">
+                <IonBadge color="secondary">
                   {flagRefresh
                     ? Object.keys(shoppingCart).length
                     : Object.keys(shoppingCart).length}
