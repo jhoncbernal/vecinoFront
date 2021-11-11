@@ -32,6 +32,7 @@ import * as H from "history";
 import { login, setFingerLogin, getFingerLogin } from "../../hooks/Auth";
 import { witchDevice } from "../../hooks/WitchDevice";
 import { push } from "../../hooks/Push";
+import { constants } from "../../hooks/Constants";
 
 const notifications = [
   { id: "id", title: "Test Push", body: "This is my first push notification" },
@@ -261,16 +262,25 @@ export class LoginPage extends React.Component<
               </IonButton>
             ) : null}
             <IonButton class="btn-auth" routerLink="/recover">
-              ¿Olvidaste tu usuario o contraseña?
-              <IonIcon slot ='start' src={helpCircleOutline}></IonIcon>
+              {constants.FORGOT_PASSWORD}
+              <IonIcon slot="start" src={helpCircleOutline}></IonIcon>
             </IonButton>
             <IonButton class="btn-auth" routerLink="/signup">
-              Quiero registrarme
-              <IonIcon slot ='start' src={personAddOutline}></IonIcon>
+              {constants.SIGN_UP}
+              <IonIcon slot="start" src={personAddOutline}></IonIcon>
             </IonButton>
-            <IonButton   type="button" fill='clear' data-toggle="collapse" target='_blank' href="https://api.whatsapp.com/send?phone=573204485942"
-            data-target="#landx-navigation"> 
-            Contactanos <IonIcon slot ='start' src={helpBuoyOutline}></IonIcon></IonButton>
+            <br/>
+            <IonButton
+              type="button"
+              fill="clear"
+              data-toggle="collapse"
+              target="_blank"
+              href="https://api.whatsapp.com/send?phone=573204485942"
+              data-target="#landx-navigation"
+            >
+              {constants.CONTACT_US}
+              <IonIcon slot="start" src={helpBuoyOutline}></IonIcon>
+            </IonButton>
           </div>
         </IonContent>
       </>

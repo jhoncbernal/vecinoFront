@@ -20,7 +20,6 @@ import { User } from "../entities";
 import { timeOutline } from "ionicons/icons";
 import { refByIdFirebase } from "../config/firebase";
 import { createLocalNotification } from "../hooks/LocalNotification";
-import {language} from "../hooks/Language";
 interface ContainerProps {
   history: H.History;
   currentUser: User;
@@ -40,7 +39,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
   const [segmentValue, setSegmentValue] = useState<any>("provider");
   const [pending, setPending] = useState(0);
   const httpRequest = useCallback(async () => {
- console.log(language);
+
     try {
       let pathUrl;
       if (segmentValue === "provider") {
