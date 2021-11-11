@@ -1,5 +1,8 @@
 {
   "FORGOT_PASSWORD": "I forgot my password",
   "SIGN_UP": "Sign up",
-  "CONTACT_US": "Contact us"
+  "CONTACT_US": "Contact us",
+  "LOG_IN": "log in",
+  "PASSWORD": "password",
+  "USER_NAME": "username or email"
 }

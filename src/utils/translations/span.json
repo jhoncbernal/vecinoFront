@@ -1,5 +1,8 @@
 {
   "FORGOT_PASSWORD": "¿Olvidaste tu usuario o contraseña?",
   "SIGN_UP": "Quiero registrarme",
-  "CONTACT_US": "Contáctenos"
+  "CONTACT_US": "Contáctenos",
+  "LOG_IN": "Ingresar",
+  "PASSWORD": "Contraseña",
+  "USER_NAME": "Usuario o email"
 }
