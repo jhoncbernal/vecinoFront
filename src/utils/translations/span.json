@@ -27,5 +27,15 @@
     "Papelería",
     "Alimentos para mascotas",
     "Productos limpieza"
-  ]
+  ],
+  "DAYS_OF_WEEK": [
+    "domingo",
+    "lunes",
+    "martes",
+    "miercoles",
+    "jueves",
+    "viernes",
+    "sabado"
+  ],
+  "TIPS": [0, 1000, 2000]
 }

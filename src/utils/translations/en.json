@@ -42,5 +42,15 @@
     "Sunday"
   ],
   "USER_TAB": "User",
-  "COMPANY_TAB": "Company"
+  "COMPANY_TAB": "Company",
+  "DAYS_OF_WEEK": [
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday"
+  ],
+  "TIPS": [0, 1, 5]
 }
