@@ -33,6 +33,7 @@ import { HttpRequest } from "../../hooks/HttpRequest";
 import config from "../../config";
 import * as H from "history";
 import AddressContainer from "./AddressContainer";
+import { constants } from "../../hooks/Constants";
 
 export class SignUpPage extends React.Component<
   { history: H.History },
@@ -260,7 +261,7 @@ export class SignUpPage extends React.Component<
             <IonCard class="home-card-center">
               <IonItem>
                 <IonIcon color="primary" icon={personOutline} slot="start" />
-                <IonLabel position="floating">Nombre de usuario</IonLabel>
+                <IonLabel position="floating">{constants.USER_NICK}</IonLabel>
                 <IonInput
                   min={"8"}
                   minlength={8}
@@ -281,7 +282,7 @@ export class SignUpPage extends React.Component<
               </IonItem>
               <IonItem>
                 <IonIcon color="primary" icon={mailOpenOutline} slot="start" />
-                <IonLabel position="floating">Email</IonLabel>
+                <IonLabel position="floating">{constants.EMAIL}</IonLabel>
                 <IonInput
                   minlength={8}
                   color="dark"
@@ -300,7 +301,7 @@ export class SignUpPage extends React.Component<
                   icon={phonePortraitOutline}
                   slot="start"
                 />
-                <IonLabel position="floating">Telefono</IonLabel>
+                <IonLabel position="floating">{constants.MOBILE}</IonLabel>
                 <IonInput
                   minlength={8}
                   maxlength={10}
@@ -317,7 +318,7 @@ export class SignUpPage extends React.Component<
                 />
               </IonItem>
               <IonGrid>
-                <IonLabel>Nombre completo</IonLabel>
+                <IonLabel>{constants.FUL_NAME}</IonLabel>
                 <IonRow>
                   <IonCol>
                     <IonItem>
@@ -326,7 +327,7 @@ export class SignUpPage extends React.Component<
                         icon={personOutline}
                         slot="start"
                       />
-                      <IonLabel position="floating">Nombre</IonLabel>
+                      <IonLabel position="floating">{constants.FIRST_NAME}</IonLabel>
                       <IonInput
                         min={"4"}
                         minlength={4}
@@ -354,7 +355,7 @@ export class SignUpPage extends React.Component<
                         icon={personOutline}
                         slot="start"
                       />
-                      <IonLabel position="floating">Apellido</IonLabel>
+                      <IonLabel position="floating">{constants.LAST_NAME}</IonLabel>
                       <IonInput
                         min={"4"}
                         minlength={4}
@@ -464,7 +465,7 @@ export class SignUpPage extends React.Component<
               </IonItem>
               <IonItem>
                 <IonIcon color="primary" icon={keyOutline} slot="start" />
-                <IonLabel position="floating">Contraseña</IonLabel>
+                <IonLabel position="floating">{constants.PASSWORD}</IonLabel>
                 <IonInput
                   min={"8"}
                   color="dark"
@@ -485,7 +486,7 @@ export class SignUpPage extends React.Component<
               ) : null}
               <IonItem>
                 <IonIcon color="primary" icon={keyOutline} slot="start" />
-                <IonLabel position="floating">Confirmar contraseña</IonLabel>
+                <IonLabel position="floating">{constants.CONFIRM_PASSWORD}</IonLabel>
                 <IonInput
                   color={
                     this.state.confirmpassword !== this.state.password &&
@@ -534,7 +535,7 @@ export class SignUpPage extends React.Component<
               class="btn-login"
               type="submit"
             >
-              Registrarse
+              {constants.SING_BOTTOM}
             </IonButton>
           </form>
 

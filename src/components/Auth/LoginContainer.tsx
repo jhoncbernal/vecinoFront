@@ -185,7 +185,7 @@ export class LoginPage extends React.Component<
             <IonCard class="card-center">
               <IonItem>
                 <IonIcon color="primary" icon={personOutline} slot="start" />
-                <IonLabel position="floating">Username o Email</IonLabel>
+                <IonLabel position="floating">{constants.USER_EMAIL}</IonLabel>
                 <IonInput
                   color="dark"
                   required={true}
@@ -200,7 +200,7 @@ export class LoginPage extends React.Component<
               </IonItem>
               <IonItem>
                 <IonIcon color="primary" icon={keyOutline} slot="start" />
-                <IonLabel position="floating">Contraseña</IonLabel>
+                <IonLabel position="floating">{constants.PASSWORD}</IonLabel>
                 <IonInput
                   color="dark"
                   required={true}
@@ -218,7 +218,7 @@ export class LoginPage extends React.Component<
               <IonItem lines="none">
                 <IonIcon color="primary" icon={bulbOutline} slot="start" />
                 <IonText color="steel">
-                  <small>Recordar usuario:</small>
+                  <small>{constants.REMEMBER_USER}</small>
                 </IonText>
                 <IonToggle
                   slot="end"
@@ -235,7 +235,7 @@ export class LoginPage extends React.Component<
               <br />
             </IonCard>
             <IonButton class="btn-login" type="submit">
-              Ingresar
+              {constants.LOG_IN}
             </IonButton>
           </form>
 

@@ -1,8 +1,21 @@
 {
+  "USER_EMAIL": "User or Email",
   "FORGOT_PASSWORD": "I forgot my password",
   "SIGN_UP": "Sign up",
   "CONTACT_US": "Contact us",
   "LOG_IN": "log in",
-  "PASSWORD": "password",
-  "USER_NAME": "username or email"
+  "PASSWORD": "Password",
+  "USER_NAME": "Username or Email",
+  "REMEMBER_USER": "Remember user",
+  "USER_NICK": "User",
+  "EMAIL": "Email",
+  "MOBILE": "Mobile",
+  "FULL_NAME": "Full name",
+  "FIRST_NAME": "First name",
+  "LAST_NAME": "Last name",
+  "CITY": "City",
+  "CONFIRM_PASSWORD": "Confirm password",
+  "SING_BOTTOM": "SING UP",
+  "UPDATE_PROFILE": "Update profile",
+  "UPDATE_BUTTOM": "UPDATE"
 }

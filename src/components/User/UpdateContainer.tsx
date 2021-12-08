@@ -31,6 +31,7 @@ import { Storages } from "../../hooks/Storage";
 import config from "../../config";
 import { User } from "../../entities";
 import AddressContainer from "../Auth/AddressContainer";
+import { constants } from "../../hooks/Constants";
 
 interface ContainerProps {
   dataModal: User;
@@ -112,7 +113,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
     <IonContent>
       <IonToolbar color="primary">
         <IonTitle>
-          <h1>Actualizar datos</h1>
+          <h1>{constants.UPDATE_PROFILE}</h1>
         </IonTitle>
       </IonToolbar>
       <>
@@ -125,7 +126,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
           <IonCard class="card-center">
             <IonItem>
               <IonIcon color="primary" icon={personOutline} slot="start" />
-              <IonLabel position="floating">Nombre de usuario</IonLabel>
+              <IonLabel position="floating">{constants.USER_NICK}</IonLabel>
               <IonInput
                 disabled
                 color="dark"
@@ -137,7 +138,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
             </IonItem>
             <IonItem>
               <IonIcon color="primary" icon={mailOpenOutline} slot="start" />
-              <IonLabel position="floating">Email</IonLabel>
+              <IonLabel position="floating">{constants.EMAIL}</IonLabel>
               <IonInput
                 color="dark"
                 required={true}
@@ -156,7 +157,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
                 icon={phonePortraitOutline}
                 slot="start"
               />
-              <IonLabel position="floating">Telefono</IonLabel>
+              <IonLabel position="floating">{constants.MOBILE}</IonLabel>
               <IonInput
                 color="dark"
                 required={true}
@@ -173,7 +174,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
               />
             </IonItem>
             <IonGrid>
-              <IonLabel>Nombre completo</IonLabel>
+              <IonLabel>{constants.FULL_NAME}</IonLabel>
               <IonRow>
                 <IonCol>
                   <IonItem>
@@ -182,7 +183,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
                       icon={personOutline}
                       slot="start"
                     />
-                    <IonLabel position="floating">Nombre</IonLabel>
+                    <IonLabel position="floating">{constants.FIRST_NAME}</IonLabel>
                     <IonInput
                       color="dark"
                       required={true}
@@ -218,7 +219,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
                       icon={personOutline}
                       slot="start"
                     />
-                    <IonLabel position="floating">Apellido</IonLabel>
+                    <IonLabel position="floating">{constants.LAST_NAME}</IonLabel>
                     <IonInput
                       color="dark"
                       autocomplete="off"
@@ -398,13 +399,21 @@ const UpdateUser: React.FC<ContainerProps> = ({
                 }}
               />
             </IonItem>
-            <IonItem hidden={currentUser?.roles?.includes(config.RolAdminAccess)?false:true}>
+            <IonItem
+              hidden={
+                currentUser?.roles?.includes(config.RolAdminAccess)
+                  ? false
+                  : true
+              }
+            >
               <IonIcon color="primary" icon={bulbOutline} slot="start" />
               <IonLabel>Habilitar usuario</IonLabel>
               <IonToggle
-                checked={dataSend?.enabled!==undefined
-                  ? dataSend["enabled"]
-                  : dataModall?.enabled}
+                checked={
+                  dataSend?.enabled !== undefined
+                    ? dataSend["enabled"]
+                    : dataModall?.enabled
+                }
                 name="enabled"
                 onIonChange={(e: any) => {
                   handleValueChange(e.target.name, e.detail.checked);
@@ -419,7 +428,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
           </IonCard>
           <IonButton class="btn-login" type="submit">
             <IonIcon icon={pushOutline} slot="start" />
-            Actualizar
+            {constants.UPDATE_BUTTOM}
           </IonButton>
         </form>
         <IonAlert
