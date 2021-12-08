@@ -218,7 +218,7 @@ export class SignUpPage extends React.Component<
           address: this.state.address + " ," + this.state.postalCode,
           documentId: this.state.documentId,
           uniquecode: this.state.uniquecode,
-          city: this.state.city + this.state.province,
+          city: this.state.city + " " + this.state.province,
 
           // city: this.state.city,
           acceptPolicity: this.state.privacyPolicy,
