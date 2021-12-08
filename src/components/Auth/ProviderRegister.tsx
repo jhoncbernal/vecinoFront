@@ -38,9 +38,7 @@ export const ProviderRegisterContainer: React.FC<ContainerProps> = ({
          const [subCategoryText, setSubCategoryText] = useState("");
          const [openAt, setOpenAt] = useState("");
          const [closeAt, setCloseAt] = useState("");
-         const [days, setDays] = useState<string[]>(
-           constants.SCHEDULE_DAYS_DATA
-         );
+         const [days, setDays] = useState<string[]>(constants.DAYS_OF_WEEK);
          const [schedule, setSchedule] = useState<
            { days: string[]; open: string; close: string }[]
          >([]);

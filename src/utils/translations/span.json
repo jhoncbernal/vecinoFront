@@ -29,13 +29,13 @@
     "Productos limpieza"
   ],
   "DAYS_OF_WEEK": [
-    "domingo",
-    "lunes",
-    "martes",
-    "miercoles",
-    "jueves",
-    "viernes",
-    "sabado"
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miercoles",
+    "Jueves",
+    "Viernes",
+    "Sabado"
   ],
   "TIPS": [0, 1000, 2000]
 }

@@ -32,25 +32,16 @@
   "SCHEDULE_ClOSE_LABEL": "Close at",
   "SCHEDULE_DAYS_LABEL": "Select the days",
   "SCHEDULE_CONFIRM": "Agregar",
-  "SCHEDULE_DAYS_DATA": [
+  "USER_TAB": "User",
+  "COMPANY_TAB": "Company",
+  "DAYS_OF_WEEK": [
+    "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
-    "Saturday",
-    "Sunday"
-  ],
-  "USER_TAB": "User",
-  "COMPANY_TAB": "Company",
-  "DAYS_OF_WEEK": [
-    "sunday",
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday"
+    "Saturday"
   ],
   "TIPS": [0, 1, 5]
 }
