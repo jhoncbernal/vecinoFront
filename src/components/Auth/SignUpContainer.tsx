@@ -58,6 +58,7 @@ export class SignUpPage extends React.Component<
     homeNumber: number | string;
     whereIlive: string;
     city: string;
+    province: string;
     country: string;
     documentId: number | string;
     privacyPolicy: boolean;
@@ -92,6 +93,7 @@ export class SignUpPage extends React.Component<
       homeNumber: "",
       whereIlive: "",
       city: "",
+      province:"",
       country: "",
       documentId: "",
       uniquecode: "",
@@ -213,11 +215,11 @@ export class SignUpPage extends React.Component<
           password: this.state.password,
           phone: this.state.phone,
           firstName: this.state.firstName,
-
+          address: this.state.address + " ," + this.state.postalCode,
           documentId: this.state.documentId,
           uniquecode: this.state.uniquecode,
-          city: "Toronto,ON",
-          address: this.state.address + " ," + this.state.postalCode,
+          city: this.state.city + this.state.province,
+
           // city: this.state.city,
           acceptPolicity: this.state.privacyPolicy,
         };
@@ -230,7 +232,7 @@ export class SignUpPage extends React.Component<
             ...data,
             ...{
               uniquecode:
-                "ONTO" +
+                this.state.province +this.state.city.slice(0, 2)+
                 this.state.firstName.slice(0, 3) +
                 Math.random().toString().slice(2, 5),
               paymentMethod: "efectivo",
@@ -556,6 +558,7 @@ export class SignUpPage extends React.Component<
                           componentRestrictions: { country: "ca" },
                         }}
                         onPlaceSelected={(place: any) => {
+                          console.log(place);
                           this.setState({
                             address: place.formatted_address,
                             postalCode:
@@ -564,15 +567,18 @@ export class SignUpPage extends React.Component<
                               ].long_name,
                             city:
                               place.address_components[
-                                place.address_components.length - 2
+                                place.address_components.length - 4
                               ].long_name,
                             country:
                               place.address_components[
-                                place.address_components.length - 4
+                                place.address_components.length - 2
                               ].long_name,
+                            province:
+                              place.address_components[
+                                place.address_components.length - 3
+                              ].short_name,
                           });
 
-                          console.log(place);
                         }}
                       />
                       {/*  <IonInput
