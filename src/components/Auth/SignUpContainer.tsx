@@ -355,7 +355,9 @@ export class SignUpPage extends React.Component<
                   <IonCol size-md="6" size-xs="12">
                     <IonItem>
                       <IonIcon color="primary" icon={keyOutline} slot="start" />
-                      <IonLabel position="floating">Contraseña</IonLabel>
+                      <IonLabel position="floating">
+                        {constants.PASSWORD}
+                      </IonLabel>
                       <IonInput
                         min={"8"}
                         color="dark"
@@ -381,7 +383,7 @@ export class SignUpPage extends React.Component<
                     <IonItem>
                       <IonIcon color="primary" icon={keyOutline} slot="start" />
                       <IonLabel position="floating">
-                        Confirmar contraseña
+                        {constants.CONFIRM_PASSWORD}
                       </IonLabel>
                       <IonInput
                         color={
@@ -417,7 +419,7 @@ export class SignUpPage extends React.Component<
                         icon={mailOpenOutline}
                         slot="start"
                       />
-                      <IonLabel position="floating">Email</IonLabel>
+                      <IonLabel position="floating">{constants.EMAIL}</IonLabel>
                       <IonInput
                         minlength={8}
                         color="dark"
@@ -438,7 +440,9 @@ export class SignUpPage extends React.Component<
                         icon={phonePortraitOutline}
                         slot="start"
                       />
-                      <IonLabel position="floating">Telefono</IonLabel>
+                      <IonLabel position="floating">
+                        {constants.MOBILE}
+                      </IonLabel>
                       <IonInput
                         minlength={8}
                         maxlength={10}
@@ -504,7 +508,9 @@ export class SignUpPage extends React.Component<
                         icon={personOutline}
                         slot="start"
                       />
-                      <IonLabel position="floating">{constants.LAST_NAME}</IonLabel>
+                      <IonLabel position="floating">
+                        {constants.LAST_NAME}
+                      </IonLabel>
                       <IonInput
                         min={"4"}
                         minlength={4}
@@ -578,7 +584,6 @@ export class SignUpPage extends React.Component<
                                 place.address_components.length - 3
                               ].short_name,
                           });
-
                         }}
                       />
                       {/*  <IonInput
@@ -677,7 +682,7 @@ export class SignUpPage extends React.Component<
               </IonItem>
               <IonItem>
                 <IonLabel>
-                  <a href="/PrivacyPolicy">Acepto las politica de privacidad</a>
+                  <a href="/PrivacyPolicy">{constants.ACCEPT_PRIVACE_POLICIES}</a>
                 </IonLabel>
                 <IonCheckbox
                   checked={this.state.privacyPolicy}

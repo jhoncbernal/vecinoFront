@@ -63,7 +63,7 @@ export const ProviderRegisterContainer: React.FC<ContainerProps> = ({
                ]);
              }
              setDays(
-               constants.SCHEDULE_DAYS_DATA.filter(
+               constants.DAYS_OF_WEEK.filter(
                  (day: string) => !days.includes(day)
                )
              );
@@ -229,7 +229,7 @@ export const ProviderRegisterContainer: React.FC<ContainerProps> = ({
                          <IonChip
                            onClick={(e: any) => {
                              if (days.length === 1) {
-                               setDays(constants.SCHEDULE_DAYS_DATA);
+                               setDays(constants.DAYS_OF_WEEK);
                              } else {
                                setDays(
                                  days.filter((item: string) => item !== day)

@@ -16,8 +16,8 @@
   "SING_BOTTOM": "SING UP",
   "UPDATE_PROFILE": "Update profile",
   "UPDATE_BUTTOM": "UPDATE",
-  "PASSWORD": "password",
-  "USER_NAME": "username or email",
+  "PASSWORD": "Password",
+  "USER_NAME": "Username or email",
   "SELECT_CATEGORY_LABEL": "Business category",
   "SELECT_CATEGORY_PLACEHOLDER": "Business category",
   "SCHEDULE_LABEL": "Business hours",
@@ -56,5 +56,6 @@
     "Friday",
     "Saturday"
   ],
-  "TIPS": [0, 1, 5]
+  "TIPS": [0, 1, 5],
+  "ACCEPT_PRIVACE_POLICIES": "I accept privacy policies"
 }

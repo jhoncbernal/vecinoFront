@@ -45,5 +45,6 @@
     "Viernes",
     "Sabado"
   ],
-  "TIPS": [0, 1000, 2000]
+  "TIPS": [0, 1000, 2000],
+  "ACCEPT_PRIVACE_POLICIES": "acepta politicas de privacidad"
 }
