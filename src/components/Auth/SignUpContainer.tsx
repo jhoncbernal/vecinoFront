@@ -545,7 +545,7 @@ export class SignUpPage extends React.Component<
                       />
                       <IonLabel position="stacked">Address</IonLabel>
                       <Autocomplete
-                        apiKey={"AIzaSyCrrN7RQ3KreBJ17ysmvwr2vc1vzeVK3mw"}
+                        apiKey={process.env.REACT_APP_GOOGLE_API}
                         style={{
                           width: "100%",
                           height: 40,
