@@ -109,8 +109,8 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
 
   return (
     <IonCard>
-      <IonToolbar class='ion-text-center'>
-  <IonTitle >{provider.category.toUpperCase()}</IonTitle>
+      <IonToolbar class="ion-text-center">
+        <IonTitle>{provider.category.toUpperCase()}</IonTitle>
         <IonButton
           slot="start"
           buttonType=""
@@ -193,6 +193,7 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
                 <label>Precio</label>
                 <IonInput
                   type="number"
+                  step="any"
                   required={true}
                   name="price"
                   value={product?.price}
