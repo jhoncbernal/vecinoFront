@@ -44,6 +44,7 @@ import {
   pushStatesUserFirebase,
 } from "../../../config/firebase";
 import * as H from "history";
+import { constants } from "../../../hooks/Constants";
 interface ContainerProps {
   history: H.History;
   closeModal: any;
@@ -65,37 +66,31 @@ const ResumeContainer: React.FC<ContainerProps> = ({
 }) => {
   const today: Date = new Date();
   const numDayOfWeek: number = today.getDay();
-  const daysOfWeek: Array<string> = [
-    "domingo",
-    "lunes",
-    "martes",
-    "miercoles",
-    "jueves",
-    "viernes",
-    "sabado",
-  ];
+  const daysOfWeek: Array<string> = constants.DAYS_OF_WEEK;
   const todayschedule: any = provider.schedule.filter((obj) =>
     obj.days.includes(daysOfWeek[numDayOfWeek])
   );
   let tomorrow: string = daysOfWeek[numDayOfWeek + 1];
-  if (daysOfWeek[numDayOfWeek] === daysOfWeek[daysOfWeek.length-1]) {
-    tomorrow =daysOfWeek[0];
+  if (daysOfWeek[numDayOfWeek] === daysOfWeek[daysOfWeek.length - 1]) {
+    tomorrow = daysOfWeek[0];
   }
   const tomorrowschedule: any = provider.schedule.filter((obj) =>
-    obj.days.includes(daysOfWeek[tomorrow === daysOfWeek[0]? 0 : numDayOfWeek + 1])
+    obj.days.includes(
+      daysOfWeek[tomorrow === daysOfWeek[0] ? 0 : numDayOfWeek + 1]
+    )
   );
-  let openHour: number =0;
-  let closeHour: number=0;
-  if(todayschedule.length>0){
- openHour = new Date(todayschedule[0].open).getHours() + 5;
- closeHour = new Date(todayschedule[0].close).getHours() + 5;
-}
-let openHourTomorrow: number =0;
-let closeHourTomorrow: number=0;
-if(tomorrowschedule.length>0){
-  openHourTomorrow = new Date(tomorrowschedule[0].open).getHours() + 5;
-  closeHourTomorrow = new Date(tomorrowschedule[0].close).getHours() + 5;
-}
+  let openHour: number = 0;
+  let closeHour: number = 0;
+  if (todayschedule.length > 0) {
+    openHour = new Date(todayschedule[0].open).getHours() + 5;
+    closeHour = new Date(todayschedule[0].close).getHours() + 5;
+  }
+  let openHourTomorrow: number = 0;
+  let closeHourTomorrow: number = 0;
+  if (tomorrowschedule.length > 0) {
+    openHourTomorrow = new Date(tomorrowschedule[0].open).getHours() + 5;
+    closeHourTomorrow = new Date(tomorrowschedule[0].close).getHours() + 5;
+  }
 
   const flagDeliveryRighNow: boolean =
     openHour <= today.getHours() && today.getHours() <= closeHour - 2;
@@ -103,7 +98,7 @@ if(tomorrowschedule.length>0){
   const [schedule, setSchedule] = useState<string>();
   const [cashValue, setCashValue] = useState<number>(0);
   const [address, setAddress] = useState<string>();
-  const [tip, setTip] = useState<string>("1000");
+  const [tip, setTip] = useState<string>("0");
   const [flagExtraCharge, setFlagExtraCharge] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -213,38 +208,46 @@ if(tomorrowschedule.length>0){
         <IonToolbar color={"white"}>
           <IonTitle color={"primary"}>Orden de compra</IonTitle>
         </IonToolbar>
-        
+
         <IonGrid>
           <IonRow>
-            <IonCol size={'10'}>
-              <IonItem lines='none'>
-            <IonLabel position='stacked'>Direccion donde se recibe:</IonLabel>
-              <IonIcon color="primary" icon={mapOutline} slot="start" />
-              <IonInput
-                disabled={!flagExtraCharge}
-                type={"text"}
-                value={address?address:
-                  currentUser.neighborhood.address === "NO APLICA"
-                    ? currentUser.address
-                    : `${currentUser.neighborhood.address} T${currentUser.blockNumber}Apt${currentUser.homeNumber}`
-                }
-                onIonChange={(e: any) => setAddress(e.target.value)}
-              />
+            <IonCol size={"10"}>
+              <IonItem lines="none">
+                <IonLabel position="stacked">
+                  Direccion donde se recibe:
+                </IonLabel>
+                <IonIcon color="primary" icon={mapOutline} slot="start" />
+                <IonInput
+                  disabled={!flagExtraCharge}
+                  type={"text"}
+                  value={
+                    address
+                      ? address
+                      : currentUser.neighborhood.address === "NO APLICA"
+                      ? currentUser.address
+                      : `${currentUser.neighborhood.address} T${currentUser.blockNumber}Apt${currentUser.homeNumber}`
+                  }
+                  onIonChange={(e: any) => setAddress(e.target.value)}
+                />
               </IonItem>
-              </IonCol>
-              <IonCol  size={'2'}>
-              <IonButton class="ion-float-right"  size="default" hidden={flagExtraCharge}
-              color={"secondary"}
-              onClick={() => {
-                if (!flagExtraCharge) {
-                  setShowAlert(true);
-                }
-              }}>
+            </IonCol>
+            <IonCol size={"2"}>
+              <IonButton
+                class="ion-float-right"
+                size="default"
+                hidden={flagExtraCharge}
+                color={"secondary"}
+                onClick={() => {
+                  if (!flagExtraCharge) {
+                    setShowAlert(true);
+                  }
+                }}
+              >
                 cambiar
               </IonButton>
-              </IonCol>
-              </IonRow>
-            </IonGrid>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
         <IonItemDivider>
           <IonItem>
             <IonIcon
@@ -259,33 +262,45 @@ if(tomorrowschedule.length>0){
               placeholder="En que horario desea su pedido"
               onIonChange={(e) => {
                 e.preventDefault();
-                if(!e.detail.value.includes("Cerrado")){
-                deliverySchedule(e.detail.value);
-              }else{
-                deliverySchedule('');
-              }
+                if (!e.detail.value.includes("Cerrado")) {
+                  deliverySchedule(e.detail.value);
+                } else {
+                  deliverySchedule("");
+                }
               }}
             >
-              <IonSelectOption disabled={openHourTomorrow===0}>
+              <IonSelectOption disabled={openHourTomorrow === 0}>
                 {today.getHours() < openHour - 2
-                  ?((openHour!==0)?`Hoy de ${openHour}:00  a ${openHour + 1}:00 `:'Cerrado')
-                  : (openHourTomorrow!==0)?`${tomorrow} de ${openHourTomorrow}:00  a ${
+                  ? openHour !== 0
+                    ? `Hoy de ${openHour}:00  a ${openHour + 1}:00 `
+                    : "Cerrado"
+                  : openHourTomorrow !== 0
+                  ? `${tomorrow} de ${openHourTomorrow}:00  a ${
                       openHourTomorrow + 1
-                    }:00 `:`El ${tomorrow} no abrimos`}
+                    }:00 `
+                  : `El ${tomorrow} no abrimos`}
               </IonSelectOption>
-              <IonSelectOption disabled={openHourTomorrow===0}>
+              <IonSelectOption disabled={openHourTomorrow === 0}>
                 {today.getHours() < openHour + 4
-                  ? ((openHour!==0)?`Hoy de ${openHour + 4}:00  a ${openHour + 5}:00 `:'Cerrado')
-                  : (openHourTomorrow!==0)?`${tomorrow} de ${openHourTomorrow + 4}:00  a ${
+                  ? openHour !== 0
+                    ? `Hoy de ${openHour + 4}:00  a ${openHour + 5}:00 `
+                    : "Cerrado"
+                  : openHourTomorrow !== 0
+                  ? `${tomorrow} de ${openHourTomorrow + 4}:00  a ${
                       openHourTomorrow + 5
-                    }:00 `:`El ${tomorrow} no abrimos`}
+                    }:00 `
+                  : `El ${tomorrow} no abrimos`}
               </IonSelectOption>
-              <IonSelectOption disabled={openHourTomorrow===0}>
+              <IonSelectOption disabled={openHourTomorrow === 0}>
                 {today.getHours() < closeHour - 2
-                  ?((openHour!==0)? `Hoy de ${closeHour - 1}:00  a ${closeHour}:00 `:'Cerrado')
-                  : (openHourTomorrow!==0)?`${tomorrow} de ${
+                  ? openHour !== 0
+                    ? `Hoy de ${closeHour - 1}:00  a ${closeHour}:00 `
+                    : "Cerrado"
+                  : openHourTomorrow !== 0
+                  ? `${tomorrow} de ${
                       closeHourTomorrow - 1
-                    }:00  a ${closeHourTomorrow}:00 `:`El ${tomorrow} no abrimos`}
+                    }:00  a ${closeHourTomorrow}:00 `
+                  : `El ${tomorrow} no abrimos`}
               </IonSelectOption>
               {flagDeliveryRighNow ? (
                 <IonSelectOption value="Ahora mismo">
@@ -346,15 +361,13 @@ if(tomorrowschedule.length>0){
             onIonChange={(e: any) => setTip(e.detail.value)}
             value={tip}
           >
-            <IonSegmentButton value="0">
-              <IonLabel>$0</IonLabel>
-            </IonSegmentButton>
-            <IonSegmentButton value="1000">
-              <IonLabel>$1,000</IonLabel>
-            </IonSegmentButton>
-            <IonSegmentButton value="2000">
-              <IonLabel>$2,000</IonLabel>
-            </IonSegmentButton>
+            {constants.TIPS.map((tip: string, index: number) => {
+              return (
+                  <IonSegmentButton key={index} value={tip}>
+              <IonLabel>${tip}</IonLabel>
+            </IonSegmentButton>)
+            })}
+            
           </IonSegment>
         </IonItem>
         <IonItem>

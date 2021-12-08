@@ -95,7 +95,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
         .catch((error) => console.error("Error:", error));
     }
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (address) {
@@ -186,7 +186,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
         <IonGrid>
           <IonLabel>Info de residencia</IonLabel>
           <IonRow>
-            <IonCol>
+            <IonCol size-md="6" size-xs="12">
               <IonItem>
                 <IonIcon color="primary" icon={mapOutline} slot="start" />
                 <IonLabel position="stacked">Ciudad</IonLabel>
@@ -218,9 +218,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                 </IonSelect>
               </IonItem>
             </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
+            <IonCol size-md="6" size-xs="12">
               <IonItem>
                 <IonIcon
                   color="primary"
@@ -271,7 +269,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                 </IonToolbar>
               ) : null}
               <IonRow>
-                <IonCol>
+                <IonCol size-md="4" size-xs="12">
                   <IonItem>
                     <IonIcon color="primary" icon={bookOutline} slot="start" />
                     <IonLabel position="stacked">
@@ -325,68 +323,74 @@ const AddressContainer: React.FC<ContainerProps> = ({
                     </IonSelect>
                   </IonItem>
                 </IonCol>
+
+                {address.whereIlive === "Conjunto" ? (
+                  <>
+                    <IonCol size-md="4" size-xs="12">
+                      <IonItem>
+                        <IonIcon
+                          color="primary"
+                          icon={businessOutline}
+                          slot="start"
+                        />
+                        <IonLabel position="floating">Torre</IonLabel>
+                        <IonInput
+                          minlength={1}
+                          maxlength={3}
+                          color="dark"
+                          required={true}
+                          type="tel"
+                          value={address.blockNumber}
+                          onIonChange={(e: any) =>
+                            setAddress((prevState: any) => ({
+                              ...prevState,
+                              ...{
+                                blockNumber: e.target.value
+                                  ? e.target.value
+                                      .toString()
+                                      .replace(/[^0-9]/gi, "")
+                                  : "",
+                              },
+                            }))
+                          }
+                        />
+                      </IonItem>
+                    </IonCol>
+                    <IonCol size-md="4" size-xs="12">
+                      <IonItem>
+                        <IonIcon
+                          color="primary"
+                          icon={homeOutline}
+                          slot="start"
+                        />
+                        <IonLabel position="floating">Apartamento</IonLabel>
+                        <IonInput
+                          minlength={2}
+                          maxlength={6}
+                          color="dark"
+                          required={true}
+                          autocomplete="on"
+                          type="tel"
+                          value={address.homeNumber}
+                          onIonChange={(e: any) =>
+                            setAddress((prevState: any) => ({
+                              ...prevState,
+                              ...{
+                                homeNumber: e.target.value
+                                  ? e.target.value
+                                      .toString()
+                                      .replace(/[^0-9]/gi, "")
+                                  : "",
+                              },
+                            }))
+                          }
+                        />
+                      </IonItem>
+                    </IonCol>
+                  </>
+                ) : null}
               </IonRow>
-              {address.whereIlive === "Conjunto" ? (
-                <IonRow>
-                  <IonCol>
-                    <IonItem>
-                      <IonIcon
-                        color="primary"
-                        icon={businessOutline}
-                        slot="start"
-                      />
-                      <IonLabel position="floating">Torre</IonLabel>
-                      <IonInput
-                        minlength={1}
-                        maxlength={3}
-                        color="dark"
-                        required={true}
-                        type="tel"
-                        value={address.blockNumber}
-                        onIonChange={(e: any) =>
-                          setAddress((prevState: any) => ({
-                            ...prevState,
-                            ...{
-                              blockNumber: e.target.value
-                                ? e.target.value.toString().replace(/[^0-9]/gi, "")
-                                : "",
-                            },
-                          }))
-                        }
-                      />
-                    </IonItem>
-                  </IonCol>
-                  <IonCol>
-                    <IonItem>
-                      <IonIcon
-                        color="primary"
-                        icon={homeOutline}
-                        slot="start"
-                      />
-                      <IonLabel position="floating">Apartamento</IonLabel>
-                      <IonInput
-                        minlength={2}
-                        maxlength={6}
-                        color="dark"
-                        required={true}
-                        autocomplete="on"
-                        type="tel"
-                        value={address.homeNumber}
-                        onIonChange={(e: any) =>
-                          setAddress((prevState: any) => ({
-                            ...prevState,
-                            ...{
-                              homeNumber: e.target.value
-                                ? e.target.value.toString().replace(/[^0-9]/gi, "")
-                                : "",
-                            },
-                          }))
-                        }
-                      />
-                    </IonItem>
-                  </IonCol>
-                </IonRow>
-              ) : (
+              {address.whereIlive !== "Conjunto" ? (
                 <>
                   <IonLabel position="stacked">Dirección</IonLabel>
                   <IonLabel position="stacked">
@@ -559,7 +563,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                     </IonCol>
                   </IonRow>
                 </>
-              )}
+              ) : null}
               <IonRow>
                 <IonCol size={"12"}>
                   <IonItem>

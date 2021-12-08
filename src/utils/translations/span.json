@@ -12,5 +12,38 @@
   "MOBILE": "Telefono",
   "FULL_NAME": "Nombre completo",
   "FIRST_NAME": "Nombre",
-  "LAST_NAME": "Apellido"
+  "LAST_NAME": "Apellido",
+  "SELECT_CATEGORY_LABEL": "Categoria",
+  "SELECT_CATEGORY_PLACEHOLDER": "Categoria ded Negocio",
+  "SCHEDULE": "horario de atención",
+  "CATEGORIES_LABEL": "Categorias de los productos",
+  "ADD_CATEGORIES_LABEL": "Agregar categorias",
+  "PAYMENT_METHOD": "Metodos de pago",
+  "LOGO": "Logo de la compañia",
+  "DELIVERY_CHARGE": "Gastos de domicilio",
+  "ERROR_DELIVERY_CHARGE": "Gastos de domicilio no pueden ser GRATIS",
+  "BUSINESS_CATEGORY": [
+    "Restaurante",
+    "Supermercado",
+    "Tienda",
+    "Carnicería",
+    "Droguería",
+    "Comidas Rápidas",
+    "Heladería",
+    "Cafetería",
+    "Panadería",
+    "Papelería",
+    "Alimentos para mascotas",
+    "Productos limpieza"
+  ],
+  "DAYS_OF_WEEK": [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miercoles",
+    "Jueves",
+    "Viernes",
+    "Sabado"
+  ],
+  "TIPS": [0, 1000, 2000]
 }

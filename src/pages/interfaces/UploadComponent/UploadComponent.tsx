@@ -9,6 +9,7 @@ interface componentData {
 }
 const UploadComponent: FC<componentData> = ({
   output,
+  signUp=false,
   srcInitial = "assets/icon/icon.png"
 }) => {
   const [urlImage, setUrlImage] = useState<string>();
@@ -29,15 +30,15 @@ useEffect(() => {
     const { getObject } = await Storages();
     let token: any = await getObject("token");
 
-    if (!token) {
+    if (!token && !signUp) {
       const err = new Error();
       err.message = "Sus credenciales vencieron";
       throw err;
     }
     let header = {
-      Authorization: token.obj,
+      Authorization: signUp?"":token.obj,
       "Access-Control-Allow-Origin": "*",
-      encType: "multipart/form-data"
+      encType: "multipart/form-data",
     };
     let url = `${config.BASE_URL}${config.API_VERSION}${config.FileUploadImageContext}`;
     const data = new FormData();

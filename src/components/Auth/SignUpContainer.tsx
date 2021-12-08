@@ -18,7 +18,11 @@ import {
   IonCheckbox,
   IonText,
   IonAlert,
+  IonHeader,
+  IonSegment,
+  IonSegmentButton,
 } from "@ionic/react";
+import Autocomplete from "react-google-autocomplete";
 import {
   mailOpenOutline,
   personOutline,
@@ -28,12 +32,16 @@ import {
   arrowBackOutline,
   businessOutline,
   homeOutline,
+  peopleOutline,
+  locationOutline,
 } from "ionicons/icons";
 import { HttpRequest } from "../../hooks/HttpRequest";
 import config from "../../config";
 import * as H from "history";
 import AddressContainer from "./AddressContainer";
+import { ProviderRegisterContainer } from "./ProviderRegister";
 import { constants } from "../../hooks/Constants";
+import { t } from "../../redux/actions/providerRegisterActions";
 
 export class SignUpPage extends React.Component<
   { history: H.History },
@@ -50,6 +58,8 @@ export class SignUpPage extends React.Component<
     homeNumber: number | string;
     whereIlive: string;
     city: string;
+    province: string;
+    country: string;
     documentId: number | string;
     privacyPolicy: boolean;
     uniquecode: string | undefined;
@@ -60,6 +70,10 @@ export class SignUpPage extends React.Component<
     params: string;
     paramsId: string;
     isOwner: boolean;
+    kind: string;
+    postalCode: string;
+    validPostalCode: boolean;
+    provider: any;
   }
 > {
   constructor(props: any) {
@@ -79,6 +93,8 @@ export class SignUpPage extends React.Component<
       homeNumber: "",
       whereIlive: "",
       city: "",
+      province:"",
+      country: "",
       documentId: "",
       uniquecode: "",
       showAlert: false,
@@ -89,7 +105,11 @@ export class SignUpPage extends React.Component<
       privacyPolicy: false,
       params: param ? param : "",
       paramsId: "",
-      isOwner:false
+      isOwner: false,
+      kind: "user",
+      postalCode: "",
+      validPostalCode: false,
+      provider: {},
     };
     if (param) {
       this.setData();
@@ -106,6 +126,7 @@ export class SignUpPage extends React.Component<
     this.setState({ blockNumber: "" });
     this.setState({ homeNumber: "" });
     this.setState({ documentId: "" });
+    this.setState({ kind: "user" });
     if (this.state.paramsId) {
       await HttpRequest(
         `${config.FileContext}/${this.state.paramsId}`,
@@ -128,20 +149,22 @@ export class SignUpPage extends React.Component<
         this.setState({ hiddenbar: true });
         this.setState({ headerText: "Bienvenido" });
         if (response) {
-          console.log(response)
+          console.log(response);
           this.setState({ paramsId: response?._id });
           this.setState({ username: response?.Correo.split("@")[0] });
           this.setState({ email: response?.Correo });
           this.setState({ phone: response?.Telefono });
           this.setState({ firstName: response?.Nombres });
           this.setState({ lastName: response?.Apellidos });
-          this.setState({ blockNumber: Number(response?.Torre)});
-          this.setState({ homeNumber: Number(response?.Apartamento)});
+          this.setState({ blockNumber: Number(response?.Torre) });
+          this.setState({ homeNumber: Number(response?.Apartamento) });
           this.setState({ documentId: response?.Identification });
           this.setState({ uniquecode: response?.Uniquecode });
-          this.setState({ isOwner: response?.Propietario==="si"?true:false });
+          this.setState({
+            isOwner: response?.Propietario === "si" ? true : false,
+          });
           this.setState({ city: response?.Ciudad });
-          this.setState({whereIlive:"Conjunto"});
+          this.setState({ whereIlive: "Conjunto" });
           this.setState({
             loginMessage:
               "Estas a un paso de finalizar tu registro, completa los espacios en blanco y da clic en el boton registrarse",
@@ -166,7 +189,7 @@ export class SignUpPage extends React.Component<
           loginMessage: "la confirmacion de contraseña no coincide",
         });
         this.setState({ showAlert: true });
-      } else if (!this.state.city) {
+      } /*  else if (!this.state.city) {
         this.setState({
           loginMessage: "Se debe seleccionar una ciudad",
         });
@@ -179,43 +202,70 @@ export class SignUpPage extends React.Component<
           loginMessage: "Se debe seleccionar un " + complement,
         });
         this.setState({ showAlert: true });
-      } else {
+      }  */ else {
         let pathUrl = `${config.AuthSignUp}`;
         let data = {
-          roles: [config.RolUserAccess],
+          roles: [
+            this.state.kind === "user"
+              ? config.RolUserAccess
+              : config.RolProviderAccess,
+          ],
           username: this.state.username,
           email: this.state.email,
           password: this.state.password,
           phone: this.state.phone,
           firstName: this.state.firstName,
-          lastName: this.state.lastName,
+          address: this.state.address + " ," + this.state.postalCode,
           documentId: this.state.documentId,
           uniquecode: this.state.uniquecode,
-          city: this.state.city,
+          city: this.state.city + " " + this.state.province,
+
+          // city: this.state.city,
           acceptPolicity: this.state.privacyPolicy,
         };
         if (this.state.paramsId) {
-          data.roles.push(this.state.uniquecode);
-          data={...data,...{isOwner:this.state.isOwner}}
+          // data.roles.push(this.state.uniquecode);
+          data = { ...data, ...{ isOwner: this.state.isOwner } };
         }
-        data =
-          this.state.whereIlive === "Conjunto"
-            ? {
-                ...data,
-                ...{
-                  blockNumber: this.state.blockNumber,
-                  homeNumber: this.state.homeNumber,
-                },
-              }
-            : {
-                ...data,
-                ...{
-                  address: this.state.address,
-                  blockNumber: 0,
-                  homeNumber: 0,
-                },
-              };
+        if (this.state.kind === "company") {
+          data = {
+            ...data,
+            ...{
+              uniquecode:
+                this.state.province +this.state.city.slice(0, 2)+
+                this.state.firstName.slice(0, 3) +
+                Math.random().toString().slice(2, 5),
+              paymentMethod: "efectivo",
+              billType: "Tax",
+              deliveryExtraCharge: 0,
+              schedule: this.state.provider.schedule,
+              categories: this.state.provider.subCategory,
+              deliveryCharge: this.state.provider.deliveryCharge,
+              category: this.state.provider.category,
+              urlImage: this.state.provider.urlImage,
+            },
+          };
+        } else {
+          data =
+            this.state.whereIlive === "Conjunto"
+              ? {
+                  ...data,
+                  ...{ lastName: this.state.lastName },
+                  ...{
+                    blockNumber: this.state.blockNumber,
+                    homeNumber: this.state.homeNumber,
+                  },
+                }
+              : {
+                  ...data,
+                  ...{
+                    blockNumber: 0,
+                    homeNumber: 0,
+                  },
+                };
+        }
         this.setState({ hiddenbar: false });
+
         await HttpRequest(pathUrl, "POST", data)
           .then((response: any) => {
             this.setState({ headerText: "Perfecto" });
@@ -227,11 +277,13 @@ export class SignUpPage extends React.Component<
                   "se envio un correo de verificacion de cuenta a " +
                   response.emailResult.email.result.accepted[0],
               });
-            } else if(response?.userService?.enabled){
+            } else if (response?.userService?.enabled) {
               this.ClearState();
-              this.setState({ loginMessage: "Ya pudes ingresar a tu cuenta Vecinoo" });
+              this.setState({
+                loginMessage: "Ya pudes ingresar a tu cuenta Vecinoo",
+              });
               ///username or email already exists
-            }else {
+            } else {
               this.setState({ headerText: "Error" });
               this.setState({ loginMessage: response.message });
               console.error(response.message);
@@ -259,6 +311,24 @@ export class SignUpPage extends React.Component<
           </IonItem>
           <form onSubmit={(e) => this.handleSubmit(e)} action="post">
             <IonCard class="home-card-center">
+              <IonSegment
+                value={this.state.kind}
+                onIonChange={(e) => {
+                  this.setState({
+                    kind: e.detail.value ? e.detail.value : "user",
+                  });
+                }}
+              >
+                <IonSegmentButton value="user" layout="icon-start">
+                  <IonIcon icon={personOutline} />
+                  <IonLabel> {constants.USER_TAB}</IonLabel>
+                </IonSegmentButton>
+                <IonSegmentButton value="company" layout="icon-start">
+                  <IonIcon icon={peopleOutline} />
+                  <IonLabel> {constants.COMPANY_TAB}</IonLabel>
+                </IonSegmentButton>
+              </IonSegment>
+
               <IonItem>
                 <IonIcon color="primary" icon={personOutline} slot="start" />
                 <IonLabel position="floating">{constants.USER_NICK}</IonLabel>
@@ -280,54 +350,129 @@ export class SignUpPage extends React.Component<
                   }}
                 />
               </IonItem>
-              <IonItem>
-                <IonIcon color="primary" icon={mailOpenOutline} slot="start" />
-                <IonLabel position="floating">{constants.EMAIL}</IonLabel>
-                <IonInput
-                  minlength={8}
-                  color="dark"
-                  required={true}
-                  autocomplete="on"
-                  type="email"
-                  value={this.state.email}
-                  onIonChange={(email: any) =>
-                    this.setState({ email: email.target.value })
-                  }
-                />
-              </IonItem>
-              <IonItem>
-                <IonIcon
-                  color="primary"
-                  icon={phonePortraitOutline}
-                  slot="start"
-                />
-                <IonLabel position="floating">{constants.MOBILE}</IonLabel>
-                <IonInput
-                  minlength={8}
-                  maxlength={10}
-                  color="dark"
-                  required={true}
-                  autocomplete="on"
-                  type="tel"
-                  value={this.state.phone}
-                  onIonChange={(phone: any) =>
-                    this.setState({
-                      phone: phone.target.value?.toString().trim().replace(/[^0-9]/gi, ""),
-                    })
-                  }
-                />
-              </IonItem>
               <IonGrid>
-                <IonLabel>{constants.FUL_NAME}</IonLabel>
                 <IonRow>
-                  <IonCol>
+                  <IonCol size-md="6" size-xs="12">
+                    <IonItem>
+                      <IonIcon color="primary" icon={keyOutline} slot="start" />
+                      <IonLabel position="floating">Contraseña</IonLabel>
+                      <IonInput
+                        min={"8"}
+                        color="dark"
+                        required={true}
+                        minlength={8}
+                        maxlength={12}
+                        name="password"
+                        type="password"
+                        value={this.state.password}
+                        onIonChange={(password: any) =>
+                          this.setState({ password: password.target.value })
+                        }
+                      />
+                    </IonItem>
+                    {this.state.confirmpassword !== this.state.password &&
+                    this.state.confirmpassword.length >= 8 ? (
+                      <IonText color="danger">
+                        La contraseña no coincide
+                      </IonText>
+                    ) : null}
+                  </IonCol>
+                  <IonCol size-md="6" size-xs="12">
+                    <IonItem>
+                      <IonIcon color="primary" icon={keyOutline} slot="start" />
+                      <IonLabel position="floating">
+                        Confirmar contraseña
+                      </IonLabel>
+                      <IonInput
+                        color={
+                          this.state.confirmpassword !== this.state.password &&
+                          this.state.confirmpassword.length >= 8
+                            ? "danger"
+                            : "dark"
+                        }
+                        required={true}
+                        min={"8"}
+                        minlength={8}
+                        maxlength={12}
+                        name="password2"
+                        type="password"
+                        value={this.state.confirmpassword}
+                        onIonChange={(confirmpassword: any) => {
+                          this.setState({
+                            confirmpassword: confirmpassword.target.value,
+                          });
+                        }}
+                      />
+                    </IonItem>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+              <IonGrid>
+                <IonLabel>Datos de contacto</IonLabel>
+                <IonRow>
+                  <IonCol size-md="6" size-xs="12">
+                    <IonItem>
+                      <IonIcon
+                        color="primary"
+                        icon={mailOpenOutline}
+                        slot="start"
+                      />
+                      <IonLabel position="floating">Email</IonLabel>
+                      <IonInput
+                        minlength={8}
+                        color="dark"
+                        required={true}
+                        autocomplete="on"
+                        type="email"
+                        value={this.state.email}
+                        onIonChange={(email: any) =>
+                          this.setState({ email: email.target.value })
+                        }
+                      />
+                    </IonItem>
+                  </IonCol>
+                  <IonCol size-md="6" size-xs="12">
+                    <IonItem>
+                      <IonIcon
+                        color="primary"
+                        icon={phonePortraitOutline}
+                        slot="start"
+                      />
+                      <IonLabel position="floating">Telefono</IonLabel>
+                      <IonInput
+                        minlength={8}
+                        maxlength={10}
+                        color="dark"
+                        required={true}
+                        autocomplete="on"
+                        type="tel"
+                        value={this.state.phone}
+                        onIonChange={(phone: any) =>
+                          this.setState({
+                            phone: phone.target.value
+                              ?.toString()
+                              .trim()
+                              .replace(/[^0-9]/gi, ""),
+                          })
+                        }
+                      />
+                    </IonItem>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+              <IonGrid>
+                <IonLabel>Full name</IonLabel>
+                <IonRow>
+                  <IonCol size-md="6" size-xs="12">
                     <IonItem>
                       <IonIcon
                         color="primary"
                         icon={personOutline}
                         slot="start"
                       />
-                      <IonLabel position="floating">{constants.FIRST_NAME}</IonLabel>
+                      <IonLabel position="floating">
+                        {this.state.kind !== "user" ? "Company " : null}Name{" "}
+                      </IonLabel>
                       <IonInput
                         min={"4"}
                         minlength={4}
@@ -348,7 +493,11 @@ export class SignUpPage extends React.Component<
                       />
                     </IonItem>
                   </IonCol>
-                  <IonCol>
+                  <IonCol
+                    size-md="6"
+                    size-xs="12"
+                    hidden={this.state.kind !== "user" ? true : false}
+                  >
                     <IonItem>
                       <IonIcon
                         color="primary"
@@ -361,7 +510,7 @@ export class SignUpPage extends React.Component<
                         minlength={4}
                         maxlength={20}
                         color="dark"
-                        required={true}
+                        required={this.state.kind === "user" ? true : false}
                         autocomplete="on"
                         type="text"
                         value={this.state.lastName}
@@ -378,54 +527,111 @@ export class SignUpPage extends React.Component<
                   </IonCol>
                 </IonRow>
               </IonGrid>
-              {this.state.params ? (
-                <IonGrid>
-                  <IonRow>
-                    <IonCol>
-                      <IonItem>
-                        <IonIcon
-                          color="primary"
-                          icon={businessOutline}
-                          slot="start"
-                        />
-                        <IonLabel position="floating">Torre</IonLabel>
-                        <IonInput
-                          disabled
-                          minlength={1}
-                          maxlength={3}
-                          color="dark"
-                          required={true}
-                          type="tel"
-                          name={"blockNumber"}
-                          value={this.state.blockNumber}
-                        />
-                      </IonItem>
-                    </IonCol>
-                    <IonCol>
-                      <IonItem>
-                        <IonIcon
-                          color="primary"
-                          icon={homeOutline}
-                          slot="start"
-                        />
-                        <IonLabel position="floating">Apartamento</IonLabel>
-                        <IonInput
-                          disabled
-                          minlength={2}
-                          maxlength={6}
-                          color="dark"
-                          required={true}
-                          autocomplete="on"
-                          type="tel"
-                          name={"homeNumber"}
-                          value={this.state.homeNumber}
-                        />
-                      </IonItem>
-                    </IonCol>
-                  </IonRow>
-                </IonGrid>
-              ) : (
-                <AddressContainer
+              {this.state.kind === "company" ? (
+                <ProviderRegisterContainer
+                  providerTrigger={(response: any) => {
+                    this.setState({ provider: response });
+                  }}
+                />
+              ) : null}
+              <IonGrid>
+                <IonRow>
+                  <IonCol size-md="6" size-xs="12">
+                    <IonItem lines="none">
+                      <IonIcon
+                        color="primary"
+                        icon={locationOutline}
+                        slot="start"
+                      />
+                      <IonLabel position="stacked">Address</IonLabel>
+                      <Autocomplete
+                        apiKey={"AIzaSyCrrN7RQ3KreBJ17ysmvwr2vc1vzeVK3mw"}
+                        style={{
+                          width: "100%",
+                          height: 40,
+                          border: "0px ",
+                        }}
+                        placeholder="Enter your address"
+                        debounce={500}
+                        options={{
+                          types: ["geocode"],
+                          componentRestrictions: { country: "ca" },
+                        }}
+                        onPlaceSelected={(place: any) => {
+                          console.log(place);
+                          this.setState({
+                            address: place.formatted_address,
+                            postalCode:
+                              place.address_components[
+                                place.address_components.length - 1
+                              ].long_name,
+                            city:
+                              place.address_components[
+                                place.address_components.length - 4
+                              ].long_name,
+                            country:
+                              place.address_components[
+                                place.address_components.length - 2
+                              ].long_name,
+                            province:
+                              place.address_components[
+                                place.address_components.length - 3
+                              ].short_name,
+                          });
+
+                        }}
+                      />
+                      {/*  <IonInput
+                        color={"dark"}
+                        required={true}
+                        autocomplete="on"
+                        type="text"
+                        value={this.state.address}
+                        onIonChange={(e: any) => {
+                          this.setState({
+                            address: e.target.value,
+                          });
+                        }}
+                      /> */}
+                    </IonItem>
+                  </IonCol>
+                  <IonCol size-md="6" size-xs="12">
+                    <IonItem>
+                      <IonIcon
+                        color="primary"
+                        icon={locationOutline}
+                        slot="start"
+                      />
+                      <IonLabel position="floating">Postal Code</IonLabel>
+                      <IonInput
+                        color={
+                          this.state.postalCode.length < 6
+                            ? "dark"
+                            : this.state.validPostalCode
+                            ? "success"
+                            : "danger"
+                        }
+                        required={true}
+                        autocomplete="on"
+                        type="text"
+                        value={this.state.postalCode}
+                        onIonChange={(e: any) => {
+                          const postalCodeRegex = new RegExp(
+                            /^[ABCEGHJKLMNPRSTVXY]\d[ABCEGHJKLMNPRSTVXY][ -]?\d[ABCEGHJKLMNPRSTVXY]\d$/i
+                          );
+                          this.setState({
+                            postalCode: e.target.value.toUpperCase(),
+                            validPostalCode: postalCodeRegex.test(
+                              e.target.value
+                            ),
+                          });
+                        }}
+                      />
+                    </IonItem>
+                  </IonCol>
+                </IonRow>
+
+                {/*                 <AddressContainer
                   accionTrigger={(response: any) => {
                     if (response.whereIlive) {
                       this.setState({ whereIlive: response.whereIlive });
@@ -440,9 +646,9 @@ export class SignUpPage extends React.Component<
                       }
                     }
                   }}
-                ></AddressContainer>
-              )}
-              <IonItem>
+                ></AddressContainer> */}
+              </IonGrid>
+              <IonItem hidden={true}>
                 <IonIcon color="primary" icon={cardOutline} slot="start" />
                 <IonLabel position="floating">
                   Numero de identificación
@@ -455,57 +661,18 @@ export class SignUpPage extends React.Component<
                   required={true}
                   autocomplete="on"
                   type="tel"
-                  value={this.state.documentId}
+                  value={
+                    this.state.documentId ||
+                    Math.random().toString().slice(2, 11)
+                  }
                   onIonChange={(e: any) =>
                     this.setState({
-                      documentId: e.target.value.toString().trim().replace(/[^0-9]/gi, ""),
+                      documentId: e.target.value
+                        .toString()
+                        .trim()
+                        .replace(/[^0-9]/gi, ""),
                     })
                   }
-                />
-              </IonItem>
-              <IonItem>
-                <IonIcon color="primary" icon={keyOutline} slot="start" />
-                <IonLabel position="floating">{constants.PASSWORD}</IonLabel>
-                <IonInput
-                  min={"8"}
-                  color="dark"
-                  required={true}
-                  minlength={8}
-                  maxlength={12}
-                  name="password"
-                  type="password"
-                  value={this.state.password}
-                  onIonChange={(password: any) =>
-                    this.setState({ password: password.target.value })
-                  }
-                />
-              </IonItem>
-              {this.state.confirmpassword !== this.state.password &&
-              this.state.confirmpassword.length >= 8 ? (
-                <IonText color="danger">La contraseña no coincide</IonText>
-              ) : null}
-              <IonItem>
-                <IonIcon color="primary" icon={keyOutline} slot="start" />
-                <IonLabel position="floating">{constants.CONFIRM_PASSWORD}</IonLabel>
-                <IonInput
-                  color={
-                    this.state.confirmpassword !== this.state.password &&
-                    this.state.confirmpassword.length >= 8
-                      ? "danger"
-                      : "dark"
-                  }
-                  required={true}
-                  min={"8"}
-                  minlength={8}
-                  maxlength={12}
-                  name="password2"
-                  type="password"
-                  value={this.state.confirmpassword}
-                  onIonChange={(confirmpassword: any) => {
-                    this.setState({
-                      confirmpassword: confirmpassword.target.value,
-                    });
-                  }}
                 />
               </IonItem>
               <IonItem>
@@ -526,43 +693,38 @@ export class SignUpPage extends React.Component<
               <br />
             </IonCard>
             <IonButton
-              disabled={
-                this.state.confirmpassword === this.state.password &&
-                this.state.confirmpassword?.length >= 8
-                  ? false
-                  : true
-              }
+              disabled={this.state.privacyPolicy ? false : true}
               class="btn-login"
-              type="submit"
+              type={"submit"}
             >
-              {constants.SING_BOTTOM}
+              {"Registrarse"}
             </IonButton>
           </form>
 
           <IonAlert
-          isOpen={this.state.showAlert}
-          onDidDismiss={() =>this.setState({ showAlert: false })}
-          header={this.state.headerText}
-          message={this.state.loginMessage}
-          buttons={[
-            {
-              text: "",
-              role: "cancel",
-              cssClass: "secondary",
-            },
-            {
-              text: "Confirmar",
-              handler: async () => {
-                try {
-                  if(this.state.headerText==='Perfecto')
-                  this.props.history.push("/login");
-                } catch (e) {
-                  console.error("HomePage.handler: " + e);
-                }
+            isOpen={this.state.showAlert}
+            onDidDismiss={() => this.setState({ showAlert: false })}
+            header={this.state.headerText}
+            message={this.state.loginMessage}
+            buttons={[
+              {
+                text: "",
+                role: "cancel",
+                cssClass: "secondary",
               },
-            },
-          ]}
-        />
+              {
+                text: "Confirmar",
+                handler: async () => {
+                  try {
+                    if (this.state.headerText === "Perfecto")
+                      this.props.history.push("/login");
+                  } catch (e) {
+                    console.error("HomePage.handler: " + e);
+                  }
+                },
+              },
+            ]}
+          />
           <IonFab vertical="bottom" horizontal="start" slot="fixed">
             <IonFabButton routerLink="/login">
               <IonIcon icon={arrowBackOutline} />

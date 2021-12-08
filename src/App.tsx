@@ -39,7 +39,6 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        <IonTabs>
           <IonRouterOutlet>
             <Route path="/login" component={LoginPage} exact={true} />
             <Route path="/signup" component={SignUpPage} exact={true} />
@@ -57,21 +56,7 @@ const App: React.FC = () => {
               exact={true}
             />
           </IonRouterOutlet>
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="tab1" href="/login" hidden={true}>
-              <IonIcon icon={triangle} />
-              <IonLabel>Tab 1</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="tab2" href="/signup" hidden={true}>
-              <IonIcon icon={ellipse} />
-              <IonLabel>Tab 2</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="tab3" href="/recover" hidden={true}>
-              <IonIcon icon={square} />
-              <IonLabel>Tab 3</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
+          
       </IonReactRouter>
     </IonApp>
   );
