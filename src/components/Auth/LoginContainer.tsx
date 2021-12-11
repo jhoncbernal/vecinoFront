@@ -154,7 +154,7 @@ export class LoginPage extends React.Component<
             await removeItem("username");
           }
           this.setState({ toastColor: "white" });
-          this.setState({ loginMessage: "Bienvenido!" });
+          this.setState({ loginMessage: "Welcome!" });
           this.setState({ password: "" });
 
           this.props.history.push("/home");

@@ -46,5 +46,17 @@
     "Sabado"
   ],
   "TIPS": [0, 1000, 2000],
-  "ACCEPT_PRIVACE_POLICIES": "acepta politicas de privacidad"
+  "ACCEPT_PRIVACE_POLICIES": "acepta politicas de privacidad",
+  "PRODUCT_NAME": "Nombre del producto",
+  "UNIT": "Unidad de medida",
+  "PRICE": "Pricio",
+  "PRODUCT_TYPE": "Tipo de producto",
+  "STOCK_UNITS": "Unidades en stock",
+  "BRAND": "Marca",
+  "PRODUCT_CODE": "Codigo de Producto",
+  "DISCOUNTEND_PRICE": "Precio en promoción",
+  "DISCOUNT_END": "La promocion termina en",
+  "DESCRIPTION": "Descripción",
+  "SAVE": "Guardar",
+  "ADD_PRODUCT": "Agregar nuevo producto"
 }

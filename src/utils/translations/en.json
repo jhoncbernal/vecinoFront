@@ -57,5 +57,17 @@
     "Saturday"
   ],
   "TIPS": [0, 1, 5],
-  "ACCEPT_PRIVACE_POLICIES": "I accept privacy policies"
+  "ACCEPT_PRIVACE_POLICIES": "I accept privacy policies",
+  "PRODUCT_NAME": "Product Name",
+  "UNIT": "Unit",
+  "PRICE": "Price",
+  "PRODUCT_TYPE": "Product type",
+  "STOCK_UNITS": "Units in estok",
+  "BRAND": "Brand",
+  "PRODUCT_CODE": "Product Code",
+  "DISCOUNTEND_PRICE": "Discounted price",
+  "DISCOUNT_END": "Discount end date",
+  "DESCRIPTION": "Description",
+  "SAVE": "SAVE",
+  "ADD_PRODUCT": "Add a new product"
 }
