@@ -23,6 +23,7 @@ import { HttpRequest } from "../../../hooks/HttpRequest";
 import { arrowBack } from "ionicons/icons";
 import { Product, Provider } from "../../../entities";
 import Axios from "axios";
+import { constants } from "../../../hooks/Constants";
 
 const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
   const productType =
@@ -162,7 +163,7 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
                 }}
                 action="post"
               >
-                <label>Nombre del producto</label>
+                <label>{constants.PRODUCT_NAME}</label>
                 <IonInput
                   type="text"
                   required={true}
@@ -172,11 +173,11 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
                 ></IonInput>
-                <label>Unidad de medida</label>
+                <label>{constants.UNIT}</label>
                 <IonSelect
                   interface="popover"
                   name="measureType"
-                  placeholder="Seleccione uno"
+                  placeholder="Select"
                   value={product?.measureType}
                   onIonChange={(e: any) => {
                     handleValueChange(e.target.name, e.target.value);
@@ -190,7 +191,7 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
                     );
                   })}
                 </IonSelect>
-                <label>Precio</label>
+                <label>{constants.PRICE}</label>
                 <IonInput
                   type="number"
                   step="any"
@@ -201,11 +202,11 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
                 ></IonInput>
-                <label>Tipo de producto</label>
+                <label>{constants.PRODUCT_TYPE}</label>
                 <IonSelect
                   value={product?.productType}
                   interface="popover"
-                  placeholder="Seleccione uno"
+                  placeholder="Select"
                   name="productType"
                   onIonChange={(e: any) => {
                     handleValueChange(e.target.name, e.target.value);
@@ -219,7 +220,7 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
                     );
                   })}
                 </IonSelect>
-                <label>Unidades en stock</label>
+                <label>{constants.STOCK_UNITS}</label>
                 <IonInput
                   type="number"
                   required={true}
@@ -229,7 +230,7 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
                 ></IonInput>
-                <label>Marca</label>
+                <label>{constants.BRAND}</label>
                 <IonInput
                   type="text"
                   required={true}
@@ -239,7 +240,7 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
                 ></IonInput>
-                <label>Codigo de Producto</label>
+                <label>{constants.PRODUCT_CODE}</label>
                 <IonInput
                   required={true}
                   value={product?.code ? product.code : new Date().getTime()}
@@ -248,7 +249,7 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
                 ></IonInput>
-                <label>Precio en promoción </label>
+                <label>{constants.DISCOUNTEND_PRICE} </label>
                 <IonInput
                   type="number"
                   value={product?.promotionPrice}
@@ -257,12 +258,13 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
                     handleValueChange(e.target.name, e.target.value);
                   }}
                 ></IonInput>
-                <label>Fecha de expiracion de la promoción</label>
+                <label>{constants.DISCOUNT_END}</label>
                 <IonDatetime
                   displayFormat="DD/MMM/YYYY"
                   name="promotionExpires"
-                  placeholder="Seleccione la fecha de expiración"
-                  monthShortNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+                  placeholder={constants.DISCOUNT_END}
+                  monthShortNames="
+January, February, March, April, May, June, July, August, September, October, November, December "
                   value={
                     product?.promotionExpires
                       ? product.promotionExpires.toLocaleString()
@@ -272,7 +274,7 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
                     handleValueChange(e.target.name, e.target.value!);
                   }}
                 ></IonDatetime>
-                <label>Descripción</label>
+                <label>{constants.DESCRIPTION}</label>
                 <IonTextarea
                   required={true}
                   value={product?.features}
@@ -283,7 +285,7 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
                 ></IonTextarea>
                 <IonCol>
                   <IonButton type="submit" expand="full" color="secondary">
-                    Guardar
+                    {constants.SAVE}
                   </IonButton>
                 </IonCol>
               </form>

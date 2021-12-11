@@ -39,6 +39,7 @@ import { Product } from "../../entities";
 import handleProducts from "./shopingCart/handleProducts";
 import * as H from "history";
 import { witchDevice } from "../../hooks/WitchDevice";
+import { constants } from "../../hooks/Constants";
 interface ContainerProps {
   [id: string]: any;
   inputs: Array<Product>;
@@ -190,7 +191,7 @@ const ListContainer: React.FC<ContainerProps> = ({
           }}
         >
           <IonIcon icon={addCircle}></IonIcon>
-          Agregar nuevo producto
+          {constants.ADD_PRODUCT}
         </IonButton>
       );
     }
