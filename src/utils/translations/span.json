@@ -58,5 +58,7 @@
   "DISCOUNT_END": "La promocion termina en",
   "DESCRIPTION": "Descripción",
   "SAVE": "Guardar",
-  "ADD_PRODUCT": "Agregar nuevo producto"
+  "ADD_PRODUCT": "Agregar nuevo producto",
+  "ADD_CAR": "Agregar",
+  "SHOW_MORE": "Ver detalles"
 }

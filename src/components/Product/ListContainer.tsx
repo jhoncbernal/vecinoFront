@@ -396,7 +396,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                   class="ion-float-left"
                                   fill="clear"
                                 >
-                                  <small>Ver detalles</small>
+                                  <small>{constants.SHOW_MORE}</small>
                                 </IonButton>
                                 <IonText
                                   class="ion-text-justify"
@@ -414,7 +414,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                             </IonItem>
 
                             <IonItem
-                            lines='none'
+                              lines="none"
                               hidden={
                                 currentUser.roles?.includes(
                                   config.RolProviderAccess
@@ -423,12 +423,23 @@ const ListContainer: React.FC<ContainerProps> = ({
                                   : true
                               }
                             >
-                              <IonText color={'steel'}>
-                            <h2>{`Total:`}<strong>{` ${input.totalAmount} ${input.measureType}`}</strong></h2>
-                                <h3>{`Estado: `}<small>{
-                                  input.enabled ? "Habilitado" : "Inhabilitado"
-                                }</small></h3>
-                                <p>{`Cod Producto: `}<small>{input.code}</small></p>
+                              <IonText color={"steel"}>
+                                <h2>
+                                  {`Total:`}
+                                  <strong>{` ${input.totalAmount} ${input.measureType}`}</strong>
+                                </h2>
+                                <h3>
+                                  {`Estatus: `}
+                                  <small>
+                                    {input.enabled
+                                      ? "Enabled"
+                                      : "Disabled"}
+                                  </small>
+                                </h3>
+                                <p>
+                                  {`Cod Product: `}
+                                  <small>{input.code}</small>
+                                </p>
                               </IonText>
                             </IonItem>
                           </IonCardContent>
@@ -471,7 +482,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                   slot="start"
                                   icon={cartOutline}
                                 ></IonIcon>
-                                Agregar
+                                {constants.ADD_CAR}
                               </IonButton>
                             ) : (
                               <div className="ion-justify-content-center ion-margin-bottom">

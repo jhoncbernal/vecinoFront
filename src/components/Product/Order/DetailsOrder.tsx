@@ -61,60 +61,60 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
  
   const statesStyle = StatesDictionary().states;
   const resumePayment = (bill: Bill) => {
-        return (<>
-          <IonItem>
-            <IonLabel> Resumen de pago</IonLabel>
-            <IonIcon
-              class="ion-margin"
-              color={"primary"}
-              icon={cashSharp}
-            ></IonIcon>
-          </IonItem>
-          <IonCardContent>
+        return (
+          <>
             <IonItem>
-              <IonLabel class="ion-text-start">SubTotal</IonLabel>
-              <IonLabel class="ion-text-end">
-                ${bill.subTotal.toLocaleString()}
-              </IonLabel>
+              <IonLabel> Payment Summary</IonLabel>
+              <IonIcon
+                class="ion-margin"
+                color={"primary"}
+                icon={cashSharp}
+              ></IonIcon>
             </IonItem>
-            <IonItem>
-              <IonLabel class="ion-text-start">Envio</IonLabel>
-              <IonLabel class="ion-text-end">
-                {bill.deliveryCharge + bill.deliveryExtraCharge > 1 ? (
-                  `$${(
-                    bill.deliveryCharge + bill.deliveryExtraCharge
-                  ).toLocaleString()}`
-                ) : (
-                  <IonText color={"primary"}>
-                    <strong>GRATIS</strong>
-                  </IonText>
-                )}
-              </IonLabel>
-            </IonItem>
-            <IonItem hidden={bill.tip < 1}>
-              <IonLabel class="ion-text-start">Propina</IonLabel>
-              <IonLabel class="ion-text-end">
-                ${bill.tip.toLocaleString()}
-              </IonLabel>
-            </IonItem>
-            <IonItem>
-              <IonLabel class="ion-text-start">Total</IonLabel>
-              <IonLabel class="ion-text-end">
-                ${bill.Total.toLocaleString()}
-              </IonLabel>
-            </IonItem>
-          </IonCardContent>
-        </>
+            <IonCardContent>
+              <IonItem>
+                <IonLabel class="ion-text-start">SubTotal</IonLabel>
+                <IonLabel class="ion-text-end">
+                  ${bill.subTotal.toLocaleString()}
+                </IonLabel>
+              </IonItem>
+              <IonItem>
+                <IonLabel class="ion-text-start">Delivery fee</IonLabel>
+                <IonLabel class="ion-text-end">
+                  {bill.deliveryCharge + bill.deliveryExtraCharge > 1 ? (
+                    `$${(
+                      bill.deliveryCharge + bill.deliveryExtraCharge
+                    ).toLocaleString()}`
+                  ) : (
+                    <IonText color={"primary"}>
+                      <strong>FREE</strong>
+                    </IonText>
+                  )}
+                </IonLabel>
+              </IonItem>
+              <IonItem hidden={bill.tip < 1}>
+                <IonLabel class="ion-text-start">Propina</IonLabel>
+                <IonLabel class="ion-text-end">
+                  ${bill.tip.toLocaleString()}
+                </IonLabel>
+              </IonItem>
+              <IonItem>
+                <IonLabel class="ion-text-start">Total</IonLabel>
+                <IonLabel class="ion-text-end">
+                  ${bill.Total.toLocaleString()}
+                </IonLabel>
+              </IonItem>
+            </IonCardContent>
+          </>
         );
   };
   return (
-
     <IonContent>
-      {bill&&fireData ? (
+      {bill && fireData ? (
         <>
-            <IonToolbar>
-              <IonTitle>Estado de tu pedido</IonTitle>
-            </IonToolbar>
+          <IonToolbar>
+            <IonTitle>Status of your order</IonTitle>
+          </IonToolbar>
           <IonCardContent>
             <IonCard>
               <IonItemGroup>
@@ -144,14 +144,13 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
               }}
             >
               <IonItem lines="none">
-                <IonLabel>Productos </IonLabel>
+                <IonLabel>Products </IonLabel>
                 <IonIcon
                   slot="start"
                   color={"primary"}
                   icon={basketSharp}
-                ></IonIcon><IonBadge color={'white'}>
-                x{bill.products.length}
-              </IonBadge>
+                ></IonIcon>
+                <IonBadge color={"white"}>x{bill.products.length}</IonBadge>
               </IonItem>
               <IonItemDivider class="ion-margin">
                 {bill.products.map((product: any, index) => {
@@ -165,19 +164,15 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
                 })}
                 <IonItemGroup class="ion-margin">
                   <div>
-                
-                  <IonIcon
-                  size='large'
-                    color={"gray"}
-                    class="ion-margin-top ion-margin-horizontal"
-                    icon={informationCircleSharp}
-                  ></IonIcon>
+                    <IonIcon
+                      size="large"
+                      color={"gray"}
+                      class="ion-margin-top ion-margin-horizontal"
+                      icon={informationCircleSharp}
+                    ></IonIcon>
                   </div>
                   <IonText>
-                    <p>
-                      Ver todos
-                    
-                    </p>
+                    <p>Ver todos</p>
                   </IonText>
                 </IonItemGroup>
               </IonItemDivider>
@@ -186,44 +181,49 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
               <IonItemDivider>
                 <IonItem lines="none">
                   <IonIcon color="primary" icon={walletSharp} slot="start" />
-                  <IonLabel position="stacked">Methodo de Pago</IonLabel>
+                  <IonLabel position="stacked">Payment method</IonLabel>
                   <IonText color="dark">{bill.MethodOfPayment}</IonText>
                 </IonItem>
               </IonItemDivider>
               <IonItemDivider>
                 <IonItem lines="none">
                   <IonIcon color="primary" icon={mapSharp} slot="start" />
-                  <IonLabel position="stacked">Dirección</IonLabel>
+                  <IonLabel position="stacked">Address</IonLabel>
                   <IonText color="dark">
                     {bill.otherAddress
                       ? bill.otherAddress
-                      : bill.user.neighborhood.address==='NO APLICA'?bill.user.address:bill.user.neighborhood.address}
+                      : bill.user.neighborhood.address === "NO APPLY"
+                      ? bill.user.address
+                      : bill.user.neighborhood.address}
                   </IonText>
                 </IonItem>
               </IonItemDivider>
             </IonCard>
-            <IonCard>
-            {resumePayment(bill)}</IonCard>
+            <IonCard>{resumePayment(bill)}</IonCard>
           </IonCardContent>
-        
-      <IonModal
-        onDidDismiss={(e) => setShowModal(false)}
-        isOpen={showModal}
-        animated={true}
-      >
-        <IonContent>
-          <ProductsDetailsContainer history={history} bill={bill} resumePayment={resumePayment(bill)}></ProductsDetailsContainer>
-          <IonFab vertical="bottom" horizontal="start" slot="fixed">
-            <IonFabButton
-              onClick={() => setShowModal(false)}
-              routerLink="/home"
-            >
-              <IonIcon icon={arrowBackOutline} />
-            </IonFabButton>
-          </IonFab>
-        </IonContent>
-      </IonModal>
-      </>
+
+          <IonModal
+            onDidDismiss={(e) => setShowModal(false)}
+            isOpen={showModal}
+            animated={true}
+          >
+            <IonContent>
+              <ProductsDetailsContainer
+                history={history}
+                bill={bill}
+                resumePayment={resumePayment(bill)}
+              ></ProductsDetailsContainer>
+              <IonFab vertical="bottom" horizontal="start" slot="fixed">
+                <IonFabButton
+                  onClick={() => setShowModal(false)}
+                  routerLink="/home"
+                >
+                  <IonIcon icon={arrowBackOutline} />
+                </IonFabButton>
+              </IonFab>
+            </IonContent>
+          </IonModal>
+        </>
       ) : null}
     </IonContent>
   );

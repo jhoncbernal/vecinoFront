@@ -69,5 +69,7 @@
   "DISCOUNT_END": "Discount end date",
   "DESCRIPTION": "Description",
   "SAVE": "SAVE",
-  "ADD_PRODUCT": "Add a new product"
+  "ADD_PRODUCT": "Add a new product",
+  "ADD_CAR": "Add",
+  "SHOW": "show more"
 }

@@ -183,7 +183,9 @@ const UpdateUser: React.FC<ContainerProps> = ({
                       icon={personOutline}
                       slot="start"
                     />
-                    <IonLabel position="floating">{constants.FIRST_NAME}</IonLabel>
+                    <IonLabel position="floating">
+                      {constants.FIRST_NAME}
+                    </IonLabel>
                     <IonInput
                       color="dark"
                       required={true}
@@ -219,7 +221,9 @@ const UpdateUser: React.FC<ContainerProps> = ({
                       icon={personOutline}
                       slot="start"
                     />
-                    <IonLabel position="floating">{constants.LAST_NAME}</IonLabel>
+                    <IonLabel position="floating">
+                      {constants.LAST_NAME}
+                    </IonLabel>
                     <IonInput
                       color="dark"
                       autocomplete="off"
@@ -379,7 +383,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
             </IonGrid>
             <IonItem>
               <IonIcon color="primary" icon={cardOutline} slot="start" />
-              <IonLabel position="floating">Numero de identificación</IonLabel>
+              <IonLabel position="floating">User ID</IonLabel>
               <IonInput
                 color="dark"
                 required={true}

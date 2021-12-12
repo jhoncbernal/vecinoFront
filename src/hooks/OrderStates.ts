@@ -11,27 +11,27 @@ import {
   states.set("start", {
     icon: cubeSharp,
     color: "gray",
-    state: "Procesando",
+    state: "Processing",
   });
   states.set("prepare", {
     icon: listCircleSharp,
     color: "purple",
-    state: "Alistado",
+    state: "Preparing",
   });
   states.set("delivery", {
     icon: "assets/icons/deliveryTimeOutline.svg",
     color: "blue-hole",
-    state: "Despachado",
+    state: "Dispatched",
   });
   states.set("finished", {
     icon: checkmarkCircleSharp,
     color: "green-light",
-    state: "Recibido",
+    state: "In delivery",
   });
   states.set("cancel", {
     icon: closeCircleSharp,
     color: "red-light",
-    state: "Cancelado",
+    state: "Paid",
   });
   return {
     states

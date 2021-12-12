@@ -131,7 +131,7 @@ const ListContainer: React.FC<ContainerProps> = ({
               </IonToolbar>
               <IonList class="cartItem">
                 <IonListHeader>
-                  <IonTitle color="primary">Mis productos</IonTitle>
+                  <IonTitle color="primary">My products</IonTitle>
                 </IonListHeader>
                 {shoppingProducts
                   ? shoppingProducts.products.map(
@@ -154,7 +154,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                               shoppingCart[shoppingProduct._id] === 0 ? (
                                 <>
                                   <IonLabel class="ion-padding-self-start ion-margin-vertical">
-                                    Producto Agotado
+                                    Product out of stock
                                   </IonLabel>
                                   <IonButton
                                     color={"white"}
@@ -296,17 +296,19 @@ const ListContainer: React.FC<ContainerProps> = ({
                                 }));
                               }}
                             >
-                              <IonItemOption color="danger"
-                               onClick={() => {
-                                let pendingShopingCar = shoppingCart;
-                                delete pendingShopingCar[
-                                  `${shoppingProduct?._id}`
-                                ];
-                                setShoppingCart((prevState: any) => ({
-                                  ...prevState,
-                                  ...pendingShopingCar,
-                                }));
-                              }}>
+                              <IonItemOption
+                                color="danger"
+                                onClick={() => {
+                                  let pendingShopingCar = shoppingCart;
+                                  delete pendingShopingCar[
+                                    `${shoppingProduct?._id}`
+                                  ];
+                                  setShoppingCart((prevState: any) => ({
+                                    ...prevState,
+                                    ...pendingShopingCar,
+                                  }));
+                                }}
+                              >
                                 <IonIcon
                                   slot="top"
                                   src={trashBinSharp}
@@ -360,7 +362,7 @@ const ListContainer: React.FC<ContainerProps> = ({
               }}
               expand="full"
             >
-              Finalizar orden
+              Fialize order
             </IonButton>
           </IonToolbar>
         </IonFooter>

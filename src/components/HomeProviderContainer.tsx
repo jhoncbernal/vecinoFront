@@ -170,14 +170,11 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
               <IonCard>
                 <IonCardHeader>
                   <IonTitle class="ion-text-center ion-margin-top">
-                  <strong>!Bien hecho!</strong>
+                    <strong>!Well done</strong>
                   </IonTitle>
-                    <IonText>
-                   
-                      <p> Completaste todos 
-                        tus pedidos pendientes.</p>
-                    </IonText>
-                 
+                  <IonText>
+                    <p> You completed all your pending orders.</p>
+                  </IonText>
                 </IonCardHeader>
                 <IonImg class="justImage " src={"/assets/img/Finish.png"} />
               </IonCard>

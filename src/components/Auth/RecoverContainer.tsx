@@ -51,7 +51,7 @@ export class RecoverContainer extends React.Component<
           if (response.emailResult) {
             this.setState({
               loginMessage:
-                "se envio un correo para restablecimiento de su cuenta a " +
+                " an email to send your account reestablishment to " +
                 response.emailResult.result.accepted[0],
             });
           } else {

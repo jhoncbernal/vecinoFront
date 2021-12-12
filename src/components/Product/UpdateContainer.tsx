@@ -103,7 +103,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
       </IonToolbar>
       <IonContent>
         <form
-          onSubmit={e => {
+          onSubmit={(e) => {
             handleSubmit(e);
           }}
           action="post"
@@ -262,7 +262,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
             </IonGrid>
             <IonItem>
               <IonIcon color="primary" icon={cardOutline} slot="start" />
-              <IonLabel position="floating">Numero de identificación</IonLabel>
+              <IonLabel position="floating">User ID</IonLabel>
               <IonInput
                 color="dark"
                 required={true}

@@ -217,7 +217,10 @@ export class SignUpPage extends React.Component<
           firstName: this.state.firstName,
           address: this.state.address + " ," + this.state.postalCode,
           documentId: this.state.documentId,
-          uniquecode: this.state.uniquecode,
+          uniquecode:
+            this.state.kind === "user" && this.state.uniquecode===""
+              ? "TOUNIQUE"
+              : this.state.uniquecode,
           city: this.state.city + " " + this.state.province,
 
           // city: this.state.city,
@@ -232,10 +235,11 @@ export class SignUpPage extends React.Component<
             ...data,
             ...{
               uniquecode:
-                this.state.province +this.state.city.slice(0, 2)+
+                this.state.province +
+                this.state.city.slice(0, 2) +
                 this.state.firstName.slice(0, 3) +
                 Math.random().toString().slice(2, 5),
-              paymentMethod: "efectivo",
+              paymentMethod: "Cash",
               billType: "Tax",
               deliveryExtraCharge: 0,
               schedule: this.state.provider.schedule,
@@ -274,7 +278,7 @@ export class SignUpPage extends React.Component<
               this.ClearState();
               this.setState({
                 loginMessage:
-                  "se envio un correo de verificacion de cuenta a " +
+                  " An account verification email was sent to " +
                   response.emailResult.email.result.accepted[0],
               });
             } else if (response?.userService?.enabled) {
@@ -655,9 +659,7 @@ export class SignUpPage extends React.Component<
               </IonGrid>
               <IonItem hidden={true}>
                 <IonIcon color="primary" icon={cardOutline} slot="start" />
-                <IonLabel position="floating">
-                  Numero de identificación
-                </IonLabel>
+                <IonLabel position="floating">User ID</IonLabel>
                 <IonInput
                   min={"8"}
                   minlength={8}
@@ -682,7 +684,9 @@ export class SignUpPage extends React.Component<
               </IonItem>
               <IonItem>
                 <IonLabel>
-                  <a href="/PrivacyPolicy">{constants.ACCEPT_PRIVACE_POLICIES}</a>
+                  <a href="/PrivacyPolicy">
+                    {constants.ACCEPT_PRIVACE_POLICIES}
+                  </a>
                 </IonLabel>
                 <IonCheckbox
                   checked={this.state.privacyPolicy}

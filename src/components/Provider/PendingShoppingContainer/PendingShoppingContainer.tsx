@@ -133,8 +133,8 @@ const PendingShoppingContainer: FC<componentData> = ({
                       data-toggle="collapse"
                       href={`https://api.whatsapp.com/send?phone=57${bill.user.phone}`}
                       data-target="#landx-navigation"
-                      routerDirection='none'
-                      target='_blank'
+                      routerDirection="none"
+                      target="_blank"
                     >
                       {bill.user.phone}
                     </IonButton>
@@ -175,7 +175,7 @@ const PendingShoppingContainer: FC<componentData> = ({
                     </IonText>
                   </IonItem>
                 </IonCol>
-                {bill.MethodOfPayment === "efectivo" ? (
+                {bill.MethodOfPayment === "Cash" ? (
                   <>
                     <IonCol
                       size-xs="6"
@@ -200,7 +200,7 @@ const PendingShoppingContainer: FC<componentData> = ({
                     >
                       <IonItem lines="none">
                         <IonLabel position="stacked">
-                          <p>Efectivo</p>
+                          <p>Cash</p>
                         </IonLabel>
                         <IonText>
                           $
