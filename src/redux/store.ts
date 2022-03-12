@@ -6,13 +6,13 @@ import storage from "redux-persist/lib/storage";
 import { composeWithDevTools } from "redux-devtools-extension";
 
 import reducers from "./reducers";
-// Sagas
-import userSagas from "./sagas/providerSagas";
 
+// Sagas
+import sagas from "./sagas";
 
 // Add Sagas
 function* rootSaga() {
-  yield all([...userSagas]);
+  yield all(sagas);
 }
 
 // config

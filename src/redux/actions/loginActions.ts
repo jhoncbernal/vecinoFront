@@ -6,11 +6,9 @@ export type Action = {
   payload?: any;
 };
 
-export const onLogin: Function = (data: any): Action => ({
+export const onLogin: Function = (login: any): Action => ({
   type: Types.ON_LOGIN,
-  payload: {
-    login: data,
-  },
+  payload: { login },
 });
 
 export const onLoginReceive: Function = (token: string): Action => ({
@@ -22,7 +20,7 @@ export const onLoginReceive: Function = (token: string): Action => ({
 
 export const onLoadingLogin: Function = (
   name: string,
-  status: string
+  status: string,
 ): Action => ({
   type: Types.LOADING_LOGIN,
   payload: {

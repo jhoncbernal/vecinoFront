@@ -10,7 +10,7 @@ export type Action = {
 // Add Reducers
 const reducers = {
   provider: providerReducers,
-  login:loginReducer
+  login: loginReducer,
 };
 
 export default reducers;
