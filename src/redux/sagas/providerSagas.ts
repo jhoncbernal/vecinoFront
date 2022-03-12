@@ -2,44 +2,90 @@
 import { SagaIterator } from "redux-saga";
 import { call, put, takeLatest } from "redux-saga/effects";
 // Types
-import  Types from "../types/providerTypes";
+import Types from "../types/providerTypes";
 import {
-  onLoginReceive,
-  onLoadingLogin,
-  onGetProviderInfoReceive
+  onGetAllProvidersRecive,
+  onGetProviderByCityRecive,
+  onGetProviderCitiesRecive,
+  onGetProviderRecive,
+  onLoadingProvider,
 } from "../actions/providerActions";
-import { login } from "../../services/provider";
+import {
+  getAllProviders,
+  getProvider,
+  getProviderByCity,
+  getProviderCities,
+} from "../../services/provider";
 // Services
 
-function* fetchLogin({ payload }: any): SagaIterator {
+function* fetchProvider({ payload }: any): SagaIterator {
   try {
-    yield put(onLoadingLogin("login", true));
-    const {data} = yield call(login, payload);
-    console.log(data.user);
-    yield put(onLoginReceive(data.token));
-    yield put(onGetProviderInfoReceive( data.user));
-    yield put(onLoadingLogin("login", false));
-  } catch (e ) {
-    console.error(`Error login: ${e}`);
-    yield put(onLoadingLogin("login", false));
+    yield put(onLoadingProvider("provider", true));
+    const { data, status } = yield call(getProvider, payload);
+    if (status === 200) {
+      yield put(onGetProviderRecive(data));
+    } else {
+      console.error("provider info failed");
+    }
+    yield put(onLoadingProvider("provider", false));
+  } catch (e) {
+    console.error(`provider info Error: ${e}`);
+    yield put(onLoadingProvider("provider", false));
   }
 }
 
-/* function* fetchProviderInfo(): SagaIterator {
+function* fetchAllProviders(): SagaIterator {
   try {
-     const { data } = yield call(axios.gatewayModule.login);
-
-    if (data) {
-      yield put(onGetProviderInfoReceive(data));
+    yield put(onLoadingProvider("providerList", true));
+    const { data, status } = yield call(getAllProviders);
+    if (status === 200) {
+      yield put(onGetAllProvidersRecive(data));
     } else {
-      console.error("provider info failed");
-    } 
+      console.error("providerList info failed");
+    }
+    yield put(onLoadingProvider("providerList", false));
   } catch (e) {
-    console.error(`provider info Error: ${e}`);
+    console.error(`providerList info Error: ${e}`);
+    yield put(onLoadingProvider("providerList", false));
   }
-} */
+}
+
+function* fetchProviderCities(): SagaIterator {
+  try {
+    yield put(onLoadingProvider("cityList", true));
+    const { data, status } = yield call(getProviderCities);
+    if (status === 200) {
+      yield put(onGetProviderCitiesRecive(data));
+    } else {
+      console.error("ProviderCities info failed");
+    }
+    yield put(onLoadingProvider("cityList", false));
+  } catch (e) {
+    console.error(`ProviderCities info Error: ${e}`);
+    yield put(onLoadingProvider("ProviderCities", false));
+  }
+}
+
+function* fetchProviderByCity({ payload }: any): SagaIterator {
+  try {
+    yield put(onLoadingProvider("providerListByCity", true));
+    const { data, status } = yield call(getProviderByCity, payload);
+    if (status === 200) {
+      yield put(onGetProviderByCityRecive(data));
+    } else {
+      console.error("ProviderByCity info failed");
+    }
+    yield put(onLoadingProvider("providerListByCity", false));
+  } catch (e) {
+    console.error(`ProviderByCity info Error: ${e}`);
+    yield put(onLoadingProvider("ProviderByCity", false));
+  }
+}
+
 
 export default [
-  takeLatest(Types.ON_LOGIN, fetchLogin),
-  //takeLatest(Types.GET_PROVIDER, fetchProviderInfo),
+  takeLatest(Types.GET_PROVIDER, fetchProvider),
+  takeLatest(Types.GET_PROVIDER_ALL, fetchAllProviders),
+  takeLatest(Types.GET_PROVIDER_CITIES, fetchProviderCities),
+  takeLatest(Types.GET_PROVIDER_BY_CITY, fetchProviderByCity),
 ];

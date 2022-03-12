@@ -6,25 +6,27 @@ import Types from "../types/providerTypes";
 
 export type state = {
   data: {
+    providerId: string | null;
     provider: any;
-    token: string | null;
-    login: {
-      email: string;
-      password: string;
-    };
+    providerList: any[];
+    cityList: any[];
+    cityId: string | null;
+    providerListByCity: any[];
   };
   loading: {
-    login: boolean;
+    provider: boolean;
+    providerList: boolean;
+    cityList: boolean;
+    providerListByCity: boolean;
   };
 };
 
 const initialState: state | any = {
   data: {
     provider: {},
-    token: null,
   },
   loading: {
-    login: false,
+    provider: false,
   },
 };
 
@@ -32,33 +34,32 @@ const reducer = (state = initialState, action: Action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case Types.ON_LOGIN: {
-      state.data.login = payload.login;
-      return;
-    }
-
-    case Types.ON_LOGIN_RECEIVE: {
-      state.data.token = payload.token;
-      state.data.login = {};
-      return;
-    }
-
     case Types.GET_PROVIDER_RECEIVE: {
       state.data.provider = payload.provider;
       return;
     }
-
-    case Types.LOADING_LOGIN: {
+    case Types.GET_PROVIDER_ALL_RECEIVE: {
+      state.data.providerList = payload.providerList;
+      return;
+    }
+    case Types.GET_PROVIDER_CITIES_RECEIVE: {
+      state.data.cityList = payload.cityList;
+      return;
+    }
+    case Types.GET_PROVIDER_BY_CITY_RECEIVE: {
+      state.data.providersListByCity = payload.providerListByCity;
+      return;
+    }
+    case Types.LOADING_PROVIDER: {
       state.loading[payload.name] = payload.status;
       return;
     }
 
-    case Types.RESET_LOGIN: {
+    case Types.RESET_PROVIDER: {
       if (payload.name === "*") return initialState;
       state.data[payload.name] = initialState.data[payload.name];
       return;
     }
-
     default:
       return state;
   }
