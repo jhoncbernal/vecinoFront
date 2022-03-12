@@ -34,30 +34,36 @@ import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/ownStyle.css";
+import { Provider } from "react-redux";
+import store, { persistor } from "./Redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 const App: React.FC = () => {
   return (
     <IonApp>
-      <IonReactRouter>
-          <IonRouterOutlet>
-            <Route path="/login" component={LoginPage} exact={true} />
-            <Route path="/signup" component={SignUpPage} exact={true} />
-            <Route path="/signup/:id" component={SignUpPage} exact={true} />
-            <Route path="/recover" component={RecoveryPage} />
-            <Route path="/home" component={HomePage} exact={true} />
-            <Route
-              path="/PrivacyPolicy"
-              component={PrivacyPolicy}
-              exact={true}
-            />
-            <Route
-              path="/"
-              render={() => <Redirect to="/login" />}
-              exact={true}
-            />
-          </IonRouterOutlet>
-          
-      </IonReactRouter>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <IonReactRouter>
+            <IonRouterOutlet>
+              <Route path="/login" component={LoginPage} exact={true} />
+              <Route path="/signup" component={SignUpPage} exact={true} />
+              <Route path="/signup/:id" component={SignUpPage} exact={true} />
+              <Route path="/recover" component={RecoveryPage} />
+              <Route path="/home" component={HomePage} exact={true} />
+              <Route
+                path="/PrivacyPolicy"
+                component={PrivacyPolicy}
+                exact={true}
+              />
+              <Route
+                path="/"
+                render={() => <Redirect to="/login" />}
+                exact={true}
+              />
+            </IonRouterOutlet>
+          </IonReactRouter>
+        </PersistGate>
+      </Provider>
     </IonApp>
   );
 };
