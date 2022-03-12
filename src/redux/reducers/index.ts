@@ -1,4 +1,5 @@
 // Reducers
+import loginReducer from "./loginReducers";
 import providerReducers from "./providerReducers";
 export type Action = {
   type: string;
@@ -8,7 +9,8 @@ export type Action = {
 
 // Add Reducers
 const reducers = {
-  provider: providerReducers
+  provider: providerReducers,
+  login:loginReducer
 };
 
 export default reducers;
