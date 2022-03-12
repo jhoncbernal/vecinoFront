@@ -41,7 +41,6 @@ import * as H from "history";
 import AddressContainer from "./AddressContainer";
 import { ProviderRegisterContainer } from "./ProviderRegister";
 import { constants } from "../../hooks/Constants";
-import { t } from "../../redux/actions/providerRegisterActions";
 
 export class SignUpPage extends React.Component<
   { history: H.History },
