@@ -1,7 +1,8 @@
 import produce from "immer";
+import { Action } from ".";
 // Types
-import * as Types from "../types/providerTypes";
-import { Action } from "../types/actionTypes";
+import Types from "../types/providerTypes";
+
 
 export type state = {
   data: {
@@ -42,7 +43,7 @@ const reducer = (state = initialState, action: Action) => {
       return;
     }
 
-    case Types.GET_PROVIDER_INFO_RECEIVE: {
+    case Types.GET_PROVIDER_RECEIVE: {
       state.data.provider = payload.provider;
       return;
     }

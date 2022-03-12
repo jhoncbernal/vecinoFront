@@ -1,5 +1,5 @@
 // Types
-import * as Types from "../types/providerTypes";
+import Types from "../types/providerTypes";
 
 export type Action = {
   type: string;
@@ -21,11 +21,11 @@ export const onLoginReceive: Function = (token: string): Action => ({
 });
 
 export const onGetProviderInfo: Function = (): Action => ({
-  type: Types.GET_PROVIDER_INFO,
+  type: Types.GET_PROVIDER,
 });
 
 export const onGetProviderInfoReceive: Function = (provider: any): Action => ({
-  type: Types.GET_PROVIDER_INFO_RECEIVE,
+  type: Types.GET_PROVIDER_RECEIVE,
   payload: {
     provider:provider,
   },

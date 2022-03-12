@@ -2,7 +2,7 @@
 import { SagaIterator } from "redux-saga";
 import { call, put, takeLatest } from "redux-saga/effects";
 // Types
-import * as Types from "../types/providerTypes";
+import  Types from "../types/providerTypes";
 import {
   onLoginReceive,
   onLoadingLogin,
@@ -41,5 +41,5 @@ function* fetchLogin({ payload }: any): SagaIterator {
 
 export default [
   takeLatest(Types.ON_LOGIN, fetchLogin),
-  //takeLatest(Types.GET_PROVIDER_INFO, fetchProviderInfo),
+  //takeLatest(Types.GET_PROVIDER, fetchProviderInfo),
 ];
