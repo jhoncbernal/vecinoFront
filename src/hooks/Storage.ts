@@ -1,7 +1,7 @@
-import { Storage } from '@capacitor/core';
+import { Storage } from "@capacitor/core";
 export  function Storages() {
 
-    const setObject:any = async (key:string,obj:any='') => {
+    const setObject: any = async (key: string,obj: any="") => {
       try{
         await Storage.set({
             key: key,
@@ -14,7 +14,7 @@ export  function Storages() {
           console.error("setObject:"+e);
         }
     };
-    const getObject:any = async (key:string) => {
+    const getObject: any = async (key: string) => {
         try{
             const ret = await Storage.get({ key: key });
         const user = JSON.parse(ret.value);
@@ -24,7 +24,7 @@ export  function Storages() {
             console.error("getObject:"+e);
           }
       };
-      const removeItem:any = async (key:string) => {
+      const removeItem: any = async (key: string) => {
         try{
             await Storage.remove({ key: key });
         }

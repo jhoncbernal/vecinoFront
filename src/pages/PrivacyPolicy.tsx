@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React from "react";
 import {
   IonPage,
@@ -1061,7 +1062,7 @@ export const termsAndConditions=(
     art&#237;culo a Vecinoo o en el formulario de la secci&#243;n de
     ayuda.
   </p>
-  </IonText></>)
+  </IonText></>);
       
 export class PrivacyPolicy extends React.Component<{ history: H.History }, {}> {
 
@@ -1071,7 +1072,7 @@ return (
       <IonPage>
         <IonContent class="bg-image">
 <IonCard>
-          <IonToolbar onClick={()=>this.props.history.push('/login')}>
+          <IonToolbar onClick={()=>this.props.history.push("/login")}>
             <IonTitle>
               <IonImg class="img" src={"/assets/img/IconLogo.png"} />
             </IonTitle>

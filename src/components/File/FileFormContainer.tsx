@@ -49,13 +49,13 @@ export class FileFormPage extends React.Component<
     try {
       this.setState({ hiddenbar: false });
       const { getObject } = await Storages();
-      let token: any = await getObject("token");
+      const token: any = await getObject("token");
       if (!token) {
         const err = new Error();
         err.message = "sus credenciales vencieron";
         throw err;
       }
-      let header = {
+      const header = {
         Authorization: token.obj,
         "Access-Control-Allow-Origin": "*",
         encType: "multipart/form-data",
@@ -87,13 +87,9 @@ export class FileFormPage extends React.Component<
           return { response };
         })
         .catch((error) => {
-          try {
-            this.setState({ hiddenbar: true });
-            this.setState({ message: error });
-            this.setState({ showToast1: true });
-          } catch (e) {
-            throw e;
-          }
+          this.setState({ hiddenbar: true });
+          this.setState({ message: error });
+          this.setState({ showToast1: true });
         });
     } catch (e) {
       this.setState({ hiddenbar: true });
@@ -142,18 +138,18 @@ export class FileFormPage extends React.Component<
                       {`Por favor agrege el documento con los datos de ${this.state.segmentValue} actualizados`}
                     </h3>
                   </IonText>
-                  <IonItem lines='none' >
-                    <IonLabel color="dark" position="stacked" >
+                  <IonItem lines="none">
+                    <IonLabel color="dark" position="stacked">
                       Documento excel:
                     </IonLabel>
                     <IonIcon
-                      color={this.state.file?'success':'primary'}
+                      color={this.state.file ? "success" : "primary"}
                       icon={documentTextOutline}
                       slot="start"
                     />
                     <div className="ion-magin">
                       <input
-                      required={true}
+                        required={true}
                         type="file"
                         className="custom-file-input "
                         id="customFile"
@@ -164,7 +160,6 @@ export class FileFormPage extends React.Component<
                       />
                     </div>
                   </IonItem>
-
                 </IonCardContent>
               ) : null}
               <IonProgressBar
@@ -174,7 +169,7 @@ export class FileFormPage extends React.Component<
               <br />
             </IonCard>
             <IonButton
-              disabled={!this.state.file||!this.state.hiddenbar}
+              disabled={!this.state.file || !this.state.hiddenbar}
               class="btn-login"
               type="submit"
             >

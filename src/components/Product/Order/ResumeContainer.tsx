@@ -79,14 +79,14 @@ const ResumeContainer: React.FC<ContainerProps> = ({
       daysOfWeek[tomorrow === daysOfWeek[0] ? 0 : numDayOfWeek + 1]
     )
   );
-  let openHour: number = 0;
-  let closeHour: number = 0;
+  let openHour = 0;
+  let closeHour = 0;
   if (todayschedule.length > 0) {
     openHour = new Date(todayschedule[0].open).getHours() + 5;
     closeHour = new Date(todayschedule[0].close).getHours() + 5;
   }
-  let openHourTomorrow: number = 0;
-  let closeHourTomorrow: number = 0;
+  let openHourTomorrow = 0;
+  let closeHourTomorrow = 0;
   if (tomorrowschedule.length > 0) {
     openHourTomorrow = new Date(tomorrowschedule[0].open).getHours() + 5;
     closeHourTomorrow = new Date(tomorrowschedule[0].close).getHours() + 5;
@@ -119,19 +119,19 @@ const ResumeContainer: React.FC<ContainerProps> = ({
   const submitOrder = useCallback(
     async (order: ShoppingOrder) => {
       setHiddenSpiner(true);
-      let newTotal = Number(tip) + order.total + provider.deliveryCharge;
+      const newTotal = Number(tip) + order.total + provider.deliveryCharge;
       if (
         (!cashValue || cashValue < newTotal) &&
         paymentMethod === "efectivo"
       ) {
         setAlertHeader("Verificar");
         setAlertMessage(
-          `Por favor agrege una cantidad superior de efectivo con el cual va a pagar `
+          "Por favor agrege una cantidad superior de efectivo con el cual va a pagar "
         );
       } else if (!schedule) {
         setAlertHeader("Verificar");
         setAlertMessage(
-          `Seleccione el horario en el cual el desea que el pedido sea enviado`
+          "Seleccione el horario en el cual el desea que el pedido sea enviado"
         );
       } else {
         let data = {
@@ -150,13 +150,13 @@ const ResumeContainer: React.FC<ContainerProps> = ({
         if (paymentMethod === "efectivo") {
           data = { ...data, ...{ cashValue: cashValue } };
         }
-        let pathUrl = `${config.BillsContext}`;
+        const pathUrl = `${config.BillsContext}`;
 
         await HttpRequest(pathUrl, "POST", data, true)
           .then(async (response: Bill) => {
             if (currentUser._id && provider._id) {
               await pushProviderBillsFirebase(response);
-              let mStates = [
+              const mStates = [
                 {
                   state: "start",
                   start: new Date().toLocaleString("en-US", {
@@ -365,7 +365,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
               return (
                   <IonSegmentButton key={index} value={tip}>
               <IonLabel>${tip}</IonLabel>
-            </IonSegmentButton>)
+            </IonSegmentButton>);
             })}
             
           </IonSegment>

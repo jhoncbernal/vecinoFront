@@ -9,10 +9,10 @@ export interface Bill {
   cashValue: number;
   change: number;
   enabled: boolean;
-  states: [{start:string,state:string}];
+  states: [{start: string;state: string}];
   code: string;
   otherAddress: string;
-  tip:number;
+  tip: number;
   products: [ProductBill];
   user: {
     _id: string;
@@ -21,8 +21,8 @@ export interface Bill {
     email: string;
     homeNumber: number;
     blockNumber: number;
-    address:string;
-    neighborhood: {firstName:string,address:string};
+    address: string;
+    neighborhood: {firstName: string;address: string};
   };
   provider: {
     _id: string;
@@ -34,7 +34,7 @@ export interface Bill {
   updatedAt: Date;
 }
 export interface ProductBill {
-  _id:string
+  _id: string;
   productName: string;
   measureType: string;
   quantity: number;

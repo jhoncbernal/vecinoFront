@@ -116,7 +116,6 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
         setFireData(pendingData);
       }
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
   return (
     <>

@@ -29,7 +29,7 @@ export const TermsCondContainer: React.FC<ContainerProps> = ({
     <IonButton
     class='ion-float-right'
     onClick={async () => {
-      let pathUrl = ``;
+      let pathUrl = "";
       if (currentUser.roles?.includes(config.RolUserAccess)) {
         pathUrl = `${config.UserContext}/${currentUser._id}`;
       } else if (currentUser.roles?.includes(config.RolAdminAccess)) {
@@ -43,8 +43,8 @@ export const TermsCondContainer: React.FC<ContainerProps> = ({
         { acceptPolicity: true },
         true
       )
-        .then(async (response: any) => {
-          let user = currentUser;
+        .then(async () => {
+          const user = currentUser;
           user.acceptPolicity = true;
           const { setObject } = Storages();
           await setObject("user", user);

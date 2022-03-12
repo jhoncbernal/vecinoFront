@@ -35,4 +35,4 @@ import {
   });
   return {
     states
-}}
+};};

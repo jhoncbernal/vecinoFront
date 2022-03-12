@@ -52,7 +52,7 @@ const ListContainer: React.FC<ContainerProps> = ({
   const [segmentValue, setSegmentValue] = useState<any>("shoppingCart");
   const getProducts = useCallback(
     async (shoppingCart) => {
-      let pathUrl = `${
+      const pathUrl = `${
         config.ProductContext
       }/productsPrice/1?productsIds=${JSON.stringify(shoppingCart)}`;
       await HttpRequest(pathUrl, "GET", "", true)
@@ -136,14 +136,14 @@ const ListContainer: React.FC<ContainerProps> = ({
                 {shoppingProducts
                   ? shoppingProducts.products.map(
                       (shoppingProduct: ShoppingProduct) => {
-                        let oldprice =
+                        const oldprice =
                           (shoppingProduct.price +
                             shoppingProduct.salving /
                               shoppingProduct.quantity) *
                           shoppingProduct.quantity;
-                        let price =
+                        const price =
                           shoppingProduct.price * shoppingProduct.quantity;
-                        let percent = Math.round((1 - price / oldprice) * 100);
+                        const percent = Math.round((1 - price / oldprice) * 100);
                         return (
                           <IonItemSliding key={shoppingProduct._id}>
                             <IonItem>
@@ -162,7 +162,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                     size="small"
                                     fill="outline"
                                     onClick={() => {
-                                      let products = handleProducts(
+                                      const products = handleProducts(
                                         shoppingProduct._id!,
                                         "Less",
                                         shoppingCart
@@ -225,7 +225,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                       size="small"
                                       fill="outline"
                                       onClick={() => {
-                                        let products = handleProducts(
+                                        const products = handleProducts(
                                           shoppingProduct._id!,
                                           "Less",
                                           shoppingCart
@@ -261,7 +261,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                           shoppingCart[shoppingProduct._id] <
                                           shoppingProduct.totalAmount
                                         ) {
-                                          let products = handleProducts(
+                                          const products = handleProducts(
                                             shoppingProduct._id!,
                                             "Add",
                                             shoppingCart
@@ -286,7 +286,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                             </IonItem>
                             <IonItemOptions
                               onIonSwipe={() => {
-                                let pendingShopingCar = shoppingCart;
+                                const pendingShopingCar = shoppingCart;
                                 delete pendingShopingCar[
                                   `${shoppingProduct?._id}`
                                 ];
@@ -298,7 +298,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                             >
                               <IonItemOption color="danger"
                                onClick={() => {
-                                let pendingShopingCar = shoppingCart;
+                                const pendingShopingCar = shoppingCart;
                                 delete pendingShopingCar[
                                   `${shoppingProduct?._id}`
                                 ];

@@ -1,6 +1,6 @@
 import { LocalNotifications } from "@ionic-native/local-notifications";
 import { PhonegapLocalNotification } from "@ionic-native/phonegap-local-notification";
-export function createLocalNotification(title:string,message:string){
+export function createLocalNotification(title: string,message: string){
 LocalNotifications.schedule({
   id: 1,
   title: title,

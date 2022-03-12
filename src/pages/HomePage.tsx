@@ -34,7 +34,7 @@ export class Home extends React.Component<
     showAlert: boolean;
     errorMessage: string;
     showModal: boolean;
-    loadData:boolean;
+    loadData: boolean;
   }
 > {
   constructor(props: any) {
@@ -59,7 +59,7 @@ export class Home extends React.Component<
       const user: any = await getObject("user");
 
       if (!user) {
-        let message = "sus credenciales vencieron";
+        const message = "sus credenciales vencieron";
         this.setState({ errorMessage: message });
         this.setState({ showAlert: true });
         history.push("/login");
@@ -68,7 +68,7 @@ export class Home extends React.Component<
         if (!user.obj.acceptPolicity) {
           this.setState({ showModal: true });
         }
-        this.setState({loadData:true})
+        this.setState({loadData:true});
       }
     } catch (e) {
       console.error(e);

@@ -54,7 +54,7 @@ const ListContainer: React.FC<ContainerProps> = ({
               setdata(inputs);
               setSearchText(e.detail.value!);
 
-              let newData = inputs.filter((item) => {
+              const newData = inputs.filter((item) => {
                 const itemData = `T${item.blockNumber
                   .toString()
                   .toUpperCase()} ${item.homeNumber.toString().toUpperCase()} 
@@ -74,9 +74,9 @@ const ListContainer: React.FC<ContainerProps> = ({
 
           {data.map((input: User, index) => {
             if(!input?.roles?.includes(currentUser.uniquecode)){
-              return null
+              return null;
             }
-            let debt = input.debt ? input.debt.toLocaleString() : 0;
+            const debt = input.debt ? input.debt.toLocaleString() : 0;
             return (
               <IonCard key={index} id="card">
                 <IonCardHeader color={debt > 0 ? "danger" : "primary"}>
@@ -98,7 +98,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                   <IonGrid>
                     <IonItem lines='none'>
                       <IonLabel>Estado del usuario:</IonLabel>
-                      <IonText color={'steel'}>{input.enabled?"Activo":"Inactivo"}</IonText>
+                      <IonText color={"steel"}>{input.enabled?"Activo":"Inactivo"}</IonText>
                     </IonItem>
                     <IonRow>
                       <IonCol>
@@ -126,7 +126,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                           <IonLabel>
                             <h2>{`Points:    ${input.points}`}</h2>
                             <h3>
-                              {`Deuda: `} <strong>${input.debt}</strong>
+                              {"Deuda: "} <strong>${input.debt}</strong>
                             </h3>
                             <p>{`${
                               input.isOwner
@@ -163,7 +163,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                   ></UpdateUser>
                   <IonFab vertical="bottom" horizontal="start" slot="fixed">
                     <IonFabButton
-                      onClick={() => {setShowModal(false)}}
+                      onClick={() => {setShowModal(false);}}
                     >
                       <IonIcon icon={arrowBackOutline} />
                     </IonFabButton>

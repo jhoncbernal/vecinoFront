@@ -60,7 +60,6 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
         setBills(pendingData);
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser._id]);
   const httpRequest = useCallback(async () => {
     try {
@@ -170,14 +169,11 @@ const HomeProviderContainer: React.FC<ContainerProps> = ({
               <IonCard>
                 <IonCardHeader>
                   <IonTitle class="ion-text-center ion-margin-top">
-                  <strong>!Bien hecho!</strong>
+                    <strong>!Bien hecho!</strong>
                   </IonTitle>
-                    <IonText>
-                   
-                      <p> Completaste todos 
-                        tus pedidos pendientes.</p>
-                    </IonText>
-                 
+                  <IonText>
+                    <p> Completaste todos tus pedidos pendientes.</p>
+                  </IonText>
                 </IonCardHeader>
                 <IonImg class="justImage " src={"/assets/img/Finish.png"} />
               </IonCard>

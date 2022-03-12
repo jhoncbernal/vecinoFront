@@ -34,7 +34,7 @@ interface ContainerProps {
 }
 
 const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
-  let body: any = {};
+  const body: any = {};
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState("");
   const [dataModall, setdataModall] = useState(dataModal);
@@ -62,7 +62,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
         } else {
           pathUrl = `${config.AdminContext}/${dataModal._id}`;
         }
-        let data = body;
+        const data = body;
         if (!bodyChange) {
           setMessage("No se modifico ningun campo");
         } else {

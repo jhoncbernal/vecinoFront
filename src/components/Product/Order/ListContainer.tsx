@@ -26,7 +26,7 @@ import { StatesDictionary } from "../../../hooks/OrderStates";
 import DetailsOrder from "./DetailsOrder";
 interface ContainerProps {
   history: H.History;
-  fireData:any;
+  fireData: any;
 }
 
 const ListContainer: React.FC<ContainerProps> = ({ history,fireData }) => {
@@ -35,14 +35,14 @@ const ListContainer: React.FC<ContainerProps> = ({ history,fireData }) => {
   const [data, setdata] = useState<Array<Bill>>();
   const [showModal, setShowModal] = useState(false);
   const [billSelected, setBillSelected] = useState<Bill>();
-  const [statesSelected, setSetStatesSelected] = useState<Array<{state:string,start:string}>>();
+  const [statesSelected, setSetStatesSelected] = useState<Array<{state: string;start: string}>>();
   const [hideLoadBar, setHideLoadBar] = useState(false);
   const states = StatesDictionary().states;
   
   useEffect(() => {
     async function fetchData() {
       setHideLoadBar(false);
-      let pathUrl = `${config.BillsContext}?pageSize=15`;
+      const pathUrl = `${config.BillsContext}?pageSize=15`;
       await HttpRequest(pathUrl, "GET", "", true)
         .then(async (resultado: any) => {
           setdata(resultado);
@@ -66,12 +66,12 @@ const ListContainer: React.FC<ContainerProps> = ({ history,fireData }) => {
         ? data.map((bill: Bill, index) => {
             let billstate;
             let startState;
-            let ActualState:any;
-            let total = bill.Total.toLocaleString();
+            let ActualState: any;
+            const total = bill.Total.toLocaleString();
 
             if (bill.enabled) {
               const fireStates = fireData
-                ? fireData.find((element:any) => element.code === bill.code)
+                ? fireData.find((element: any) => element.code === bill.code)
                 : null;
               if (fireStates && fireStates.states) {
                 billstate = states.get(
@@ -90,7 +90,7 @@ const ListContainer: React.FC<ContainerProps> = ({ history,fireData }) => {
               billstate = states.get(bill.states[bill.states.length - 1].state);
             }
             return (
-                <IonCard key={index}  onClick={async () => {setBillSelected(bill);setShowModal(true);setSetStatesSelected(ActualState)}}>
+                <IonCard key={index}  onClick={async () => {setBillSelected(bill);setShowModal(true);setSetStatesSelected(ActualState);}}>
                   <IonGrid>
                     <IonRow>
                       <IonCol size-xs="7" size-md="6">
@@ -151,7 +151,7 @@ const ListContainer: React.FC<ContainerProps> = ({ history,fireData }) => {
         <IonImg class="justImage " src={"/assets/img/emptyCart.png"} />
       </IonCard>}
         <IonModal
-                  onDidDismiss={(e) => setShowModal(false)}
+                  onDidDismiss={() => setShowModal(false)}
                   isOpen={showModal}
                   animated={true}
                 >

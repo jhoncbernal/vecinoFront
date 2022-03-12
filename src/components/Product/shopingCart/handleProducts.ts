@@ -1,9 +1,9 @@
 
 export default function handleProducts
-    (property: string, operation: string,shoppingCart:any) {
+    (property: string, operation: string,shoppingCart: any) {
       try {
-        let productCart: any = {};
-        let pendingShopingCar = shoppingCart;
+        const productCart: any = {};
+        const pendingShopingCar = shoppingCart;
         if (operation === "Add" && shoppingCart[`${property}`] >= 0) {
           productCart[`${property}`] = shoppingCart[`${property}`] + 1;
          return productCart;
@@ -11,13 +11,13 @@ export default function handleProducts
           productCart[`${property}`] = shoppingCart[`${property}`] - 1;
           if (productCart[`${property}`] === 0) {
             delete pendingShopingCar[`${property}`];
-            return pendingShopingCar
+            return pendingShopingCar;
           } else {
-            return productCart
+            return productCart;
           }
         } else if (operation !== "Less") {
           productCart[`${property}`] = 1;
-          return productCart
+          return productCart;
         }
       } catch (e) {
         console.error(e);

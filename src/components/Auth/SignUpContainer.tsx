@@ -18,7 +18,6 @@ import {
   IonCheckbox,
   IonText,
   IonAlert,
-  IonHeader,
   IonSegment,
   IonSegmentButton,
 } from "@ionic/react";
@@ -30,15 +29,12 @@ import {
   cardOutline,
   phonePortraitOutline,
   arrowBackOutline,
-  businessOutline,
-  homeOutline,
   peopleOutline,
   locationOutline,
 } from "ionicons/icons";
 import { HttpRequest } from "../../hooks/HttpRequest";
 import config from "../../config";
 import * as H from "history";
-import AddressContainer from "./AddressContainer";
 import { ProviderRegisterContainer } from "./ProviderRegister";
 import { constants } from "../../hooks/Constants";
 
@@ -77,7 +73,7 @@ export class SignUpPage extends React.Component<
 > {
   constructor(props: any) {
     super(props);
-    let param = this.props.history.location.pathname
+    const param = this.props.history.location.pathname
       .replace("/signup", "")
       .replace("/", "");
     this.state = {
@@ -131,7 +127,7 @@ export class SignUpPage extends React.Component<
         `${config.FileContext}/${this.state.paramsId}`,
         "DELETE"
       )
-        .then((response: any) => {})
+        .then(() => {})
         .catch((error) => {
           this.setState({ headerText: "Error" });
           this.setState({
@@ -202,7 +198,7 @@ export class SignUpPage extends React.Component<
         });
         this.setState({ showAlert: true });
       }  */ else {
-        let pathUrl = `${config.AuthSignUp}`;
+        const pathUrl = `${config.AuthSignUp}`;
         let data = {
           roles: [
             this.state.kind === "user"
@@ -544,7 +540,7 @@ export class SignUpPage extends React.Component<
                       />
                       <IonLabel position="stacked">Address</IonLabel>
                       <Autocomplete
-                        apiKey={process.env.REACT_APP_GOOGLE_API}
+                        apiKey={config.googleApiKey}
                         style={{
                           width: "100%",
                           height: 40,

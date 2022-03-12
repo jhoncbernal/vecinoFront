@@ -6,13 +6,12 @@ import * as Types from "../types/providerTypes";
 import {
   onLoginReceive,
   onLoadingLogin,
-  onGetProviderInfoReceive,
-  onGetProviderInfo,
+  onGetProviderInfoReceive
 } from "../actions/providerActions";
 import { login } from "../../services/provider";
 // Services
 
-function* fetchLogin({ payload }:any): SagaIterator {
+function* fetchLogin({ payload }: any): SagaIterator {
   try {
     yield put(onLoadingLogin("login", true));
     const {data} = yield call(login, payload);
@@ -20,7 +19,7 @@ function* fetchLogin({ payload }:any): SagaIterator {
     yield put(onLoginReceive(data.token));
     yield put(onGetProviderInfoReceive( data.user));
     yield put(onLoadingLogin("login", false));
-  } catch (e) {
+  } catch (e ) {
     console.error(`Error login: ${e}`);
     yield put(onLoadingLogin("login", false));
   }

@@ -24,12 +24,12 @@ import { arrowBack } from "ionicons/icons";
 import { Product, Provider } from "../../../entities";
 import Axios from "axios";
 
-const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
+const CreateComponent: FC<ComponentData> = ({ prod, action, provider }) => {
   const productType =
     provider && provider.categories ? provider.categories : ["Limpieza"];
 
   const measureType = ["Lb", "Kg", "Und"];
-  let temp: { [id: string]: any } = {};
+  const temp: { [id: string]: any } = {};
   const [dataToast, setDataToast] = useState({ show: false, message: "" });
   const [product, setProduct] = useState<{ [id: string]: any }>();
   const [flagImageUpload, setFlagImageUpload] = useState<boolean>(false);
@@ -49,7 +49,7 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
   const submitData = async (e: FormEvent) => {
     e.preventDefault();
     if (product) {
-      let error: boolean = false;
+      let error = false;
 
       const method = product._id ? "PATCH" : "POST";
       const pathUrl = product._id
@@ -96,7 +96,7 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
       }
       if (!error) {
         await HttpRequest(pathUrl, method, product, true)
-          .then(async (response: any) => {
+          .then(async () => {
             action({ hasChanges: true });
           })
           .catch((error) => {
@@ -134,7 +134,7 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
                 output={async (value: any) => {
                   try {
                     setFlagImageUpload(false);
-                    let header = {
+                    const header = {
                       "Access-Control-Allow-Origin": "*",
                       "Access-Control-Allow-Methods":
                         "GET, PUT, POST, DELETE, OPTIONS",
@@ -303,7 +303,7 @@ const CreateComponent: FC<componentData> = ({ prod, action, provider }) => {
     </IonCard>
   );
 };
-interface componentData {
+interface ComponentData {
   [id: string]: any;
   prod: Product;
   provider: Provider;

@@ -63,7 +63,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
   const [cities, setCities] = useState<Array<string>>();
   useEffect(() => {
     async function fetchData() {
-      let pathUrl = `${config.AllNeighborhoodsContext}`;
+      const pathUrl = `${config.AllNeighborhoodsContext}`;
       await HttpRequest(pathUrl, "GET", "")
         .then((response: any) => {
           if (currentAddress) {
@@ -95,11 +95,10 @@ const AddressContainer: React.FC<ContainerProps> = ({
         .catch((error) => console.error("Error:", error));
     }
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (address) {
-      let addressTemp: string = "";
+      let addressTemp = "";
       if (address.whereIlive === "Conjunto") {
         addressTemp = `${address.neighborhood ? address.neighborhood : ""} 
                       ${
@@ -148,10 +147,9 @@ const AddressContainer: React.FC<ContainerProps> = ({
         });
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address]);
   useEffect(() => {
-    let whereIlive = currentAddress?.address ? "Barrio" : "Conjunto";
+    const whereIlive = currentAddress?.address ? "Barrio" : "Conjunto";
     if (
       currentAddress &&
       address &&
@@ -177,7 +175,6 @@ const AddressContainer: React.FC<ContainerProps> = ({
       }));
       setNewAddres("");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address?.whereIlive]);
 
   return (

@@ -14,7 +14,7 @@ export const logout = async () => {
 };
 
 export const isLogin = async () => {
-  let user = await getObject("user");
+  const user = await getObject("user");
   if (user) {
     return true;
   }
@@ -38,12 +38,14 @@ export const setFingerLogin = async (username: string, password: string) => {
               if (result.withFingerprint) {
                 await setObject("fingerToken", result.token);
               } else if (result.withBackup) {
+                console.error("error");
               } else console.error("Didn't authenticate!");
             })
             .catch((error) => {
               if (
                 error === AndroidFingerprintAuth.ERRORS.FINGERPRINT_CANCELLED
               ) {
+                console.error("error");
               } else console.error(error);
             });
         } else {
@@ -68,7 +70,7 @@ export async function getFingerLogin(token: string,username: string) {
               userAuthRequired:true,
               dialogTitle: "Ingresa tu huella",
               dialogMessage: "Ubica tu huella en el sensor de tu celular para continuar.",
-              dialogHint:'',
+              dialogHint:"",
               token:token
             })
               .then((result) => {

@@ -36,7 +36,7 @@ import ProductsDetailsContainer from "./ProductsDetails";
 interface ContainerProps {
   bill: Bill | undefined;
   history: H.History;
-  fireData:Array<{state:string,start:string}>| undefined;
+  fireData: Array<{state: string;start: string}>| undefined;
 }
 
 const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
@@ -47,11 +47,11 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
   useEffect(() => {
     async function fetchData() {
       const device = await Device.getInfo();
-      let size =
+      const size =
         device.operatingSystem === "android" || device.operatingSystem === "ios"
           ? 3
           : 6;
-      let productsSize = bill ? bill.products.length : 0;
+      const productsSize = bill ? bill.products.length : 0;
       if (productsSize > 0) {
         setChunkSize(size > productsSize ? productsSize : size);
       }
@@ -119,7 +119,7 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
             <IonCard>
               <IonItemGroup>
                 {fireData.map((state, index) => {
-                  let style = statesStyle.get(state.state);
+                  const style = statesStyle.get(state.state);
                   return (
                     <IonItem lines="none" key={index}>
                       <IonIcon
@@ -149,7 +149,7 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
                   slot="start"
                   color={"primary"}
                   icon={basketSharp}
-                ></IonIcon><IonBadge color={'white'}>
+                ></IonIcon><IonBadge color={"white"}>
                 x{bill.products.length}
               </IonBadge>
               </IonItem>
@@ -197,7 +197,7 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
                   <IonText color="dark">
                     {bill.otherAddress
                       ? bill.otherAddress
-                      : bill.user.neighborhood.address==='NO APLICA'?bill.user.address:bill.user.neighborhood.address}
+                      : bill.user.neighborhood.address==="NO APLICA"?bill.user.address:bill.user.neighborhood.address}
                   </IonText>
                 </IonItem>
               </IonItemDivider>
@@ -207,7 +207,7 @@ const DetailsOrder: React.FC<ContainerProps> = ({ bill, history,fireData }) => {
           </IonCardContent>
         
       <IonModal
-        onDidDismiss={(e) => setShowModal(false)}
+        onDidDismiss={() => setShowModal(false)}
         isOpen={showModal}
         animated={true}
       >

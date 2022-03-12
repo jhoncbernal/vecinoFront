@@ -49,10 +49,10 @@ const UpdateUser: React.FC<ContainerProps> = ({
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [bodyChange, setbodyChange] = useState(false);
   const [dataSend, setDataSend] = useState();
-  const handleValueChange = useCallback((property: string, value:any) => {
+  const handleValueChange = useCallback((property: string, value: any) => {
     try {
       setbodyChange(true);
-      let body: any = {};
+      const body: any = {};
       body[property] = value;
       setDataSend((prevState: any) => ({
         ...prevState,
@@ -67,7 +67,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
       try {
         const { setObject } = Storages();
         e.preventDefault();
-        let pathUrl = ``;
+        let pathUrl = "";
         if (dataModal.roles?.includes(config.RolUserAccess)||dataModal.roles?.includes(config.RolSecurityAccess)) {
           pathUrl = `${config.UserContext}/${dataModal._id}`;
         } else if (dataModal.roles?.includes(config.RolAdminAccess)) {
@@ -75,7 +75,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
         } else {
           pathUrl = `${config.ProviderContext}/${dataModal._id}`;
         }
-        let data = dataSend;
+        const data = dataSend;
         if (!bodyChange) {
           setMessage("No se modifico ningun campo");
         } else {

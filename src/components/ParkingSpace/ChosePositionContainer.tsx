@@ -42,7 +42,7 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal, dataChange }) => {
     (property: string, value) => {
       try {
         setbodyChange(true);
-        let body: any={};
+        const body: any={};
         body[property] = value;
         setDataSend((prevState: any) => ({
           ...prevState,
@@ -58,7 +58,7 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal, dataChange }) => {
     async (e: any) => {
       try {
         e.preventDefault();
-        let pathUrl = `${config.ParkingSpaceContext}/positions/${dataModal.vehicletype}s/${dataModal.posnumber}`;
+        const pathUrl = `${config.ParkingSpaceContext}/positions/${dataModal.vehicletype}s/${dataModal.posnumber}`;
         let data;
         if (dataModal.available === "false") {
           data = {};
@@ -98,9 +98,9 @@ const ChosePosition: React.FC<ContainerProps> = ({ dataModal, dataChange }) => {
             })
             .catch((error) => {
               if(error.message==="the plate is already asigned to other position"){
-              setMessage(`No se puedea asignar debido a que la o el ${dataModal.vehicletype} con placa: ${dataSend["plate"]} se encuentra asignado en otra posiciòn`)}
+              setMessage(`No se puedea asignar debido a que la o el ${dataModal.vehicletype} con placa: ${dataSend["plate"]} se encuentra asignado en otra posiciòn`);}
               else{
-                setMessage(`No se pudo asignar debido a :${error.message}`)}
+                setMessage(`No se pudo asignar debido a :${error.message}`);}
 
               console.error(error);
               throw error;

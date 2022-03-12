@@ -29,7 +29,7 @@ const BestListContainer: React.FC<ContainerProps> = ({ dataModal }) => {
   const [showProgressBar, setShowProgressBar] = useState(false);
   const handleSubmit = useCallback(async () => {
     try {
-      let pathUrl = `${config.UserContext}/bestpoints/1`;
+      const pathUrl = `${config.UserContext}/bestpoints/1`;
 
       let data;
       setShowProgressBar(true);

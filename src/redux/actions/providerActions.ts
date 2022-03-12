@@ -13,7 +13,7 @@ export const onLogin: Function = (data: any): Action => ({
   },
 });
 
-export const onLoginReceive: Function = (token:string): Action => ({
+export const onLoginReceive: Function = (token: string): Action => ({
   type: Types.ON_LOGIN_RECEIVE,
   payload: {
    token

@@ -19,19 +19,24 @@ import { menuController } from "@ionic/core";
 import { Bill } from "../../../entities";
 import { StatesDictionary } from "../../../hooks/OrderStates";
 
-const PendingShoppingContainer: FC<componentData> = ({
+const PendingShoppingContainer: FC<ComponentData> = ({
   dataTrigger,
   bills,
 }) => {
   const statesStyle = StatesDictionary().states;
-
+  const getStateStyle = (bill: Bill) => {
+    if (bill.states && statesStyle) {
+      const pos: number = bill.states.length - 1;
+      return statesStyle.get(bill.states[pos].state);
+    }
+  };
   const handlerSide = (request: any) => {
     dataTrigger(request);
   };
   const renderCardsData = () => {
     if (bills) {
       return bills.map((bill: Bill, index) => {
-        let state = getStateStyle(bill);
+        const state = getStateStyle(bill);
         return (
           <IonCard
             key={index}
@@ -133,8 +138,8 @@ const PendingShoppingContainer: FC<componentData> = ({
                       data-toggle="collapse"
                       href={`https://api.whatsapp.com/send?phone=57${bill.user.phone}`}
                       data-target="#landx-navigation"
-                      routerDirection='none'
-                      target='_blank'
+                      routerDirection="none"
+                      target="_blank"
                     >
                       {bill.user.phone}
                     </IonButton>
@@ -249,12 +254,7 @@ const PendingShoppingContainer: FC<componentData> = ({
       });
     }
   };
-  const getStateStyle = (bill: Bill) => {
-    if (bill.states && statesStyle) {
-      let pos: number = bill.states.length - 1;
-      return statesStyle.get(bill.states[pos].state);
-    }
-  };
+
   return (
     <>
       <IonHeader id="auxContent">
@@ -266,7 +266,7 @@ const PendingShoppingContainer: FC<componentData> = ({
     </>
   );
 };
-interface componentData {
+interface ComponentData {
   [id: string]: any;
   bills: Array<Bill>;
 }
