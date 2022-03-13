@@ -3,7 +3,6 @@ import { Action } from ".";
 // Types
 import Types from "../types/providerTypes";
 
-
 export type state = {
   data: {
     providerId: string | null;
@@ -11,22 +10,30 @@ export type state = {
     providerList: any[];
     cityList: any[];
     cityId: string | null;
-    providerListByCity: any[];
+    providersListByCity: any[];
   };
   loading: {
     provider: boolean;
     providerList: boolean;
     cityList: boolean;
-    providerListByCity: boolean;
+    providersListByCity: boolean;
   };
 };
 
-const initialState: state | any = {
+const initialState: state = {
   data: {
+    providerId: null,
     provider: {},
+    providerList: [],
+    cityList: [],
+    cityId: null,
+    providersListByCity: [],
   },
   loading: {
     provider: false,
+    providerList: false,
+    cityList: false,
+    providersListByCity: false,
   },
 };
 

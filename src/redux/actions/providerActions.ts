@@ -47,11 +47,11 @@ export const onGetProviderByCity: Function = (cityId: string): Action => ({
 });
 
 export const onGetProviderByCityRecive: Function = (
-  providerListByCity: any,
+  providersListByCity: any,
 ): Action => ({
   type: Types.GET_PROVIDER_BY_CITY_RECEIVE,
   payload: {
-    providerListByCity,
+    providersListByCity,
   },
 });
 

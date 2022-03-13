@@ -4,20 +4,16 @@ import { Action } from ".";
 import Types from "../types/loginTypes";
 
 export type state = {
-  data:
-    | {
-        token: string | null;
-        login: {
-          email: string | null;
-          password: string | null;
-        };
-      }
-    | any;
-  loading:
-    | {
-        login: boolean;
-      }
-    | any;
+  data: {
+    token: string | null;
+    login: {
+      email: string | null;
+      password: string | null;
+    };
+  };
+  loading: {
+    login: boolean;
+  };
 };
 
 const initialState: state = {
