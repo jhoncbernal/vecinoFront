@@ -1,31 +1,31 @@
 import produce from "immer";
 import { Action } from ".";
 // Types
-import Types from "../types/loginTypes";
+import Types from "../types/authTypes";
 
 export type state = {
   data: {
     token: string | null;
-    login: {
+    auth: {
       email: string | null;
       password: string | null;
     };
   };
   loading: {
-    login: boolean;
+    auth: boolean;
   };
 };
 
 const initialState: state = {
   data: {
     token: null,
-    login: {
+    auth: {
       email: null,
       password: null,
     },
   },
   loading: {
-    login: false,
+    auth: false,
   },
 };
 
@@ -33,23 +33,23 @@ const reducer = (state = initialState, action: Action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case Types.ON_LOGIN: {
-      state.data.login = payload.login;
+    case Types.ON_AUTH: {
+      state.data.auth = payload.auth;
       return;
     }
 
-    case Types.ON_LOGIN_RECEIVE: {
+    case Types.ON_AUTH_RECEIVE: {
       state.data.token = payload.token;
-      state.data.login = initialState.data.login;
+      state.data.auth = initialState.data.auth;
       return;
     }
 
-    case Types.LOADING_LOGIN: {
+    case Types.LOADING_AUTH: {
       state.loading[payload.name] = payload.status;
       return;
     }
 
-    case Types.RESET_LOGIN: {
+    case Types.RESET_AUTH: {
       if (payload.name === "*") return initialState;
       state.data[payload.name] = initialState.data[payload.name];
       return;

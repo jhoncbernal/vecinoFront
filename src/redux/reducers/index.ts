@@ -1,6 +1,6 @@
 // Reducers
 import adminReducers from "./adminReducers";
-import loginReducer from "./loginReducers";
+import authReducer from "./authReducers";
 import providerReducers from "./providerReducers";
 import userReducers from "./userReducers";
 export type Action = {
@@ -12,7 +12,7 @@ export type Action = {
 // Add Reducers
 const reducers = {
   provider: providerReducers,
-  login: loginReducer,
+  auth: authReducer,
   user: userReducers,
   admin: adminReducers,
 };

@@ -1,7 +1,7 @@
 import adminSagas from "./adminSagas";
-import loginSagas from "./loginSagas";
+import authSagas from "./authSagas";
 import providerSagas from "./providerSagas";
 import userSagas from "./userSagas";
 
 
-export default [...providerSagas,...loginSagas,...userSagas,...adminSagas];
+export default [...providerSagas,...authSagas,...userSagas,...adminSagas];
