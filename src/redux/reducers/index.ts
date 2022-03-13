@@ -1,4 +1,5 @@
 // Reducers
+import adminReducers from "./adminReducers";
 import loginReducer from "./loginReducers";
 import providerReducers from "./providerReducers";
 import userReducers from "./userReducers";
@@ -12,7 +13,8 @@ export type Action = {
 const reducers = {
   provider: providerReducers,
   login: loginReducer,
-  user: userReducers
+  user: userReducers,
+  admin: adminReducers,
 };
 
 export default reducers;
