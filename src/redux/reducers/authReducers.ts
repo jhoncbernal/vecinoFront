@@ -2,30 +2,45 @@ import produce from "immer";
 import { Action } from ".";
 // Types
 import Types from "../types/authTypes";
-
+type recover = {
+  message: string;
+  emailResult: {
+    result: {
+      accepted: string[];
+      rejected: never[];
+      envelopeTime: number;
+      messageTime: number;
+      messageSize: number;
+      response: string;
+      envelope: {
+        from: string;
+        to: string[];
+      };
+      messageId: string;
+    };
+  };
+};
 export type state = {
   data: {
     token: string | null;
-    auth: {
-      email: string | null;
-      password: string | null;
-    };
+    recover: recover | null;
   };
   loading: {
-    auth: boolean;
+    signIn: boolean;
+    signUp: boolean;
+    recover: boolean;
   };
 };
 
 const initialState: state = {
   data: {
     token: null,
-    auth: {
-      email: null,
-      password: null,
-    },
+    recover: null,
   },
   loading: {
-    auth: false,
+    signIn: false,
+    signUp: false,
+    recover: false,
   },
 };
 
@@ -33,17 +48,18 @@ const reducer = (state = initialState, action: Action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case Types.ON_AUTH: {
-      state.data.auth = payload.auth;
+    case Types.ON_SIGN_IN: {
       return;
     }
 
-    case Types.ON_AUTH_RECEIVE: {
+    case Types.ON_SIGN_IN_RECEIVE: {
       state.data.token = payload.token;
-      state.data.auth = initialState.data.auth;
       return;
     }
-
+    case Types.ON_RECOVER_RECEIVE: {
+      state.data.recover = payload.recover;
+      return;
+    }
     case Types.LOADING_AUTH: {
       state.loading[payload.name] = payload.status;
       return;

@@ -4,31 +4,64 @@ import { call, put, takeLatest } from "redux-saga/effects";
 // Types
 import Types from "../types/authTypes";
 import {
-  onAuthReceive,
-  onLoadingAuth
+  onSignInReceive,
+  onLoadingAuth,
+  onRecoverReceive
 } from "../actions/authActions";
-import { auth } from "../../services/auth";
+import { recover, signIn, signUp } from "../../services/auth";
 import { onGetUserRecive } from "../actions/userActions";
 // Services
-function* fetchAuth({ payload }: any): SagaIterator {
+function* fetchOnSignIn({ payload }: any): SagaIterator {
   try {
-    console.log("payload", payload);
-    yield put(onLoadingAuth("auth", true));
-    const { data, status } = yield call(auth, payload);
+    yield put(onLoadingAuth("signIn", true));
+    const { data, status } = yield call(signIn, payload);
     if (status === 200) {
-      yield put(onAuthReceive(data));
+      yield put(onSignInReceive(data));
       yield put(onGetUserRecive(data?.user));
     } else {
-      console.error("auth info failed");
+      console.error("OnSignIn info failed");
     }
-    yield put(onLoadingAuth("auth", false));
+    yield put(onLoadingAuth("signIn", false));
   } catch (e) {
-    console.error(`auth info Error: ${e}`);
-    yield put(onLoadingAuth("auth", false));
+    console.error(`OnSignIn info Error: ${e}`);
+    yield put(onLoadingAuth("signIn", false));
   }
 }
 
+function* fetchOnSignUp({ payload }: any): SagaIterator {
+  try {
+    yield put(onLoadingAuth("signUp", true));
+    const { data, status } = yield call(signUp, payload);
+    if (status === 200) {
+      yield put(onGetUserRecive(data));
+    } else {
+      console.error("OnSignUp info failed");
+    }
+    yield put(onLoadingAuth("signUp", false));
+  } catch (e) {
+    console.error(`OnSignUp info Error: ${e}`);
+    yield put(onLoadingAuth("signUp", false));
+  }
+}
+
+function* fetchOnRecover({ payload }: any): SagaIterator {
+  try {
+    yield put(onLoadingAuth("recover", true));
+    const { data, status } = yield call(recover, payload);
+    if (status === 200) {
+      yield put(onRecoverReceive(data));
+    } else {
+      console.error("OnRecovery info failed");
+    }
+    yield put(onLoadingAuth("recover", false));
+  } catch (e) {
+    console.error(`OnRecovery info Error: ${e}`);
+    yield put(onLoadingAuth("recover", false));
+  }
+}
 
 export default [
-  takeLatest(Types.ON_AUTH, fetchAuth)
+  takeLatest(Types.ON_SIGN_IN, fetchOnSignIn),
+  takeLatest(Types.ON_SIGN_UP, fetchOnSignUp),
+  takeLatest(Types.ON_RECOVER, fetchOnRecover),
 ];

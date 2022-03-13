@@ -10,6 +10,7 @@ const general = {
   LoginContext: "/auth/signin",
   ParkingSpaceContext: "/parkingspace",
   RecoveryPasswordContext: "/auth/recover",
+  AuthContext: "/auth",
   UserContext: "/user",
   ProductContext: "/product",
   FileContext: "/file",

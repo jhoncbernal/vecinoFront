@@ -6,17 +6,32 @@ export type Action = {
   payload?: any;
 };
 
-export const onAuth: Function = (auth: any): Action => ({
-  type: Types.ON_AUTH,
+export const onSignIn: Function = (auth: any): Action => ({
+  type: Types.ON_SIGN_IN,
   payload: { auth },
 });
 
-export const onAuthReceive: Function = ({token}: any ): Action => ({
-  type: Types.ON_AUTH_RECEIVE,
+export const onSignInReceive: Function = ({ token }: any): Action => ({
+  type: Types.ON_SIGN_IN_RECEIVE,
   payload: {
     token,
   },
 });
+
+export const onSignUp: Function = (auth: any): Action => ({
+  type: Types.ON_SIGN_UP,
+  payload: { auth },
+});
+
+export const onRecover: Function = (auth: any): Action => ({
+  type: Types.ON_RECOVER,
+  payload: { auth },
+});
+
+export const onRecoverReceive: Function = (recover: any): Action => ({
+         type: Types.ON_RECOVER_RECEIVE,
+         payload: { recover },
+       });
 
 export const onLoadingAuth: Function = (
   name: string,
