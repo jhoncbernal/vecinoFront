@@ -3,12 +3,47 @@ import { Action } from ".";
 // Types
 import Types from "../types/userTypes";
 
+type user = {
+  enabled: boolean;
+  roles: string[];
+  isVerified: boolean;
+  acceptPolicity: boolean;
+  points: number;
+  isOwner: boolean;
+  debt: string;
+  payOnTime: boolean;
+  count: number;
+  averagePoints: number;
+  _id: string;
+  username: string;
+  email: string;
+  phone: string;
+  firstName: string;
+  uniquecode: string;
+  lastName: string;
+  homeNumber: number;
+  blockNumber: number;
+  documentId: number;
+  createdAt: string;
+  updatedAt: string;
+  code: string;
+  __v: number;
+  address: string;
+  neighborhood: {
+    _id: string;
+    firstName: string;
+    address: string;
+  };
+  fireToken: string;
+  city: string;
+};
+
 export type state = {
   data: {
     userId: string | null;
-    user: any;
-    userList: any[];
-    userListBestPoints: any[];
+    user: user | null;
+    userList: user[];
+    userListBestPoints: user[];
   };
   loading: {
     user: boolean;
@@ -20,7 +55,7 @@ export type state = {
 const initialState: state = {
   data: {
     userId: null,
-    user: {},
+    user: null,
     userList: [],
     userListBestPoints: [],
   },
