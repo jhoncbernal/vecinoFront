@@ -20,6 +20,12 @@ import { User } from "../entities";
 import { timeOutline } from "ionicons/icons";
 import { refByIdFirebase } from "../config/firebase";
 import { createLocalNotification } from "../hooks/LocalNotification";
+import { useDispatch, useSelector } from "react-redux";
+import { onGetProviderByCity, onGetProviderCities } from "../Redux/actions/providerActions";
+import { onGetUser, onGetUsersByPoints, onUpdateUser } from "../Redux/actions/userActions";
+import { onRecover, onSignIn } from "../Redux/actions/authActions";
+import { onGetAllBillsByProvider, onGetAllBillsByUser, onGetBill, onUpdateBill } from "../Redux/actions/billActions";
+
 interface ContainerProps {
   history: H.History;
   currentUser: User;
@@ -39,7 +45,6 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
   const [segmentValue, setSegmentValue] = useState<any>("provider");
   const [pending, setPending] = useState(0);
   const httpRequest = useCallback(async () => {
-
     try {
       let pathUrl;
       if (segmentValue === "provider") {
@@ -94,7 +99,6 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
         const pendingData: any[] = [];
         snapshot.forEach((snap: any) => {
           pendingData.push({ code: snap.key, states: snap.val() });
-          
         });
         if (pendingData && pendingData.length > 0) {
           const states: any = {
@@ -114,17 +118,24 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
           }
         }
         setFireData(pendingData);
-      }
+      },
     );
   }, [currentUser]);
+const dispatch= useDispatch();
+const user = useSelector((state: any) => state.user);
+  const _test = () => {
+    dispatch(onUpdateBill("5f289bfdcf54bd0017950da0", { Total: 46900 }));
+    
+  };
   return (
     <>
+      <button onClick={_test}>test</button>
       <IonCard class="home-card-center">
         <IonToolbar>
           <IonSegment
             onIonChange={(e) => {
               setSegmentValue(e.detail.value);
-              if(e.detail.value==="pendingShop"){
+              if (e.detail.value === "pendingShop") {
                 setPending(0);
               }
             }}

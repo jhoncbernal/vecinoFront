@@ -20,6 +20,7 @@ const general = {
   RolUserAccess: "ROLE_USER_ACCESS",
   RolAdminAccess: "ROLE_ADMINISTRATION_ACCESS",
   RolSecurityAccess: "ROLE_SECURITY",
+  CityContex:"/city"
 };
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,

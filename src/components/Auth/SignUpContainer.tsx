@@ -88,10 +88,10 @@ export class SignUpPage extends React.Component<
       homeNumber: "",
       whereIlive: "",
       city: "",
-      province:"",
+      province: "",
       country: "",
       documentId: "",
-      uniquecode: "",
+      uniquecode: "NEWUSER001",
       showAlert: false,
       headerText: "Advertencia",
       loginMessage: "",
@@ -550,7 +550,7 @@ export class SignUpPage extends React.Component<
                         debounce={500}
                         options={{
                           types: ["geocode"],
-                          componentRestrictions: { country: "ca" },
+                          componentRestrictions: { country: ["ca","co"] },
                         }}
                         onPlaceSelected={(place: any) => {
                           console.log(place);
@@ -612,7 +612,7 @@ export class SignUpPage extends React.Component<
                         value={this.state.postalCode}
                         onIonChange={(e: any) => {
                           const postalCodeRegex = new RegExp(
-                            /^[ABCEGHJKLMNPRSTVXY]\d[ABCEGHJKLMNPRSTVXY][ -]?\d[ABCEGHJKLMNPRSTVXY]\d$/i
+                            /^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJKLMNPRSTVXY][ -]?\d[ABCEGHJKLMNPRSTVXY]\d|\d{6})$/i,
                           );
                           this.setState({
                             postalCode: e.target.value.toUpperCase(),
