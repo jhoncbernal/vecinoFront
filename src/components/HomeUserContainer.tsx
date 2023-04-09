@@ -20,11 +20,7 @@ import { User } from "../entities";
 import { timeOutline } from "ionicons/icons";
 import { refByIdFirebase } from "../config/firebase";
 import { createLocalNotification } from "../hooks/LocalNotification";
-import { useDispatch, useSelector } from "react-redux";
-import { onGetProviderByCity, onGetProviderCities } from "../Redux/actions/providerActions";
-import { onGetUser, onGetUsersByPoints, onUpdateUser } from "../Redux/actions/userActions";
-import { onRecover, onSignIn } from "../Redux/actions/authActions";
-import { onGetAllBillsByProvider, onGetAllBillsByUser, onGetBill, onUpdateBill } from "../Redux/actions/billActions";
+import PackageReceiveForm from "./Packages/PackageReceiveForm";
 
 interface ContainerProps {
   history: H.History;
@@ -78,7 +74,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
       const { removeItem } = await Storages();
       await removeItem("token");
       await removeItem("user");
-      setMessage(e.message);
+      setMessage(JSON.stringify(e));
       setShowAlert1(true);
       console.error("HomeAdminPageContainer: " + e);
       setHiddenBar(true);
@@ -121,15 +117,10 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
       },
     );
   }, [currentUser]);
-const dispatch= useDispatch();
-const user = useSelector((state: any) => state.user);
-  const _test = () => {
-    dispatch(onUpdateBill("5f289bfdcf54bd0017950da0", { Total: 46900 }));
-    
-  };
+
   return (
     <>
-      <button onClick={_test}>test</button>
+      <PackageReceiveForm/>
       <IonCard class="home-card-center">
         <IonToolbar>
           <IonSegment
@@ -181,7 +172,6 @@ const user = useSelector((state: any) => state.user);
 
         <br />
       </IonCard>
-
       <IonAlert
         isOpen={showAlert1}
         onDidDismiss={() => setShowAlert1(true)}
