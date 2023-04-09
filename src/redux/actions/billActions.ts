@@ -8,7 +8,7 @@ export const onGetBill: Function = (billId: any): Action => ({
     billId,
   },
 });
-export const onGetBillRecive: Function = (bill: any): Action => ({
+export const onGetBillReceive: Function = (bill: any): Action => ({
   type: Types.GET_BILL_RECEIVE,
   payload: {
     bill,
@@ -23,7 +23,7 @@ export const onGetAllBillsByProvider: Function = (): Action => ({
   type: Types.GET_BILLS_BY_PROVIDER,
 });
 
-export const onGetAllBillsRecive: Function = (billList: any): Action => ({
+export const onGetAllBillsReceive: Function = (billList: any): Action => ({
   type: Types.GET_BILLS_ALL_RECEIVE,
   payload: {
     billList,

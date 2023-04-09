@@ -8,7 +8,7 @@ export const onGetUser: Function = (userId: any): Action => ({
     userId,
   },
 });
-export const onGetUserRecive: Function = (user: any): Action => ({
+export const onGetUserReceive: Function = (user: any): Action => ({
   type: Types.GET_USER_RECEIVE,
   payload: {
     user,
@@ -19,7 +19,7 @@ export const onGetAllUsers: Function = (): Action => ({
   type: Types.GET_USER_ALL,
 });
 
-export const onGetAllUsersRecive: Function = (userList: any): Action => ({
+export const onGetAllUsersReceive: Function = (userList: any): Action => ({
   type: Types.GET_USER_ALL_RECEIVE,
   payload: {
     userList,
@@ -30,7 +30,7 @@ export const onGetUsersByPoints: Function = (): Action => ({
   type: Types.GET_USER_BY_POINTS,
 });
 
-export const onGetUsersByPointsRecive: Function = (
+export const onGetUsersByPointsReceive: Function = (
   userListBestPoints: any,
 ): Action => ({
   type: Types.GET_USER_BY_POINTS_RECEIVE,

@@ -4,8 +4,8 @@ import { call, put, takeLatest } from "redux-saga/effects";
 // Types
 import Types from "../types/billTypes";
 import {
-  onGetBillRecive,
-  onGetAllBillsRecive,
+  onGetBillReceive,
+  onGetAllBillsReceive,
   onLoadingBill,
 } from "../actions/billActions";
 // Services
@@ -23,7 +23,7 @@ function* fetchBill({ payload }: any): SagaIterator {
     yield put(onLoadingBill("bill", true));
     const { data, status } = yield call(getBill, payload);
     if (status === 200) {
-      yield put(onGetBillRecive(data));
+      yield put(onGetBillReceive(data));
     } else {
       console.error("bill info failed");
     }
@@ -39,7 +39,7 @@ function* fetchBillsByUser(): SagaIterator {
     yield put(onLoadingBill("billList", true));
     const { data, status } = yield call(getAllBillsByUser);
     if (status === 200) {
-      yield put(onGetAllBillsRecive(data));
+      yield put(onGetAllBillsReceive(data));
     } else {
       console.error("BillsByUser info failed");
     }
@@ -55,7 +55,7 @@ function* fetchBillsByProvider(): SagaIterator {
     yield put(onLoadingBill("billList", true));
     const { data, status } = yield call(getAllBillsByProvider);
     if (status === 200) {
-      yield put(onGetAllBillsRecive(data));
+      yield put(onGetAllBillsReceive(data));
     } else {
       console.error("BillsByProvider info failed");
     }
@@ -71,7 +71,7 @@ function* fetchAddBill({ payload }: any): SagaIterator {
     yield put(onLoadingBill("bill", true));
     const { data, status } = yield call(addBill, payload);
     if (status === 200) {
-      yield put(onGetBillRecive(data));
+      yield put(onGetBillReceive(data));
     } else {
       console.error("addBill info failed");
     }
@@ -87,7 +87,7 @@ function* fetchUpdateBill({ payload }: any): SagaIterator {
     yield put(onLoadingBill("bill", true));
     const { data, status } = yield call(updateBill, payload);
     if (status === 200) {
-      yield put(onGetBillRecive(data));
+      yield put(onGetBillReceive(data));
     } else {
       console.error("UpdateBill info failed");
     }

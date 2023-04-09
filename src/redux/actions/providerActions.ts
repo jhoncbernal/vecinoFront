@@ -8,7 +8,7 @@ export const onGetProvider: Function = (providerId: any): Action => ({
     providerId,
   },
 });
-export const onGetProviderRecive: Function = (provider: any): Action => ({
+export const onGetProviderReceive: Function = (provider: any): Action => ({
   type: Types.GET_PROVIDER_RECEIVE,
   payload: {
     provider,
@@ -19,7 +19,7 @@ export const onGetAllProviders: Function = (): Action => ({
   type: Types.GET_PROVIDER_ALL,
 });
 
-export const onGetAllProvidersRecive: Function = (
+export const onGetAllProvidersReceive: Function = (
   providerList: any,
 ): Action => ({
   type: Types.GET_PROVIDER_ALL_RECEIVE,
@@ -32,7 +32,7 @@ export const onGetProviderCities: Function = (): Action => ({
   type: Types.GET_PROVIDER_CITIES,
 });
 
-export const onGetProviderCitiesRecive: Function = (cityList: any): Action => ({
+export const onGetProviderCitiesReceive: Function = (cityList: any): Action => ({
   type: Types.GET_PROVIDER_CITIES_RECEIVE,
   payload: {
     cityList,
@@ -46,7 +46,7 @@ export const onGetProviderByCity: Function = (cityId: string): Action => ({
   },
 });
 
-export const onGetProviderByCityRecive: Function = (
+export const onGetProviderByCityReceive: Function = (
   providersListByCity: any,
 ): Action => ({
   type: Types.GET_PROVIDER_BY_CITY_RECEIVE,

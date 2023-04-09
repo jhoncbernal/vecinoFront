@@ -4,9 +4,9 @@ import { call, put, takeLatest } from "redux-saga/effects";
 // Types
 import Types from "../types/adminTypes";
 import {
-  onGetAllAdminsRecive,
-  onGetAdminRecive,
-  onGetAdminNamesRecive,
+  onGetAllAdminsReceive,
+  onGetAdminReceive,
+  onGetAdminNamesReceive,
   onLoadingAdmin,
   onGetAllAdmins,
 } from "../actions/adminActions";
@@ -25,7 +25,7 @@ function* fetchAdmin({ payload }: any): SagaIterator {
     yield put(onLoadingAdmin("admin", true));
     const { data, status } = yield call(getAdmin, payload);
     if (status === 200) {
-      yield put(onGetAdminRecive(data));
+      yield put(onGetAdminReceive(data));
     } else {
       console.error("fetchAdmin info failed");
     }
@@ -41,7 +41,7 @@ function* fetchAllAdmins(): SagaIterator {
     yield put(onLoadingAdmin("adminList", true));
     const { data, status } = yield call(getAllAdmins);
     if (status === 200) {
-      yield put(onGetAllAdminsRecive(data));
+      yield put(onGetAllAdminsReceive(data));
     } else {
       console.error("AllAdmins info failed");
     }
@@ -57,7 +57,7 @@ function* fetchAdminsByPoints(): SagaIterator {
     yield put(onLoadingAdmin("adminListBestPoints", true));
     const { data, status } = yield call(getAdminsNames);
     if (status === 200) {
-      yield put(onGetAdminNamesRecive(data));
+      yield put(onGetAdminNamesReceive(data));
     } else {
       console.error("AdminsByPoints info failed");
     }
@@ -89,7 +89,7 @@ function* fetchUpdateAdmin({ payload }: any): SagaIterator {
     yield put(onLoadingAdmin("admin", true));
     const { data, status } = yield call(updateAdmin, payload);
     if (status === 200) {
-      yield put(onGetAdminRecive(data));
+      yield put(onGetAdminReceive(data));
     } else {
       console.error("UpdateAdmin info failed");
     }

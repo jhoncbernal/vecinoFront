@@ -4,9 +4,9 @@ import { call, put, takeLatest } from "redux-saga/effects";
 // Types
 import Types from "../types/userTypes";
 import {
-  onGetAllUsersRecive,
-  onGetUserRecive,
-  onGetUsersByPointsRecive,
+  onGetAllUsersReceive,
+  onGetUserReceive,
+  onGetUsersByPointsReceive,
 
   onLoadingUser,
 } from "../actions/userActions";
@@ -24,7 +24,7 @@ function* fetchUser({ payload }: any): SagaIterator {
     yield put(onLoadingUser("user", true));
     const { data, status } = yield call(getUser, payload);
     if (status === 200) {
-      yield put(onGetUserRecive(data));
+      yield put(onGetUserReceive(data));
     } else {
       console.error("user info failed");
     }
@@ -40,7 +40,7 @@ function* fetchAllUsers(): SagaIterator {
     yield put(onLoadingUser("userList", true));
     const { data, status } = yield call(getAllUsers);
     if (status === 200) {
-      yield put(onGetAllUsersRecive(data));
+      yield put(onGetAllUsersReceive(data));
     } else {
       console.error("AllUsers info failed");
     }
@@ -56,7 +56,7 @@ function* fetchUsersByPoints(): SagaIterator {
     yield put(onLoadingUser("userListBestPoints", true));
     const { data, status } = yield call(getUsersByPoints);
     if (status === 200) {
-      yield put(onGetUsersByPointsRecive(data));
+      yield put(onGetUsersByPointsReceive(data));
     } else {
       console.error("UsersByPoints info failed");
     }
@@ -72,7 +72,7 @@ function* fetchUpdateUser({ payload }: any): SagaIterator {
     yield put(onLoadingUser("user", true));
     const { data, status } = yield call(updateUser, payload);
     if (status === 200) {
-      yield put(onGetUserRecive(data));
+      yield put(onGetUserReceive(data));
     } else {
       console.error("UpdateUser info failed");
     }

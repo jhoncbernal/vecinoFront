@@ -9,7 +9,7 @@ import {
   onRecoverReceive
 } from "../actions/authActions";
 import { recover, signIn, signUp } from "../../services/auth";
-import { onGetUserRecive } from "../actions/userActions";
+import { onGetUserReceive } from "../actions/userActions";
 // Services
 function* fetchOnSignIn({ payload }: any): SagaIterator {
   try {
@@ -17,7 +17,7 @@ function* fetchOnSignIn({ payload }: any): SagaIterator {
     const { data, status } = yield call(signIn, payload);
     if (status === 200) {
       yield put(onSignInReceive(data));
-      yield put(onGetUserRecive(data?.user));
+      yield put(onGetUserReceive(data?.user));
     } else {
       console.error("OnSignIn info failed");
     }
@@ -33,7 +33,7 @@ function* fetchOnSignUp({ payload }: any): SagaIterator {
     yield put(onLoadingAuth("signUp", true));
     const { data, status } = yield call(signUp, payload);
     if (status === 200) {
-      yield put(onGetUserRecive(data));
+      yield put(onGetUserReceive(data));
     } else {
       console.error("OnSignUp info failed");
     }

@@ -4,10 +4,10 @@ import { call, put, takeLatest } from "redux-saga/effects";
 // Types
 import Types from "../types/providerTypes";
 import {
-  onGetAllProvidersRecive,
-  onGetProviderByCityRecive,
-  onGetProviderCitiesRecive,
-  onGetProviderRecive,
+  onGetAllProvidersReceive,
+  onGetProviderByCityReceive,
+  onGetProviderCitiesReceive,
+  onGetProviderReceive,
   onLoadingProvider,
 } from "../actions/providerActions";
 import {
@@ -23,7 +23,7 @@ function* fetchProvider({ payload }: any): SagaIterator {
     yield put(onLoadingProvider("provider", true));
     const { data, status } = yield call(getProvider, payload);
     if (status === 200) {
-      yield put(onGetProviderRecive(data));
+      yield put(onGetProviderReceive(data));
     } else {
       console.error("provider info failed");
     }
@@ -39,7 +39,7 @@ function* fetchAllProviders(): SagaIterator {
     yield put(onLoadingProvider("providerList", true));
     const { data, status } = yield call(getAllProviders);
     if (status === 200) {
-      yield put(onGetAllProvidersRecive(data));
+      yield put(onGetAllProvidersReceive(data));
     } else {
       console.error("providerList info failed");
     }
@@ -55,7 +55,7 @@ function* fetchProviderCities(): SagaIterator {
     yield put(onLoadingProvider("cityList", true));
     const { data, status } = yield call(getProviderCities);
     if (status === 200) {
-      yield put(onGetProviderCitiesRecive(data));
+      yield put(onGetProviderCitiesReceive(data));
     } else {
       console.error("ProviderCities info failed");
     }
@@ -71,7 +71,7 @@ function* fetchProviderByCity({ payload }: any): SagaIterator {
     yield put(onLoadingProvider("providerListByCity", true));
     const { data, status } = yield call(getProviderByCity, payload);
     if (status === 200) {
-      yield put(onGetProviderByCityRecive(data));
+      yield put(onGetProviderByCityReceive(data));
     } else {
       console.error("ProviderByCity info failed");
     }

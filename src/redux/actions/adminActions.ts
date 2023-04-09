@@ -8,7 +8,7 @@ export const onGetAdmin: Function = (adminId: any): Action => ({
     adminId,
   },
 });
-export const onGetAdminRecive: Function = (admin: any): Action => ({
+export const onGetAdminReceive: Function = (admin: any): Action => ({
   type: Types.GET_ADMIN_RECEIVE,
   payload: {
     admin,
@@ -19,7 +19,7 @@ export const onGetAllAdmins: Function = (): Action => ({
   type: Types.GET_ADMIN_ALL,
 });
 
-export const onGetAllAdminsRecive: Function = (adminList: any): Action => ({
+export const onGetAllAdminsReceive: Function = (adminList: any): Action => ({
   type: Types.GET_ADMIN_ALL_RECEIVE,
   payload: {
     adminList,
@@ -30,7 +30,7 @@ export const onGetAdminNames: Function = (): Action => ({
   type: Types.GET_ADMIN_BY_NAMES,
 });
 
-export const onGetAdminNamesRecive: Function = (
+export const onGetAdminNamesReceive: Function = (
   adminsListByName: any,
 ): Action => ({
   type: Types.GET_ADMIN_BY_NAMES_RECEIVE,
