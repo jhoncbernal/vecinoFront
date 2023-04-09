@@ -9,6 +9,10 @@ export const getAllAdmins = async () => {
   return await api.get(`${urlPath}`, configOptions);
 };
 
+export const getAdminsByCity = async ({ cityName }: any) => {
+  return await api.get(`${urlPath}/city/${cityName}`);
+};
+
 export const getAdminsNames = async () => {
   return await api.get(`${urlPath}/names/1`);
 };

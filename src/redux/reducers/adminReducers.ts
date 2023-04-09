@@ -22,17 +22,35 @@ type admin = {
   resetPasswordExpires: string;
   resetPasswordToken: string;
 };
-export type state = {
+type adminsByCity = {
+    propertyInfo: {
+        numberOfSections: number;
+        sectionType: string;
+        numberOfProperties: number;
+        propertyType: string;
+        parkingLots: never[];
+    };
+    _id: string;
+    firstName: string;
+    address: string;
+    uniquecode: string;
+    postalCode: string;
+};
+export type adminState = { admin: state };
+
+ type state = {
   data: {
     adminId: string | null;
     admin: admin | null;
     adminList: admin[];
     adminsListByName: { _id: string; firstName: string; uniquecode: string }[];
+    adminsListByCity: adminsByCity[];
   };
   loading: {
     admin: boolean;
     adminList: boolean;
     adminsListByName: boolean;
+    adminsListByCity: boolean;
   };
 };
 
@@ -42,11 +60,13 @@ const initialState: state = {
     admin: null,
     adminList: [],
     adminsListByName: [],
+    adminsListByCity: [],
   },
   loading: {
     admin: false,
     adminList: false,
     adminsListByName: false,
+    adminsListByCity: false,
   },
 };
 
@@ -64,6 +84,10 @@ const reducer = (state = initialState, action: Action) => {
     }
     case Types.GET_ADMIN_BY_NAMES_RECEIVE: {
       state.data.adminsListByName = payload.adminsListByName;
+      return;
+    }
+    case Types.GET_ADMIN_ALL_BY_CITY_RECEIVE: {
+      state.data.adminsListByCity = payload.adminsListByCity;
       return;
     }
     case Types.LOADING_ADMIN: {

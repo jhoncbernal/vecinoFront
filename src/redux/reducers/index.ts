@@ -2,6 +2,7 @@
 import adminReducers from "./adminReducers";
 import authReducer from "./authReducers";
 import billReducers from "./billReducers";
+import cityReducers from "./cityReducers";
 import packageReducers from "./packageReducers";
 import providerReducers from "./providerReducers";
 import userReducers from "./userReducers";
@@ -19,6 +20,7 @@ const reducers = {
   admin: adminReducers,
   bill: billReducers,
   package: packageReducers,
+  city: cityReducers
 };
 
 export default reducers;

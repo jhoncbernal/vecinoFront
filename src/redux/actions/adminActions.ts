@@ -25,6 +25,21 @@ export const onGetAllAdminsReceive: Function = (adminList: any): Action => ({
     adminList,
   },
 });
+export const onGetAllAdminsByCity: Function = (cityName: any): Action => ({
+  type: Types.GET_ADMIN_ALL_BY_CITY,
+  payload: {
+    cityName,
+  },
+});
+
+export const onGetAllAdminsByCityReceive: Function = (
+  adminsListByCity: any,
+): Action => ({
+  type: Types.GET_ADMIN_ALL_BY_CITY_RECEIVE,
+  payload: {
+    adminsListByCity,
+  },
+});
 
 export const onGetAdminNames: Function = (): Action => ({
   type: Types.GET_ADMIN_BY_NAMES,

@@ -9,6 +9,7 @@ import {
   onGetAdminNamesReceive,
   onLoadingAdmin,
   onGetAllAdmins,
+  onGetAllAdminsByCityReceive,
 } from "../actions/adminActions";
 import {
   deleteAdmin,
@@ -17,6 +18,7 @@ import {
   getAdminsNames,
   updateAdmin,
   addAdmin,
+  getAdminsByCity,
 } from "../../services/admin";
 // Services
 
@@ -49,6 +51,21 @@ function* fetchAllAdmins(): SagaIterator {
   } catch (e) {
     console.error(`AllAdmins info Error: ${e}`);
     yield put(onLoadingAdmin("adminList", false));
+  }
+}
+function* fetchAllAdminsByCity({payload}: any): SagaIterator {
+  try {
+    yield put(onLoadingAdmin("adminsListByCity", true));
+    const { data, status } = yield call(getAdminsByCity, payload);
+    if (status === 200) {
+      yield put(onGetAllAdminsByCityReceive(data));
+    } else {
+      console.error("AllAdminsByCity info failed");
+    }
+    yield put(onLoadingAdmin("adminsListByCity", false));
+  } catch (e) {
+    console.error(`AllAdminsByCity info Error: ${e}`);
+    yield put(onLoadingAdmin("adminsListByCity", false));
   }
 }
 
@@ -118,6 +135,7 @@ export default [
   takeLatest(Types.GET_ADMIN, fetchAdmin),
   takeLatest(Types.GET_ADMIN_ALL, fetchAllAdmins),
   takeLatest(Types.GET_ADMIN_BY_NAMES, fetchAdminsByPoints),
+  takeLatest(Types.GET_ADMIN_ALL_BY_CITY, fetchAllAdminsByCity),
   takeLatest(Types.ADD_ADMIN, fetchAddAdmin),
   takeLatest(Types.UPDATE_ADMIN, fetchUpdateAdmin),
   takeLatest(Types.DELETE_ADMIN, fetchDeleteAdmin),

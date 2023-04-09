@@ -1,5 +1,4 @@
 import produce from "immer";
-import { type } from "os";
 import { Action } from ".";
 // Types
 import Types from "../types/userTypes";
