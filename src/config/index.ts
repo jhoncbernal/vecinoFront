@@ -15,6 +15,7 @@ const general = {
   ProductContext: "/product",
   FileContext: "/file",
   BillsContext: "/bill",
+  PackageContext: "/package",
   ProviderContext: "/provider",
   RolProviderAccess: "ROLE_PROVIDER_ACCESS",
   RolUserAccess: "ROLE_USER_ACCESS",

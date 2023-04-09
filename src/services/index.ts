@@ -1,7 +1,7 @@
 import axios from "axios";
 import config from "../config";
 const userToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiamhvbmNiZXJuYWxAZ21haWwuY29tIiwiaWQiOiI1ZTc2NDJlNWYyZGI0MGI0OTRhYjA5ODAifSwiaWF0IjoxNjQ3MDY0NjUzLCJleHAiOjE2NDk2NTY2NTN9.0rM8XYDa7Li77yJFuJBtKGQgI9yx2oWg9r1XIvfi9zw";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiamhvbmNiZXJuYWxAZ21haWwuY29tIiwiaWQiOiI2NDMxZmQ2MWMzYzk5ODlhMDEwYzc2MjMifSwiaWF0IjoxNjgwOTk5MjE5LCJleHAiOjE2ODM1OTEyMTl9.oBbY3-PDbw2xnAMgEXrxzahegxa9bYcWXAFxj3w6RI0";
 const adminToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiYm9yZWFsbWFkcmlkcGhAZ21haWwuY29tIiwiaWQiOiI1ZTc2YTU2MjdmZTkxYWQ1NWYyMGE1OWEifSwiaWF0IjoxNjQ3MTMyNjkxLCJleHAiOjE2NDk3MjQ2OTF9.B1cC9hJNd-KZk6fQEJR9X5hnTsAdqTlzNVhHYHfd_BY";
 const ownerToken =
@@ -14,7 +14,7 @@ const api = axios.create({
 api.interceptors.request.use(
   async function (config: any) {
     if (config.headers.Authorization === true)
-      config.headers.Authorization = `${providerToken}`;
+      config.headers.Authorization = `${userToken}`;
     return config;
   },
   function (error: any) {
