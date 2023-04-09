@@ -9,6 +9,16 @@ export const getAllUsers = async () => {
   return await api.get(`${urlPath}`);
 };
 
+export const getAllUsersByPropertyInfo = async ({
+  propertyNumber,
+  sectionNumber,
+}: any) => {
+  console.log("propertyNumber", propertyNumber);
+  return await api.get(`${urlPath}/propety/1`, {
+    params: { propertyNumber, sectionNumber },
+  });
+};
+
 export const getUsersByPoints = async () => {
   return await api.get(`${urlPath}/bestpoints/1`, configOptions);
 };

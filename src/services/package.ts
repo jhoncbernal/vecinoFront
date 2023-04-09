@@ -23,7 +23,7 @@ export const getPackage = async ({ packageId }: any) => {
 };
 
 export const addPackage = async ({ pkg }: any) => {
-  return await api.patch(`${urlPath}`, pkg, configOptions);
+  return await api.post(`${urlPath}`, pkg, configOptions);
 };
 
 export const updatePackage = async ({ packageId, pkg }: any) => {
