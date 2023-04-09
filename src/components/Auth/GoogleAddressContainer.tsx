@@ -19,6 +19,15 @@ import { HttpRequest } from "../../hooks/HttpRequest";
 import config from "../../config";
 import FilterableList from "./FilterableList";
 import Autocomplete from "react-google-autocomplete";
+import { useDispatch, useSelector } from "react-redux";
+import { onGetAllAdminsByCity } from "../../Redux/actions/adminActions";
+import { adminState } from "../../Redux/reducers/adminReducers";
+import {
+  onGetAllCities,
+  onGetCity,
+  onGetCityByName,
+} from "../../Redux/actions/cityActions";
+import { cityState } from "../../Redux/reducers/cityReducers";
 
 interface ContainerProps {
   [id: string]: any;
@@ -50,9 +59,6 @@ const GoogleAddressContainer: React.FC<ContainerProps> = ({
   clearData,
 }) => {
   const [newAddress, setNewAddress] = useState<Address | undefined>();
-  const [cities, setCities] = useState<Array<{ name: string }>>();
-  const [neighborhoods, setNeighborhoods] = useState<Array<Neighborhood>>();
-  const [state, setState] = useState<string>();
   const handleNewAddress = (propertyName: string, value: any) => {
     setNewAddress((prevState: any) => ({
       ...prevState,
@@ -61,47 +67,75 @@ const GoogleAddressContainer: React.FC<ContainerProps> = ({
       },
     }));
   };
-  async function fetchNeighborhoodsByCityName(city: string) {
-    try {
-      const pathUrl = `${config.AdminContext}/city/${city}`;
-      const response: any = await HttpRequest(pathUrl, "GET", "");
-      if (response.length > 0) {
-        setNeighborhoods(response);
-        const nei = response?.filter(
-          (neighborhood: any) =>
-            neighborhood.postalCode === newAddress?.postalCode,
-        );
-        handleNewAddress("neighborhood", nei[0]);
-      }
-    } catch (error) {
-      console.error("Error:", error);
+  const dispatch = useDispatch();
+  //selectors
+  const neighborhoods = useSelector(
+    (state: adminState) => state.admin.data.adminsListByCity,
+  );
+  const cities = useSelector((state: cityState) => state.city.data.cityList);
+  const city = useSelector((state: cityState) => state.city.data.city);
+
+  //dispatches
+  const handleCity = (city: string) => {
+    const upperCaseCity = city?.toUpperCase();
+    if (upperCaseCity && upperCaseCity !== newAddress?.city) {
+      dispatch(onGetCityByName(upperCaseCity));
+      dispatch(onGetAllAdminsByCity(upperCaseCity));
     }
-  }
-  async function fetchCitiesByState(currentState: string) {
-    try {
-      if (currentState && state !== currentState) {
-        const pathUrl = `${config.CityContex}/state/name/${currentState}?pageNum=1&pageSize=500`;
-        const response: any = await HttpRequest(pathUrl, "GET", "");
-        if (response.length > 0) {
-          setState(currentState);
-          setCities(response);
-        }
-      }
-    } catch (error) {
-      console.error("Error:", error);
+  };
+
+  const handleCitiesByStateName = (stateName: string) => {
+    const params = {
+      pageNum: 1,
+      pageSize: 100,
+      code: "",
+      name: "",
+      stateName: stateName,
+      stateCode: "",
+      countryCode: "",
+    };
+    if (stateName)
+      dispatch(
+        onGetAllCities(
+          params.pageNum,
+          params.pageSize,
+          params.code,
+          params.name,
+          params.stateName,
+          params.stateCode,
+          params.countryCode,
+        ),
+      );
+  };
+
+  // handle selectors data change
+  useEffect(() => {
+    if (neighborhoods.length > 0) {
+      const nei = neighborhoods.filter(
+        (neighborhood: any) =>
+          neighborhood.postalCode === newAddress?.postalCode,
+      );
+      if (nei[0]) handleNewAddress("neighborhood", nei[0]);
     }
-  }
+  }, [neighborhoods]);
 
   useEffect(() => {
-    if (newAddress?.province) {
-      fetchCitiesByState(newAddress?.province);
+    if (city) {
+      handleNewAddress("city", city.name);
+      handleNewAddress("cityCode", city.code);
+      handleNewAddress("countryCode", city.countryCode);
+      handleNewAddress("stateCode", city.stateCode);
     }
-  }, [newAddress?.province]);
+  }, [city]);
 
-  function generateNumberArray(start: number, end: number): string[] {
+  //functions to handle data change
+  function generateNumberArray(start: number, end: number): any[] {
     const length = end - start + 1;
-    return Array.from({ length }, (_, i) => String(start + i));
+    return Array.from({ length }, (_, i) => {
+      return { number: String(start + i) };
+    });
   }
+
   const handleNeighborhood = (item: string) => {
     const neighbor = neighborhoods?.filter(
       (neighborhood) => neighborhood.firstName === item,
@@ -110,9 +144,7 @@ const GoogleAddressContainer: React.FC<ContainerProps> = ({
       handleNewAddress("neighborhood", neighbor[0]);
     }
   };
-  useEffect(() => {
-    if (newAddress?.city) fetchNeighborhoodsByCityName(newAddress?.city);
-  }, [newAddress?.city]);
+
   const handlePostalCodeChange = (e: any) => {
     const target = e.target as HTMLInputElement;
     const value = target?.value;
@@ -124,20 +156,10 @@ const GoogleAddressContainer: React.FC<ContainerProps> = ({
       handleNewAddress("validPostalCode", postalCodeRegex.test(e.target.value));
     }
   };
-  const handleGetCity = async (city: string) => {
-    const pathUrl = `${config.CityContex}/name/${city}`;
-    const response = await HttpRequest(pathUrl, "GET");
-    if (response) {
-      handleNewAddress("city", response[0]?.name);
-      handleNewAddress("cityCode", response[0]?.code);
-      handleNewAddress("countryCode", response[0]?.countryCode);
-      handleNewAddress("stateCode", response[0]?.stateCode);
-    }
-  };
+
   const handlePlaceSelected = (place: any) => {
     const cityName =
       place.address_components[place.address_components.length - 4].long_name;
-    handleGetCity(cityName);
     handleNewAddress("address", place.formatted_address);
     handleNewAddress(
       "postalCode",
@@ -148,22 +170,17 @@ const GoogleAddressContainer: React.FC<ContainerProps> = ({
       "country",
       place.address_components[place.address_components.length - 2].long_name,
     );
-    handleNewAddress(
-      "province",
-      place.address_components[place.address_components.length - 3].short_name,
-    );
+    const province =
+      place.address_components[place.address_components.length - 3].short_name;
+    handleNewAddress("province", province);
+    handleCitiesByStateName(province);
   };
+
   useEffect(() => {
     onAGoogleAddressDataChange(newAddress);
+    console.log(newAddress);
   }, [newAddress]);
-  useEffect(() => {
-    if (clearData) {
-      setNewAddress(undefined);
-      setCities(undefined);
-      setNeighborhoods(undefined);
-      setState(undefined);
-    }
-  }, [clearData]);
+
   return (
     <>
       <IonGrid>
@@ -188,7 +205,6 @@ const GoogleAddressContainer: React.FC<ContainerProps> = ({
                   },
                 }}
                 onPlaceSelected={handlePlaceSelected}
-               
               />
             </IonItem>
           </IonCol>
@@ -220,12 +236,15 @@ const GoogleAddressContainer: React.FC<ContainerProps> = ({
           <IonCol size-md="6" size-xs="12">
             <FilterableList
               value={newAddress?.city || ""}
-              items={cities?.map((city: any) => city.name) || [""]}
+              items={cities}
               labelIcon={mapOutline}
               labelText="Ciudad"
+              fieldToShow="name"
               choosenItem={(item: string) => {
-                handleNewAddress("neighborhood", undefined);
-                fetchNeighborhoodsByCityName(item);
+                if (item && item.length > 4) {
+                  handleNewAddress("neighborhood", undefined);
+                  handleCity(item);
+                }
               }}
               regexInput={"/^[a-zA-Z\\s]*$/"}
             />
@@ -233,11 +252,8 @@ const GoogleAddressContainer: React.FC<ContainerProps> = ({
           <IonCol size-md="6" size-xs="12">
             <FilterableList
               value={newAddress?.neighborhood?.firstName || ""}
-              items={
-                neighborhoods?.map(
-                  (neighborhood: any) => neighborhood.firstName,
-                ) || [""]
-              }
+              items={neighborhoods}
+              fieldToShow="firstName"
               labelIcon={mapOutline}
               labelText="Nombre Conjunto"
               choosenItem={(item: string) => {
@@ -250,7 +266,8 @@ const GoogleAddressContainer: React.FC<ContainerProps> = ({
         <IonRow hidden={newAddress?.neighborhood ? false : true}>
           <IonCol size-md="6" size-xs="12">
             <FilterableList
-              value={newAddress?.propertyInfo?.sectionNumber || ""}
+              fieldToShow="number"
+              value={newAddress?.["propertyInfo.sectionNumber"]}
               items={generateNumberArray(
                 1,
                 Number(
@@ -276,17 +293,14 @@ const GoogleAddressContainer: React.FC<ContainerProps> = ({
                 required={true}
                 autocomplete="on"
                 type="tel"
-                value={newAddress?.propertyInfo?.propertyNumber}
+                value={newAddress?.["propertyInfo.propertyNumber"]}
                 onIonChange={(e: any) => {
                   const target = e.target as HTMLInputElement;
                   if (target && target?.value?.length <= 6) {
                     const value = target.value
                       .toString()
                       .replace(/[^0-9]/gi, "");
-                    handleNewAddress(
-                      "propertyInfo.propertyNumber",
-                      value ? value : "",
-                    );
+                    handleNewAddress("propertyInfo.propertyNumber", value);
                   }
                 }}
               />

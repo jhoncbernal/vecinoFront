@@ -9,23 +9,25 @@ import {
 } from "@ionic/react";
 import React from "react";
 
-interface FilterableListProps {
-  items: string[];
+interface FilterableListProps<T> {
+  items: { [key: string]: any }[];
   labelText: string;
   labelIcon: string;
   choosenItem: any;
   value: string;
   regexInput?: string;
+  fieldToShow: string;
 }
 
-const FilterableList: React.FC<FilterableListProps> = ({
+const FilterableList = <T extends object>({
   items,
   labelText,
   labelIcon,
   choosenItem,
   value,
   regexInput = "",
-}) => {
+  fieldToShow,
+}: FilterableListProps<T>) => {
   const [filter, setFilter] = useState("");
   const [showList, setShowList] = useState(false);
   const inputRef = useRef<HTMLIonInputElement>(null);
@@ -37,22 +39,35 @@ const FilterableList: React.FC<FilterableListProps> = ({
     }
   }, [showList]);
 
-  const filteredItems = items
-    .filter((item) => item.toLowerCase().indexOf(filter.toLowerCase()) !== -1)
-    .slice(0, listMax);
+  useEffect(() => {
+    if (filter) choosenItem(filter);
+  }, [filter]);
 
-  const handleItemClick = (item: string) => {
-    setFilter(item);
-    setShowList(false);
-    choosenItem(item);
+const filteredItems = items
+  .filter(
+    (item) =>
+      item[fieldToShow].toLowerCase().indexOf(filter.toLowerCase()) !== -1,
+  )
+  .slice(0, listMax);
+
+  const handleItemClick = (item: T) => {
+    if (item) {
+      setFilter(item[fieldToShow]);
+      setShowList(false);
+    }
   };
 
   const handleInputInList = () => {
-   if (items.filter((item) => item.toLowerCase().indexOf(filter.toLowerCase()) !== -1).length>0){
-    handleItemClick(filter);
-   }
+    if (
+      items.filter(
+        (item) =>
+          item[fieldToShow].toLowerCase().indexOf(filter.toLowerCase()) !== -1,
+      ).length > 0
+    ) {
+      const item = items.find((item) => item[fieldToShow] === filter)!;
+      handleItemClick(item as T);
+    }
   };
-    
 
   const handleInputFocus = () => {
     setShowList(true);
@@ -101,9 +116,13 @@ const FilterableList: React.FC<FilterableListProps> = ({
         {showList && (
           <IonList>
             <IonListHeader>Result</IonListHeader>
-            {filteredItems.map((item) => (
-              <IonItem key={item} button onClick={() => handleItemClick(item)}>
-                <IonLabel>{item}</IonLabel>
+            {filteredItems.map((item, index) => (
+              <IonItem
+                key={index}
+                button
+                onClick={() => handleItemClick(item as T)}
+              >
+                <IonLabel>{item[fieldToShow]}</IonLabel>
               </IonItem>
             ))}
             <>
@@ -120,5 +139,4 @@ const FilterableList: React.FC<FilterableListProps> = ({
     </>
   );
 };
-
 export default FilterableList;
