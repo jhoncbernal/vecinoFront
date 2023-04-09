@@ -2,8 +2,12 @@ import { api, paths } from ".";
 const urlPath = paths.CityContex;
 const configOptions = { headers: { Authorization: false } };
 
-export const getCity = async ({ CityId }: any) => {
-  return await api.get(`${urlPath}/${CityId}`);
+export const getCity = async ({ cityId }: any) => {
+  return await api.get(`${urlPath}/${cityId}`);
+};
+
+export const getCityByName = async ({ cityName }: any) => {
+  return await api.get(`${urlPath}/name/${cityName}`);
 };
 
 export const getAllCitiesByProperty = async ({

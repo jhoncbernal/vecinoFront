@@ -8,15 +8,30 @@ import {
   onGetCityReceive,
   onGetAllCitiesReceive,
   onLoadingCity,
-  onGetAllCities,
 } from "../actions/cityActions";
 
-import { getCity, getAllCitiesByProperty } from "../../services/city";
+import { getCity, getAllCitiesByProperty, getCityByName } from "../../services/city";
 
 function* fetchCity({ payload }: any): SagaIterator {
   try {
     yield put(onLoadingCity("city", true));
     const { data, status } = yield call(getCity, payload);
+    if (status === 200) {
+      yield put(onGetCityReceive(data));
+    } else {
+      console.error("fetchCity info failed");
+    }
+    yield put(onLoadingCity("city", false));
+  } catch (e) {
+    console.error(`fetchCity info Error: ${e}`);
+    yield put(onLoadingCity("city", false));
+  }
+}
+
+function* fetchCityByName({ payload }: any): SagaIterator {
+  try {
+    yield put(onLoadingCity("city", true));
+    const { data, status } = yield call(getCityByName, payload);
     if (status === 200) {
       yield put(onGetCityReceive(data));
     } else {
@@ -95,6 +110,7 @@ function* fetchDeleteCity({ payload }: any): SagaIterator {
 
 export default [
   takeLatest(Types.GET_CITY, fetchCity),
+  takeLatest(Types.GET_CITY_BY_NAME, fetchCityByName),
   takeLatest(Types.GET_CITIES_ALL, fetchAllCities),
   takeLatest(Types.ADD_CITY, fetchAddCity),
   takeLatest(Types.UPDATE_CITY, fetchUpdateCity),
