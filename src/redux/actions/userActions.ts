@@ -26,6 +26,22 @@ export const onGetAllUsersReceive: Function = (userList: any): Action => ({
   },
 });
 
+export const onGetAllUsersByPropertyInfo: Function = (
+         sectionNumber: string,
+         propertyNumber: string,
+       ): Action => ({
+         type: Types.GET_USER_ALL_BY_PROPERTY_INFO,
+         payload: { sectionNumber, propertyNumber },
+       });
+
+export const onGetAllUsersByPropertyInfoReceive: Function = (
+  userListByPropertyInfo: any,
+): Action => ({
+  type: Types.GET_USER_ALL_BY_PROPERTY_INFO_RECEIVE,
+  payload: {
+    userListByPropertyInfo,
+  },
+});
 export const onGetUsersByPoints: Function = (): Action => ({
   type: Types.GET_USER_BY_POINTS,
 });

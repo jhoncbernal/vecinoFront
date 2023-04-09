@@ -4,6 +4,7 @@ import { call, put, takeLatest } from "redux-saga/effects";
 // Types
 import Types from "../types/userTypes";
 import {
+  onGetAllUsersByPropertyInfoReceive,
   onGetAllUsersReceive,
   onGetUserReceive,
   onGetUsersByPointsReceive,
@@ -13,6 +14,7 @@ import {
 import {
     deleteUser,
   getAllUsers,
+  getAllUsersByPropertyInfo,
   getUser,
   getUsersByPoints,
   updateUser,
@@ -48,6 +50,23 @@ function* fetchAllUsers(): SagaIterator {
   } catch (e) {
     console.error(`AllUsers info Error: ${e}`);
     yield put(onLoadingUser("userList", false));
+  }
+}
+
+function* fetchAllUsersByPropertyInfo({ payload }: any): SagaIterator {
+  try {
+    yield put(onLoadingUser("userListByPropertyInfo", true));
+    const { data, status } = yield call(getAllUsersByPropertyInfo, payload);
+    if (status === 200) {
+      console.log("data", data);
+      yield put(onGetAllUsersByPropertyInfoReceive(data));
+    } else {
+      console.error("AllUsersByPropertyInfo info failed");
+    }
+    yield put(onLoadingUser("userListByPropertyInfo", false));
+  } catch (e) {
+    console.error(`AllUsersByPropertyInfo info Error: ${e}`);
+    yield put(onLoadingUser("userListByPropertyInfo", false));
   }
 }
 
@@ -100,6 +119,7 @@ function* fetchDeleteUser({ payload }: any): SagaIterator {
 export default [
   takeLatest(Types.GET_USER, fetchUser),
   takeLatest(Types.GET_USER_ALL, fetchAllUsers),
+  takeLatest(Types.GET_USER_ALL_BY_PROPERTY_INFO, fetchAllUsersByPropertyInfo),
   takeLatest(Types.GET_USER_BY_POINTS, fetchUsersByPoints),
   takeLatest(Types.UPDATE_USER, fetchUpdateUser),
   takeLatest(Types.DELETE_USER, fetchDeleteUser),

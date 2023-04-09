@@ -1,8 +1,20 @@
 import produce from "immer";
+import { type } from "os";
 import { Action } from ".";
 // Types
 import Types from "../types/userTypes";
-
+type userByPropetyInfo = {
+  firstName: string;
+  lastName: string;
+  propertyInfo: {
+    sectionNumber: number;
+    propertyNumber: number;
+  };
+  admin: {
+    uuid: string;
+  };
+  uuid: string;
+};
 type user = {
   enabled: boolean;
   roles: string[];
@@ -37,18 +49,20 @@ type user = {
   fireToken: string;
   city: string;
 };
-
-export type state = {
+export type userState = {user: state}
+ type state = {
   data: {
     userId: string | null;
     user: user | null;
     userList: user[];
     userListBestPoints: user[];
+    userListByPropertyInfo: userByPropetyInfo[];
   };
   loading: {
     user: boolean;
     userList: boolean;
     userListBestPoints: boolean;
+    userListByPropertyInfo: boolean;
   };
 };
 
@@ -58,11 +72,13 @@ const initialState: state = {
     user: null,
     userList: [],
     userListBestPoints: [],
+    userListByPropertyInfo: [],
   },
   loading: {
     user: false,
     userList: false,
     userListBestPoints: false,
+    userListByPropertyInfo: false,
   },
 };
 
@@ -80,6 +96,10 @@ const reducer = (state = initialState, action: Action) => {
     }
     case Types.GET_USER_BY_POINTS_RECEIVE: {
       state.data.userListBestPoints = payload.userListBestPoints;
+      return;
+    }
+    case Types.GET_USER_ALL_BY_PROPERTY_INFO_RECEIVE: {
+      state.data.userListByPropertyInfo = payload.userListByPropertyInfo;
       return;
     }
     case Types.LOADING_USER: {
