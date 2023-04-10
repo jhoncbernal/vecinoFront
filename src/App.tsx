@@ -29,7 +29,7 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/ownStyle.css";
 import { Provider } from "react-redux";
-import store, { persistor } from "./Redux/store";
+import store, { persistor } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import PackageManagerPage from "./pages/PackagePage";
 

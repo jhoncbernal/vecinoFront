@@ -26,8 +26,8 @@ import {
   personCircleOutline,
 } from "ionicons/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { packageState } from "../Redux/reducers/packageReducers";
-import { onAddPackage } from "../Redux/actions/packageActions";
+import { packageState } from "../redux/reducers/packageReducers";
+import { onAddPackage } from "../redux/actions/packageActions";
 import UploadComponent from "../pages/interfaces/UploadComponent";
 import NotificationClient from "../components/Shared/NotificationClient";
 import { checkEmptyFields, isAnyFieldEmpty } from "../utils/objects";

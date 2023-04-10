@@ -20,14 +20,14 @@ import config from "../../config";
 import FilterableList from "./FilterableList";
 import Autocomplete from "react-google-autocomplete";
 import { useDispatch, useSelector } from "react-redux";
-import { onGetAllAdminsByCity } from "../../Redux/actions/adminActions";
-import { adminState } from "../../Redux/reducers/adminReducers";
+import { onGetAllAdminsByCity } from "../../redux/actions/adminActions";
+import { adminState } from "../../redux/reducers/adminReducers";
 import {
   onGetAllCities,
   onGetCity,
   onGetCityByName,
-} from "../../Redux/actions/cityActions";
-import { cityState } from "../../Redux/reducers/cityReducers";
+} from "../../redux/actions/cityActions";
+import { cityState } from "../../redux/reducers/cityReducers";
 
 interface ContainerProps {
   [id: string]: any;
