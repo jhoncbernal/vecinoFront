@@ -8,6 +8,7 @@ import {
   onGetAllPackagesReceive,
   onLoadingPackage,
   onGetPackageByPinReceive,
+  onAddPackageReceive,
 } from "../actions/packageActions";
 // Services
 import {
@@ -36,10 +37,10 @@ function* fetchPackage({ payload }: any): SagaIterator {
   }
 }
 
-function* fetchPackagesByUser({payload}: any): SagaIterator {
+function* fetchPackagesByUser({ payload }: any): SagaIterator {
   try {
     yield put(onLoadingPackage("packageList", true));
-    const { data, status } = yield call(getAllPackagesByUser,payload);
+    const { data, status } = yield call(getAllPackagesByUser, payload);
     if (status === 200) {
       yield put(onGetAllPackagesReceive(data));
     } else {
@@ -86,17 +87,18 @@ function* fetchPackageByPackageCode({ payload }: any): SagaIterator {
 }
 function* fetchAddPackage({ payload }: any): SagaIterator {
   try {
-    yield put(onLoadingPackage("package", true));
+    yield put(onLoadingPackage("newPackage", true));
     const { data, status } = yield call(addPackage, payload);
-    if (status === 200) {
-      yield put(onGetPackageReceive(data));
-    } else {
+    if (status === 201) {
+      yield put(onAddPackageReceive(data));
+    }
+    else {
       console.error("addPackage info failed");
     }
-    yield put(onLoadingPackage("package", false));
+    yield put(onLoadingPackage("newPackage", false));
   } catch (e) {
     console.error(`addPackage info Error: ${e}`);
-    yield put(onLoadingPackage("package", false));
+    yield put(onLoadingPackage("newPackage", false));
   }
 }
 

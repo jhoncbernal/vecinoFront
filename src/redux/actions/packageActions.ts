@@ -43,13 +43,19 @@ export const onGetPackageByPinReceive: Function = (pkg: any): Action => ({
   },
 });
 
-
 export const onGetPackagesByPackageCode: Function = (
   packageCode: any,
 ): Action => ({
   type: Types.GET_PACKAGES_BY_PACKAGE_CODE,
   payload: {
     packageCode,
+  },
+});
+
+export const onAddPackageReceive: Function = (pkg: any): Action => ({
+  type: Types.ADD_PACKAGE_RECEIVE,
+  payload: {
+    pkg,
   },
 });
 
