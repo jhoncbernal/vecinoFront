@@ -36,8 +36,10 @@ interface Address {
   number2?: number;
   number3?: number;
   post2?: string;
-  blockNumber?: number;
-  homeNumber?: number;
+  propertyInfo: {
+    sectionNumber: string;
+    propertyNumber: string;
+  };
   whereIlive?: string;
   city: string;
   uniquecode: string | undefined;
@@ -72,8 +74,9 @@ const AddressContainer: React.FC<ContainerProps> = ({
               ...{
                 neighborhoods: response,
                 neighborhood: currentAddress.neighborhood,
-                blockNumber: currentAddress?.propertyInfo?.sectionNumber,
-                homeNumber: currentAddress.homeNumber,
+                "propertyInfo.sectionNumber":
+                  currentAddress?.propertyInfo?.sectionNumber,
+                "propertyInfo.propertyNumber": currentAddress.propertyInfo.propertyNumber,
                 whereIlive: currentAddress.address ? "Barrio" : "Conjunto",
                 uniquecode: currentAddress.uniquecode,
                 city: currentAddress.city,
@@ -102,17 +105,17 @@ const AddressContainer: React.FC<ContainerProps> = ({
       if (address.whereIlive === "Conjunto") {
         addressTemp = `${address.neighborhood ? address.neighborhood : ""} 
                       ${
-                        address?.propertyInfo?.sectionNumber && address.neighborhood
+                        address?.propertyInfo?.sectionNumber &&
+                        address.neighborhood
                           ? address?.propertyInfo?.sectionNumber
                           : ""
                       } 
-                      ${
-                        address.homeNumber && address.neighborhood
-                          ? address.homeNumber
+                      ${address?.propertyInfo.propertyNumber && address.neighborhood
+                          ? address.propertyInfo.propertyNumber
                           : ""
                       }
                       ${
-                        address.city && address.homeNumber ? address.city : ""
+                        address.city && address.propertyInfo.propertyNumber ? address.city : ""
                       }`;
       } else {
         addressTemp = `${address.neighborhood ? address.neighborhood : ""} ${
@@ -133,14 +136,14 @@ const AddressContainer: React.FC<ContainerProps> = ({
       }
       if (
         address.whereIlive &&
-        ((address?.propertyInfo?.sectionNumber && address.homeNumber) ||
+        ((address?.propertyInfo?.sectionNumber && address.propertyInfo.propertyNumber) ||
           (address.number3 && address.kind))
       ) {
         accionTrigger({
           whereIlive: address.whereIlive,
           uniquecode: address.uniquecode,
-          blockNumber: address?.propertyInfo?.sectionNumber,
-          homeNumber: address.homeNumber,
+          "propertyInfo.sectionNumber": address?.propertyInfo?.sectionNumber,
+          "propertyInfo.propertyNumber": address.propertyInfo.propertyNumber,
           address: addressTemp,
           city: address.city,
           neighborhoodId: address.neighborhoodId,
@@ -167,8 +170,10 @@ const AddressContainer: React.FC<ContainerProps> = ({
           number3: undefined,
           post2: undefined,
           neighborhoodId: undefined,
-          blockNumber: undefined,
-          homeNumber: undefined,
+          propertyInfo: {
+            sectionNumber: undefined,
+            propertyNumber: undefined
+          },
           neighborhood: undefined,
           kind: undefined,
         },
@@ -241,8 +246,8 @@ const AddressContainer: React.FC<ContainerProps> = ({
                         neighborhood: undefined,
                         neighborhoodId: undefined,
                         address: undefined,
-                        blockNumber: undefined,
-                        homeNumber: undefined,
+                        "propertyInfo.sectionNumber": undefined,
+                        "propertyInfo.propertyNumber": undefined,
                       },
                     }));
                   }}
@@ -342,7 +347,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                             setAddress((prevState: any) => ({
                               ...prevState,
                               ...{
-                                blockNumber: e.target.value
+                                "propertyInfo.sectionNumber": e.target.value
                                   ? e.target.value
                                       .toString()
                                       .replace(/[^0-9]/gi, "")
@@ -368,12 +373,12 @@ const AddressContainer: React.FC<ContainerProps> = ({
                           required={true}
                           autocomplete="on"
                           type="tel"
-                          value={address.homeNumber}
+                          value={address.propertyInfo.propertyNumber}
                           onIonChange={(e: any) =>
                             setAddress((prevState: any) => ({
                               ...prevState,
                               ...{
-                                homeNumber: e.target.value
+                                "propertyInfo.sectionNumber": e.target.value
                                   ? e.target.value
                                       .toString()
                                       .replace(/[^0-9]/gi, "")

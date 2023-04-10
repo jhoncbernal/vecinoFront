@@ -247,7 +247,7 @@ const UpdateUser: React.FC<ContainerProps> = ({ dataModal }) => {
                       color="dark"
                       autocomplete="off"
                       type="number"
-                      value={dataModall ? dataModall.homeNumber : ""}
+                      value={dataModall ? dataModall.propertyInfo.propertyNumber : ""}
                       name="homeNumber"
                       onIonChange={(e: any) => {
                         handleValueChange(

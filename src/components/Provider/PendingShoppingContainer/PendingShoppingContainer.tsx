@@ -113,7 +113,7 @@ const PendingShoppingContainer: FC<ComponentData> = ({
                         <IonLabel position="stacked">
                           <p>Apt:</p>
                         </IonLabel>
-                        <IonText>{bill.user.homeNumber}</IonText>
+                        <IonText>{bill.user?.propertyInfo.propertyNumber}</IonText>
                       </IonItem>
                     </IonCol>
                   </>

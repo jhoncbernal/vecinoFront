@@ -225,7 +225,7 @@ const ResumeContainer: React.FC<ContainerProps> = ({
                       ? address
                       : currentUser.neighborhood.address === "NO APLICA"
                       ? currentUser.address
-                      : `${currentUser.neighborhood.address} T${currentUser?.propertyInfo?.sectionNumber}Apt${currentUser.homeNumber}`
+                      : `${currentUser.neighborhood.address} T${currentUser?.propertyInfo?.sectionNumber}Apt${currentUser.propertyInfo.propertyNumber}`
                   }
                   onIonChange={(e: any) => setAddress(e.target.value)}
                 />

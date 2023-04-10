@@ -32,8 +32,10 @@ type user = {
   firstName: string;
   uniquecode: string;
   lastName: string;
-  homeNumber: number;
-  blockNumber: number;
+  propertyInfo?: {
+    sectionNumber: string;
+    propertyNumber: string;
+  };
   documentId: number;
   createdAt: string;
   updatedAt: string;

@@ -42,8 +42,10 @@ type user = {
   email: string;
   phone: string;
   firstName: string;
-  homeNumber: number;
-  blockNumber: number;
+  propertyInfo?: {
+    sectionNumber: string;
+    propertyNumber: string;
+  };
   address: string;
   neighborhood: neighborhood;
 };
