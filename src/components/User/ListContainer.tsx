@@ -55,7 +55,7 @@ const ListContainer: React.FC<ContainerProps> = ({
               setSearchText(e.detail.value!);
 
               const newData = inputs.filter((item) => {
-                const itemData = `T${item.blockNumber
+                const itemData = `T${item?.propertyInfo?.sectionNumber
                   .toString()
                   .toUpperCase()} ${item.homeNumber.toString().toUpperCase()} 
     ${item.firstName.toUpperCase()}${item.lastName.toUpperCase()}
@@ -82,7 +82,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                 <IonCardHeader color={debt > 0 ? "danger" : "primary"}>
                   <IonTitle>
                     <strong>
-                      T{input.blockNumber} {input.homeNumber}
+                      T{input?.propertyInfo?.sectionNumber} {input.homeNumber}
                       {debt > 0 ? "  ¡Usuario en mora!" : ""}
                     </strong>
                   </IonTitle>

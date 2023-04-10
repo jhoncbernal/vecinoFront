@@ -268,9 +268,9 @@ const UpdateUser: React.FC<ContainerProps> = ({
                           type="tel"
                           name={"blockNumber"}
                           value={
-                            dataSend?.blockNumber
+                            dataSend??.propertyInfo?.sectionNumber
                               ? dataSend["blockNumber"]
-                              : dataModall?.blockNumber
+                              : dataModall??.propertyInfo?.sectionNumber
                           }
                           onIonChange={(e: any) => {
                             handleValueChange(
@@ -319,7 +319,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
                     dataModall
                       ? {
                           homeNumber: dataModall.homeNumber,
-                          blockNumber: dataModall.blockNumber,
+                          blockNumber: dataModall?.propertyInfo?.sectionNumber,
                           neighborhood:
                             dataModall.neighborhood && !dataModall.address
                               ? dataModall.neighborhood.firstName
@@ -340,16 +340,16 @@ const UpdateUser: React.FC<ContainerProps> = ({
                       }
                       if (
                         response.homeNumber &&
-                        response.blockNumber &&
+                        response?.propertyInfo?.sectionNumber &&
                         response.whereIlive === "Conjunto"
                       ) {
                         if (response.homeNumber !== dataModall.homeNumber) {
                           handleValueChange("homeNumber", response.homeNumber);
                         }
-                        if (response.blockNumber !== dataModall.blockNumber) {
+                        if (response?.propertyInfo?.sectionNumber !== dataModall?.propertyInfo?.sectionNumber) {
                           handleValueChange(
                             "blockNumber",
-                            response.blockNumber
+                            response?.propertyInfo?.sectionNumber
                           );
                         }
                         if (

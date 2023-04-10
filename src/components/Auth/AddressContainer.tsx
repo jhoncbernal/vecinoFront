@@ -72,7 +72,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
               ...{
                 neighborhoods: response,
                 neighborhood: currentAddress.neighborhood,
-                blockNumber: currentAddress.blockNumber,
+                blockNumber: currentAddress?.propertyInfo?.sectionNumber,
                 homeNumber: currentAddress.homeNumber,
                 whereIlive: currentAddress.address ? "Barrio" : "Conjunto",
                 uniquecode: currentAddress.uniquecode,
@@ -102,8 +102,8 @@ const AddressContainer: React.FC<ContainerProps> = ({
       if (address.whereIlive === "Conjunto") {
         addressTemp = `${address.neighborhood ? address.neighborhood : ""} 
                       ${
-                        address.blockNumber && address.neighborhood
-                          ? address.blockNumber
+                        address?.propertyInfo?.sectionNumber && address.neighborhood
+                          ? address?.propertyInfo?.sectionNumber
                           : ""
                       } 
                       ${
@@ -133,13 +133,13 @@ const AddressContainer: React.FC<ContainerProps> = ({
       }
       if (
         address.whereIlive &&
-        ((address.blockNumber && address.homeNumber) ||
+        ((address?.propertyInfo?.sectionNumber && address.homeNumber) ||
           (address.number3 && address.kind))
       ) {
         accionTrigger({
           whereIlive: address.whereIlive,
           uniquecode: address.uniquecode,
-          blockNumber: address.blockNumber,
+          blockNumber: address?.propertyInfo?.sectionNumber,
           homeNumber: address.homeNumber,
           address: addressTemp,
           city: address.city,
@@ -337,7 +337,7 @@ const AddressContainer: React.FC<ContainerProps> = ({
                           color="dark"
                           required={true}
                           type="tel"
-                          value={address.blockNumber}
+                          value={address?.propertyInfo?.sectionNumber}
                           onIonChange={(e: any) =>
                             setAddress((prevState: any) => ({
                               ...prevState,
