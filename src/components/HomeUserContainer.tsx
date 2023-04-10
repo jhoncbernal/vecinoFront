@@ -20,7 +20,6 @@ import { User } from "../entities";
 import { timeOutline } from "ionicons/icons";
 import { refByIdFirebase } from "../config/firebase";
 import { createLocalNotification } from "../hooks/LocalNotification";
-import PackageReceiveForm from "./Packages/PackageReceiveForm";
 
 interface ContainerProps {
   history: H.History;
@@ -120,7 +119,6 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
 
   return (
     <>
-      <PackageReceiveForm/>
       <IonCard class="home-card-center">
         <IonToolbar>
           <IonSegment

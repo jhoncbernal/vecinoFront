@@ -31,6 +31,7 @@ import "./theme/ownStyle.css";
 import { Provider } from "react-redux";
 import store, { persistor } from "./Redux/store";
 import { PersistGate } from "redux-persist/integration/react";
+import PackageManagerPage from "./pages/PackagePage";
 
 const App: React.FC = () => {
   return (
@@ -44,6 +45,7 @@ const App: React.FC = () => {
               <Route path="/signup/:id" component={SignUpPage} exact={true} />
               <Route path="/recover" component={RecoveryPage} />
               <Route path="/home" component={HomePage} exact={true} />
+              <Route paht="/packages" component={PackageManagerPage}exact={true}/>
               <Route
                 path="/PrivacyPolicy"
                 component={PrivacyPolicy}
