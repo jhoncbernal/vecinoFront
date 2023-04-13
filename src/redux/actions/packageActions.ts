@@ -36,12 +36,12 @@ export const onGetPackagesByPIN: Function = (pin: any): Action => ({
   },
 });
 
-export const onGetPackageByPinReceive: Function = (pkg: any): Action => ({
-  type: Types.GET_PACKAGE_BY_PIN_RECEIVE,
-  payload: {
-    pkg,
-  },
-});
+export const onGetPackageByPinReceive: Function = (pkgByPIN: any): Action => ({
+         type: Types.GET_PACKAGE_BY_PIN_RECEIVE,
+         payload: {
+           pkgByPIN,
+         },
+       });
 
 export const onGetPackagesByPackageCode: Function = (
   packageCode: any,

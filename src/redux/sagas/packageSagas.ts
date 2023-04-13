@@ -9,6 +9,7 @@ import {
   onLoadingPackage,
   onGetPackageByPinReceive,
   onAddPackageReceive,
+  onResetPackage,
 } from "../actions/packageActions";
 // Services
 import {
@@ -93,6 +94,7 @@ function* fetchAddPackage({ payload }: any): SagaIterator {
       yield put(onAddPackageReceive(data));
     }
     else {
+      yield put(onResetPackage("newPackage"));
       console.error("addPackage info failed");
     }
     yield put(onLoadingPackage("newPackage", false));
