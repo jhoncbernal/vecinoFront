@@ -1,7 +1,7 @@
 import React from "react";
 import { IonIcon } from "@ionic/react";
 import "./StatusIcon.css";
-import { alertOutline, attachOutline, carSportSharp, chatbubbleEllipsesOutline, chatbubblesOutline, checkmarkOutline, cubeOutline, mailOutline } from "ionicons/icons";
+import { alertOutline, attachOutline, chatbubbleEllipsesOutline, checkmarkOutline, cubeOutline, mailOutline } from "ionicons/icons";
 
 const StatusIcon = ({ status }: { status: string }) => {
   const getStatusClass = () => {

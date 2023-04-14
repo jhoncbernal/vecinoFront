@@ -35,47 +35,6 @@ const PackageManagerPage: React.FC = () => {
       (state: packageState) => state.package.data.packageList,
     );
   const dispatch = useDispatch();
-    const data = [
-      {
-        packageCode: "4774",
-        deliveryCompany: "1111",
-        receivedBy: "1111",
-        status: "received",
-        pin: "K2958",
-        imageUrl:
-          "https://vecino.s3.us-east-1.amazonaws.com/1681480263827.jpeg",
-        notificationWay: "email",
-        sectionNumber: "4",
-        propertyNumber: "1230",
-        receivedAt: "2023-04-14T04:34:39.226Z",
-      },
-      {
-        packageCode: "47274",
-        deliveryCompany: "111221",
-        receivedBy: "1111",
-        status: "notified",
-        pin: "K2958",
-        imageUrl:
-          "https://vecino.s3.us-east-1.amazonaws.com/1681480263827.jpeg",
-        notificationWay: "sms",
-        sectionNumber: "4",
-        propertyNumber: "1230",
-        receivedAt: "2023-04-14T05:25:17.328Z",
-      },
-      {
-        packageCode: "1234",
-        deliveryCompany: "envia",
-        receivedBy: "juan",
-        status: "delivered",
-        pin: "K2958",
-        imageUrl:
-          "https://vecino.s3.us-east-1.amazonaws.com/1681480263827.jpeg",
-        notificationWay: "both",
-        sectionNumber: "4",
-        propertyNumber: "1230",
-        receivedAt: "2023-04-14T13:51:19.060Z",
-      },
-    ];
     const columnAliases = {
       imageUrl: "Imagen",
       pin: "PIN",
