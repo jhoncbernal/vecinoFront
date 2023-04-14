@@ -26,7 +26,7 @@ const NotificationClient: React.FC<NotificationProps> = ({
     <IonToast
       isOpen={showToast}
       message={message}
-      duration={5000}
+      duration={10000}
       color={isSuccess ? "success" : "danger"}
       onDidDismiss={handleDismissToast}
     />

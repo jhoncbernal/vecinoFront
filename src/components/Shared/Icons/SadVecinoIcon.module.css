@@ -1,0 +1,33 @@
+.iconWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.icon {
+  transform-origin: center;
+  animation: rotate 2s linear 1 forwards;
+  pointer-events: none;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+.eye {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: black;
+  border-radius: 50%;
+  display: none;
+  z-index: 2;
+}
+
+.iconWrapper:hover .eye {
+  display: block;
+}

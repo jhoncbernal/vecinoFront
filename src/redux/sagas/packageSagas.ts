@@ -20,6 +20,8 @@ import {
   getPackageByPIN,
   updatePackage,
   getPackageByPackageCode,
+  updatePackageStatusByPIN,
+  getAllPackagesByAdmin,
 } from "../../services/package";
 
 function* fetchPackage({ payload }: any): SagaIterator {
@@ -54,9 +56,24 @@ function* fetchPackagesByUser({ payload }: any): SagaIterator {
   }
 }
 
+function* fetchPackageByAdmin({ payload }: any): SagaIterator {
+  try {
+    yield put(onLoadingPackage("packageList", true));
+    const { data, status } = yield call(getAllPackagesByAdmin, payload);
+    if (status === 200) {
+      yield put(onGetAllPackagesReceive(data));
+    } else {
+      console.error("PackagesByAdmin info failed");
+    }
+    yield put(onLoadingPackage("packageList", false));
+  } catch (e) {
+    console.error(`PackagesByAdmin info Error: ${e}`);
+    yield put(onLoadingPackage("packageList", false));
+  }
+}
+
 function* fetchPackageByPIN({ payload }: any): SagaIterator {
   try {
-    console.log(payload);
     yield put(onLoadingPackage("packageList", true));
     const { data, status } = yield call(getPackageByPIN, payload);
     if (status === 200) {
@@ -67,6 +84,22 @@ function* fetchPackageByPIN({ payload }: any): SagaIterator {
     yield put(onLoadingPackage("packageList", false));
   } catch (e) {
     console.error(`PackageByPIN, info Error: ${e}`);
+    yield put(onLoadingPackage("packageList", false));
+  }
+}
+
+function* fetchUpdatePackageStatusByPIN({ payload }: any): SagaIterator {
+  try {
+    yield put(onLoadingPackage("packageUpdate", true));
+    const { status } = yield call(updatePackageStatusByPIN, payload);
+    if (status === 200) {
+      yield put(onResetPackage("pkgByPIN"));
+    } else {
+      console.error("UpdatePackageStatusByPIN, info failed");
+    }
+    yield put(onLoadingPackage("packageList", false));
+  } catch (e) {
+    console.error(`UpdatePackageStatusByPIN, info Error: ${e}`);
     yield put(onLoadingPackage("packageList", false));
   }
 }
@@ -137,7 +170,9 @@ function* fetchDeletePackage({ payload }: any): SagaIterator {
 export default [
   takeLatest(Types.GET_PACKAGE, fetchPackage),
   takeLatest(Types.GET_PACKAGES_BY_USER, fetchPackagesByUser),
+  takeLatest(Types.GET_PACKAGES_BY_ADMIN, fetchPackageByAdmin),
   takeLatest(Types.GET_PACKAGES_BY_PIN, fetchPackageByPIN),
+  takeLatest(Types.UPDATE_PACKAGE_STATUS_BY_PIN, fetchUpdatePackageStatusByPIN),
   takeLatest(Types.GET_PACKAGES_BY_PACKAGE_CODE, fetchPackageByPackageCode),
   takeLatest(Types.ADD_PACKAGE, fetchAddPackage),
   takeLatest(Types.UPDATE_PACKAGE, fetchUpdatePackage),

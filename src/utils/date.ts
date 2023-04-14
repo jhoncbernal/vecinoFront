@@ -13,11 +13,11 @@ dayjs.extend(timezone);
  * @returns Local time string
  * @example timeConvertTZ("2020-10-10T00:00:00.000Z", "America/Bogota")
  */
-function timeConvertTZ(utcTimeString: string, tz: string): string {
+export function timeConvertTZ(utcTimeString: string, tz: string): string {
   try {
     const utcTime = dayjs.utc(utcTimeString);
     const colombianTime = utcTime.tz(tz);
-    return colombianTime.format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+    return colombianTime.format("YY-MM-DD HH:mm:ss");
   } catch (e) {
     return utcTimeString;
   }

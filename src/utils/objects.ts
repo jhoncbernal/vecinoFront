@@ -20,3 +20,7 @@ export function isAnyFieldEmpty(obj: { [key: string]: any }): boolean {
   }
   return false;
 }
+
+export function hasFieldName( fieldName: string, obj: any): boolean {
+  return !!obj && fieldName in obj;
+}

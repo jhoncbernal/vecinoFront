@@ -1,4 +1,4 @@
-import { IonButton, IonCard, IonCol, IonGrid, IonIcon, IonInput, IonItem, IonLabel, IonList, IonRow, IonText } from "@ionic/react";
+import { IonButton, IonCol, IonGrid, IonIcon, IonInput, IonItem, IonLabel, IonList, IonRow, IonText } from "@ionic/react";
 import { businessOutline, homeOutline, cubeOutline, bicycleOutline, personCircleOutline } from "ionicons/icons";
 import React, { useState } from "react";
 import UploadComponent from "../../pages/interfaces/UploadComponent";
@@ -52,7 +52,7 @@ const PacakgeCreateContainer: React.FC = () => {
 
 
     return (
-      <IonCard class="package-card-center">
+      < >
         <IonGrid>
           <IonRow>
             <IonCol size-md="2" size-xs="12" offset-md="5" offset-xs="0">
@@ -206,7 +206,7 @@ const PacakgeCreateContainer: React.FC = () => {
             </IonCol>
           </IonRow>
         </IonList>
-      </IonCard>
+      </>
     );
 };
 export default PacakgeCreateContainer;

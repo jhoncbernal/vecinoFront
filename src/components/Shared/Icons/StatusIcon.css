@@ -1,0 +1,55 @@
+.status-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 999px;
+  padding: 4px 8px;
+  margin: 4px;
+  color: #fff;
+  opacity: 0.5;
+}
+
+.status-icon.icon {
+  margin-right: 4px;
+}
+
+.status-icon.primary {
+  background-color: rgba(56, 128, 255, 0.9);
+}
+
+.status-icon.warning {
+  background-color: rgba(255, 193, 78, 0.9);
+}
+
+.status-icon.success {
+  background-color: rgba(80, 216, 144, 0.9);
+}
+
+.status-icon.secondary {
+  background-color: rgba(50, 219, 100, 0.9);
+}
+
+.status-icon.medium {
+  background-color: rgba(106, 90, 205, 0.9);
+}
+
+.status-icon.tertiary {
+  background-color: rgba(125, 194, 255, 0.9);
+}
+.status-icon.quaternary {
+  background-color: rgba(0, 109, 205, 0.9);
+}
+
+.status-icon.dark {
+  background-color: rgba(18, 18, 18, 0.9);
+}
+
+.status-icon.danger {
+  background-color: rgba(255, 105, 80, 0.9);
+}
+
+ion-label .status-icon {
+  color: #ffffff !important;
+}

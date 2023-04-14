@@ -15,17 +15,26 @@ export const onGetPackageReceive: Function = (pkg: any): Action => ({
   },
 });
 
-export const onGetAllPackagesReceive: Function = (pkg: any): Action => ({
-  type: Types.GET_PACKAGE_RECEIVE,
-  payload: {
-    pkg,
-  },
-});
+export const onGetAllPackagesReceive: Function = (
+         packageList: any,
+       ): Action => ({
+         type: Types.GET_ALL_PACKAGE_RECEIVE,
+         payload: {
+           packageList,
+         },
+       });
 
 export const onGetPackagesByUser: Function = (userId: any): Action => ({
   type: Types.GET_PACKAGES_BY_USER,
   payload: {
     userId,
+  },
+});
+
+export const onGetPackagesByAdmin: Function = (adminId: any): Action => ({
+  type: Types.GET_PACKAGES_BY_ADMIN,
+  payload: {
+    adminId,
   },
 });
 
@@ -36,12 +45,23 @@ export const onGetPackagesByPIN: Function = (pin: any): Action => ({
   },
 });
 
+export const onUpdatePackagesStatusByPIN: Function = (
+  pin: string,
+  signedBy: string,
+): Action => ({
+  type: Types.UPDATE_PACKAGE_STATUS_BY_PIN,
+  payload: {
+    pin,
+    signedBy,
+  },
+});
+
 export const onGetPackageByPinReceive: Function = (pkgByPIN: any): Action => ({
-         type: Types.GET_PACKAGE_BY_PIN_RECEIVE,
-         payload: {
-           pkgByPIN,
-         },
-       });
+  type: Types.GET_PACKAGE_BY_PIN_RECEIVE,
+  payload: {
+    pkgByPIN,
+  },
+});
 
 export const onGetPackagesByPackageCode: Function = (
   packageCode: any,
