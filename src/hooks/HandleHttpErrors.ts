@@ -29,4 +29,4 @@ Errors.set("Verify account email","Se ha re enviado el correo de verificacion co
 
 return {
     Errors
-}}
+};};

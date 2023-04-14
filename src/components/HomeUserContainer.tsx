@@ -20,6 +20,7 @@ import { User } from "../entities";
 import { timeOutline } from "ionicons/icons";
 import { refByIdFirebase } from "../config/firebase";
 import { createLocalNotification } from "../hooks/LocalNotification";
+
 interface ContainerProps {
   history: H.History;
   currentUser: User;
@@ -39,7 +40,6 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
   const [segmentValue, setSegmentValue] = useState<any>("provider");
   const [pending, setPending] = useState(0);
   const httpRequest = useCallback(async () => {
-
     try {
       let pathUrl;
       if (segmentValue === "provider") {
@@ -73,7 +73,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
       const { removeItem } = await Storages();
       await removeItem("token");
       await removeItem("user");
-      setMessage(e.message);
+      setMessage(JSON.stringify(e));
       setShowAlert1(true);
       console.error("HomeAdminPageContainer: " + e);
       setHiddenBar(true);
@@ -94,7 +94,6 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
         const pendingData: any[] = [];
         snapshot.forEach((snap: any) => {
           pendingData.push({ code: snap.key, states: snap.val() });
-          
         });
         if (pendingData && pendingData.length > 0) {
           const states: any = {
@@ -114,10 +113,10 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
           }
         }
         setFireData(pendingData);
-      }
+      },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
+
   return (
     <>
       <IonCard class="home-card-center">
@@ -125,7 +124,7 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
           <IonSegment
             onIonChange={(e) => {
               setSegmentValue(e.detail.value);
-              if(e.detail.value==="pendingShop"){
+              if (e.detail.value === "pendingShop") {
                 setPending(0);
               }
             }}
@@ -171,7 +170,6 @@ const HomeUserContainer: React.FC<ContainerProps> = ({
 
         <br />
       </IonCard>
-
       <IonAlert
         isOpen={showAlert1}
         onDidDismiss={() => setShowAlert1(true)}

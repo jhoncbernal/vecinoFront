@@ -54,14 +54,14 @@ const ListContainer: React.FC<ContainerProps> = ({
               setdata(inputs);
               setSearchText(e.detail.value!);
 
-              let newData = inputs.filter((item) => {
-                const itemData = `T${item.blockNumber
+              const newData = inputs.filter((item) => {
+                const itemData = `T${item?.propertyInfo?.sectionNumber
                   .toString()
-                  .toUpperCase()} ${item.homeNumber.toString().toUpperCase()} 
+                  .toUpperCase()} ${item.propertyInfo.propertyNumber.toString().toUpperCase()} 
     ${item.firstName.toUpperCase()}${item.lastName.toUpperCase()}
     ${item.email.toUpperCase()}
     ${item.phone.toString().toUpperCase()}
-    ${item.documentId.toString().toUpperCase()}`;
+    ${item?.documentId?.toString().toUpperCase()}`;
                 const textData = searchText.toUpperCase();
                 return itemData.indexOf(textData) > -1;
               });
@@ -73,42 +73,50 @@ const ListContainer: React.FC<ContainerProps> = ({
           ></IonSearchbar>
 
           {data.map((input: User, index) => {
-            if(!input?.roles?.includes(currentUser.uniquecode)){
-              return null
-            }
-            let debt = input.debt ? input.debt.toLocaleString() : 0;
+
+            const debt = input.debt ? input.debt.toLocaleString() : 0;
+            
             return (
               <IonCard key={index} id="card">
-                <IonCardHeader color={debt > 0 ? "danger" : "primary"}>
+                <IonCardHeader color={Number(debt) > 0 ? "danger" : "primary"}>
                   <IonTitle>
                     <strong>
-                      T{input.blockNumber} {input.homeNumber}
-                      {debt > 0 ? "  ¡Usuario en mora!" : ""}
+                      T{input?.propertyInfo?.sectionNumber}{" "}
+                      {input?.propertyInfo?.propertyNumber}
+                      {Number(debt) > 0 ? "  ¡Usuario en mora!" : ""}
                     </strong>
                   </IonTitle>
                 </IonCardHeader>
                 <IonCardContent
                   onClick={() => {
-                    if (!currentUser.roles?.includes(config.RolSecurityAccess)) {
+                    if (
+                      !currentUser.roles?.includes(config.RolSecurityAccess)
+                    ) {
                       setShowModal(true);
                       setdataModal(input);
                     }
                   }}
                 >
                   <IonGrid>
-                    <IonItem lines='none'>
+                    <IonItem lines="none">
                       <IonLabel>Estado del usuario:</IonLabel>
-                      <IonText color={'steel'}>{input.enabled?"Activo":"Inactivo"}</IonText>
+                      <IonText color={"steel"}>
+                        {input.enabled ? "Activo" : "Inactivo"}
+                      </IonText>
                     </IonItem>
                     <IonRow>
                       <IonCol>
-                        <IonItem lines='none'>
+                        <IonItem lines="none">
                           <IonAvatar slot="start">
                             <IonIcon
                               class="icon-avatar"
                               size="large"
-                              color={debt > 0 ? "danger" : "primary"}
-                              src={debt > 0 ? warningOutline : personOutline}
+                              color={Number(debt) > 0 ? "danger" : "primary"}
+                              src={
+                                Number(debt) > 0
+                                  ? warningOutline
+                                  : personOutline
+                              }
                             />
                           </IonAvatar>
                           <IonLabel>
@@ -122,11 +130,11 @@ const ListContainer: React.FC<ContainerProps> = ({
                         </IonItem>
                       </IonCol>
                       <IonCol>
-                        <IonItem lines='none'>
+                        <IonItem lines="none">
                           <IonLabel>
                             <h2>{`Points:    ${input.points}`}</h2>
                             <h3>
-                              {`Deuda: `} <strong>${input.debt}</strong>
+                              {"Deuda: "} <strong>${input.debt}</strong>
                             </h3>
                             <p>{`${
                               input.isOwner
@@ -163,7 +171,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                   ></UpdateUser>
                   <IonFab vertical="bottom" horizontal="start" slot="fixed">
                     <IonFabButton
-                      onClick={() => {setShowModal(false)}}
+                      onClick={() => {setShowModal(false);}}
                     >
                       <IonIcon icon={arrowBackOutline} />
                     </IonFabButton>

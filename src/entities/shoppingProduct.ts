@@ -6,13 +6,13 @@ export interface ShoppingProduct {
       price: number;
       salving: number;
       quantity: number;
-      totalAmount:number;
+      totalAmount: number;
 }
 
 export interface ShoppingOrder {
   products: [
     ShoppingProduct
-  ],
-  salvings:number;
+  ];
+  salvings: number;
   total: number;
 }

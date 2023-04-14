@@ -45,10 +45,26 @@ interface ContainerProps {
   inputs: Array<Product>;
   history: H.History;
 }
-
+const emptyProduct: Product = {
+  _id: "",
+  enabled: true,
+  keyImage: "",
+  measureType: "notSet",
+  price: 0,
+  productName: "",
+  productType: "",
+  provider: "",
+  totalAmount: 0,
+  urlImage: "",
+  code: 0,
+  brand: "",
+  features: "",
+  promotionPrice: 0,
+  promotionExpires: new Date(),
+  quantity: 0,
+};
 const ListContainer: React.FC<ContainerProps> = ({
   history,
-  loadData,
   inputs,
   currentUser,
   provider,
@@ -63,7 +79,7 @@ const ListContainer: React.FC<ContainerProps> = ({
   const [showPopover, setShowPopover] = useState(false);
   const [device, setDevice] = useState("");
   const [hiddenFeatures, setHiddenFeatures] = useState<any>({});
-  var today = new Date().toLocaleString();
+  const today = new Date().toLocaleString();
   const [showAlert, setShowAlert] = useState(false);
 
   const alert = (
@@ -88,8 +104,14 @@ const ListContainer: React.FC<ContainerProps> = ({
     setDataModal(emptyProduct);
     setShowModal(true);
   };
+  const groupBy = (key: React.ReactText) => (array: any[]) =>
+    array.reduce((objectsByKeyValue, obj) => {
+      const value = obj[key];
+      objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+      return objectsByKeyValue;
+    }, {});
 
-  const handleSearch = useCallback(
+  const handleSearch = useCallback( 
     async (e: any) => {
       try {
         setFlagRefresh(false);
@@ -117,7 +139,7 @@ const ListContainer: React.FC<ContainerProps> = ({
           });
         }
         const groupByType = groupBy("productType");
-        let newgroups = groupByType(newData);
+        const newgroups = groupByType(newData);
         if (newgroups) {
           setData(newgroups);
         }
@@ -140,12 +162,6 @@ const ListContainer: React.FC<ContainerProps> = ({
     }
   };
 
-  const groupBy = (key: React.ReactText) => (array: any[]) =>
-    array.reduce((objectsByKeyValue, obj) => {
-      const value = obj[key];
-      objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
-      return objectsByKeyValue;
-    }, {});
 
   useEffect(() => {
     setFlagRefresh(true);
@@ -166,7 +182,7 @@ const ListContainer: React.FC<ContainerProps> = ({
     if (inputs) {
       setData(groupByType(inputs));
     }
-    let fireProductCart: any = {};
+    const fireProductCart: any = {};
     refUserCar(currentUser._id, provider._id).on("value", (snapshot: any) => {
       snapshot.forEach((snap: any) => {
         fireProductCart[snap.key] = snap.val();
@@ -204,7 +220,7 @@ const ListContainer: React.FC<ContainerProps> = ({
         {renderAddButton()}
         <IonModal
           isOpen={showModal}
-          onDidDismiss={(e) => setShowModal(false)}
+          onDidDismiss={() => setShowModal(false)}
           animated={true}
           backdropDismiss={false}
         >
@@ -269,14 +285,14 @@ const ListContainer: React.FC<ContainerProps> = ({
                   </IonCard>
                 );
               }
-              let cards: Array<any> = [];
+              const cards: Array<any> = [];
               return (
                 <div key={index}>
                   <IonToolbar>
                     <IonTitle>{category}</IonTitle>
                   </IonToolbar>
                   {data[category].map((input: Product, index: number) => {
-                    let DatePromotion: string = "";
+                    let DatePromotion = "";
                     if (input.promotionExpires) {
                       DatePromotion = new Date(
                         input.promotionExpires
@@ -387,7 +403,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                       : false
                                   }
                                   onClick={() => {
-                                    let feature: any = {};
+                                    const feature: any = {};
                                     if (input._id) {
                                       feature[input._id] = true;
                                       setHiddenFeatures(feature);
@@ -424,22 +440,11 @@ const ListContainer: React.FC<ContainerProps> = ({
                               }
                             >
                               <IonText color={"steel"}>
-                                <h2>
-                                  {`Total:`}
-                                  <strong>{` ${input.totalAmount} ${input.measureType}`}</strong>
-                                </h2>
-                                <h3>
-                                  {`Estatus: `}
-                                  <small>
-                                    {input.enabled
-                                      ? "Enabled"
-                                      : "Disabled"}
-                                  </small>
-                                </h3>
-                                <p>
-                                  {`Cod Product: `}
-                                  <small>{input.code}</small>
-                                </p>
+                            <h2>{"Total:"}<strong>{` ${input.totalAmount} ${input.measureType}`}</strong></h2>
+                                <h3>{"Estado: "}<small>{
+                                  input.enabled ? "Habilitado" : "Inhabilitado"
+                                }</small></h3>
+                                <p>{"Cod Producto: "}<small>{input.code}</small></p>
                               </IonText>
                             </IonItem>
                           </IonCardContent>
@@ -465,7 +470,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                       shoppingCart[`${input._id}`] ||
                                     input.totalAmount !== 0
                                   ) {
-                                    let products = handleProducts(
+                                    const products = handleProducts(
                                       input._id,
                                       "Add",
                                       shoppingCart
@@ -491,7 +496,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                     size={"small"}
                                     fill="outline"
                                     onClick={() => {
-                                      let products = handleProducts(
+                                      const products = handleProducts(
                                         input._id,
                                         "Less",
                                         shoppingCart
@@ -527,7 +532,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                                         input.totalAmount >
                                         shoppingCart[`${input._id}`]
                                       ) {
-                                        let products = handleProducts(
+                                        const products = handleProducts(
                                           input._id,
                                           "Add",
                                           shoppingCart
@@ -552,12 +557,12 @@ const ListContainer: React.FC<ContainerProps> = ({
 
                     cards.push(card);
                     if (index === data[category].length - 1) {
-                      var chunk_size =
+                      const chunkSize =
                         device === "android" || device === "ios" ? 2 : 3;
-                      var groups = cards
+                      const groups = cards
                         .map(function (e, i) {
-                          return i % chunk_size === 0
-                            ? cards.slice(i, i + chunk_size)
+                          return i % chunkSize === 0
+                            ? cards.slice(i, i + chunkSize)
                             : null;
                         })
                         .filter(function (e) {
@@ -581,7 +586,7 @@ const ListContainer: React.FC<ContainerProps> = ({
             <IonModal
               isOpen={showPopover}
               swipeToClose={true}
-              onDidDismiss={(e) => setShowPopover(false)}
+              onDidDismiss={() => setShowPopover(false)}
               animated={true}
               id={"modal"}
             >
@@ -607,23 +612,6 @@ const ListContainer: React.FC<ContainerProps> = ({
     throw e;
   }
 };
-const emptyProduct: Product = {
-  _id: "",
-  enabled: true,
-  keyImage: "",
-  measureType: "notSet",
-  price: 0,
-  productName: "",
-  productType: "",
-  provider: "",
-  totalAmount: 0,
-  urlImage: "",
-  code: 0,
-  brand: "",
-  features: "",
-  promotionPrice: 0,
-  promotionExpires: new Date(),
-  quantity: 0,
-};
+
 
 export default ListContainer;

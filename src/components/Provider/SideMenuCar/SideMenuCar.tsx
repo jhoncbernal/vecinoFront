@@ -81,7 +81,16 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
   const [showPopUpInfo, setPopUpInfo] = useState<boolean>(false);
 
   const [bodyChanges, setBodyChanges] = useState<any>({});
-
+  const sumProducts = () => {
+    let sum = 0;
+    if (dataSide.products) {
+      // eslint-disable-next-line array-callback-return
+      dataSide.products.map((product: Product) => {
+        sum += product.quantity! * product.price;
+      });
+    }
+    return sum;
+  };
   const sumFullBill = () => {
     let sum = 0;
     if (dataSide.products) {
@@ -93,16 +102,6 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
     return sum;
   };
 
-  const sumProducts = () => {
-    let sum = 0;
-    if (dataSide.products) {
-      // eslint-disable-next-line array-callback-return
-      dataSide.products.map((product: Product) => {
-        sum += product.quantity! * product.price;
-      });
-    }
-    return sum;
-  };
   const deleteProductFromBill = (product: Product) => {
     const index = dataSide.products.indexOf(product);
     dataSide.products.splice(index, 1);
@@ -114,14 +113,13 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
     }));
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateFirebase = (bill: Bill) => {
     pushProviderBillsFirebase({
       ...bill,
       Total: sumFullBill(),
       subTotal: sumProducts(),
     })
-      .then((response) => {
+      .then(() => {
         menuController.close();
         setBodyChanges({});
       })
@@ -130,13 +128,12 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
       });
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateStateFirebase = (states: any[]) => {
     pushProviderBillsFirebase({
       ...dataSide,
       states: states,
     })
-      .then((response) => {
+      .then(() => {
         pushStatesUserFirebase(dataSide, states);
         menuController.close();
         setBodyChanges({});
@@ -149,7 +146,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
   const saveChanges = useCallback(async () => {
     const pathUrl = `${config.BillsContext}/${dataSide._id}`;
     await HttpRequest(pathUrl, "PATCH", bodyChanges, true)
-      .then((response) => {
+      .then(() => {
         updateFirebase(dataSide);
       })
       .catch((error) => {
@@ -159,23 +156,23 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
 
   const closeBill = useCallback(
     async (states: Array<{ state: string; start: string }>) => {
-      setTimeout(async() => {
-      const pathUrl = `${config.BillsContext}/${dataSide._id}`;
-      await HttpRequest(
-        pathUrl,
-        "PATCH",
-        { enabled: false, states: states },
-        true
-      )
-        .then((response) => {
-          deleteProviderBillsFirebase(dataSide);
-          deleteUserBillsFirebase(dataSide);
-          menuController.close();
-          setBodyChanges({});
-        })
-        .catch((error) => {
-          console.error("error", error);
-        });
+      setTimeout(async () => {
+        const pathUrl = `${config.BillsContext}/${dataSide._id}`;
+        await HttpRequest(
+          pathUrl,
+          "PATCH",
+          { enabled: false, states: states },
+          true
+        )
+          .then(() => {
+            deleteProviderBillsFirebase(dataSide);
+            deleteUserBillsFirebase(dataSide);
+            menuController.close();
+            setBodyChanges({});
+          })
+          .catch((error) => {
+            console.error("error", error);
+          });
       }, 10000);
     },
     [dataSide]
@@ -197,8 +194,8 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
         ];
         updateStateFirebase(mStates);
         if (actualState.next === "finished") {
-            closeBill(mStates);
-        } 
+          closeBill(mStates);
+        }
       }
     }
   }, [closeBill, dataSide.states, states, updateStateFirebase]);
@@ -286,7 +283,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
             text: "Eliminar",
             role: "cancel",
             cssClass: "danger",
-            handler: (response) => {
+            handler: () => {
               deleteProductFromBill(showAlertDelete.item!);
             },
           },
@@ -313,7 +310,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
             text: "Si",
             role: "cancel",
             cssClass: "danger",
-            handler: (response) => {
+            handler: () => {
               cancelState();
             },
           },
@@ -327,7 +324,7 @@ const SideMenuCar: FC<{ [id: string]: any }> = ({ dataSide }) => {
       <IonPopover
         isOpen={showPopOverOption.open}
         event={showPopOverOption.event}
-        onDidDismiss={(e) =>
+        onDidDismiss={() =>
           setPopOverOptions({ open: false, event: undefined })
         }
       >

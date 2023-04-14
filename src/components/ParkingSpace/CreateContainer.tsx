@@ -25,7 +25,7 @@ import config from "../../config";
 
 interface ContainerProps {
   parkingType: string;
-  dataChange:any;
+  dataChange: any;
 }
 
 const CreateContainer: React.FC<ContainerProps> = ({ parkingType,dataChange }) => {
@@ -47,10 +47,10 @@ const CreateContainer: React.FC<ContainerProps> = ({ parkingType,dataChange }) =
     async (e: any) => {
       try {
         e.preventDefault();
-        let positions = [];
+        const positions = [];
         if (numPositions > 0) {
           for (let index = 1; index <= numPositions; index++) {
-            let pos = {
+            const pos = {
               posnumber: `${index}`,
               available: true,
               vehicletype: `${parkingType.substring(0, parkingType.length - 1)}`
@@ -58,8 +58,8 @@ const CreateContainer: React.FC<ContainerProps> = ({ parkingType,dataChange }) =
             positions.push(pos);
           }
 
-          let pathUrl = `${config.ParkingSpaceContext}`;
-          let data = {
+          const pathUrl = `${config.ParkingSpaceContext}`;
+          const data = {
             parkingname: parkingType,
             enabled: true,
             totalspace: 55,

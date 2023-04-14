@@ -49,11 +49,11 @@ const UpdateUser: React.FC<ContainerProps> = ({
   const [dataModall, setdataModall] = useState<User>(dataModal);
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [bodyChange, setbodyChange] = useState(false);
-  const [dataSend, setDataSend] = useState();
-  const handleValueChange = useCallback((property: string, value:any) => {
+  const [dataSend, setDataSend] = useState<any>();
+  const handleValueChange = useCallback((property: string, value: any) => {
     try {
       setbodyChange(true);
-      let body: any = {};
+      const body: any = {};
       body[property] = value;
       setDataSend((prevState: any) => ({
         ...prevState,
@@ -68,7 +68,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
       try {
         const { setObject } = Storages();
         e.preventDefault();
-        let pathUrl = ``;
+        let pathUrl = "";
         if (dataModal.roles?.includes(config.RolUserAccess)||dataModal.roles?.includes(config.RolSecurityAccess)) {
           pathUrl = `${config.UserContext}/${dataModal._id}`;
         } else if (dataModal.roles?.includes(config.RolAdminAccess)) {
@@ -76,7 +76,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
         } else {
           pathUrl = `${config.ProviderContext}/${dataModal._id}`;
         }
-        let data = dataSend;
+        const data = dataSend;
         if (!bodyChange) {
           setMessage("No se modifico ningun campo");
         } else {
@@ -168,7 +168,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
                 onIonChange={(e: any) => {
                   handleValueChange(
                     e.target.name,
-                    Number(e.target.value?.toString().replace(/[^0-9]/gi, ""))
+                    Number(e.target.value?.toString().replace(/[^0-9]/gi, "")),
                   );
                 }}
               />
@@ -200,7 +200,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
                       onIonChange={(e: any) => {
                         handleValueChange(
                           e.target.name,
-                          e.target.value.replace(/[^A-Za-z ñ]/gi, "")
+                          e.target.value.replace(/[^A-Za-z ñ]/gi, ""),
                         );
                       }}
                     />
@@ -237,7 +237,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
                       onIonChange={(e: any) => {
                         handleValueChange(
                           e.target.name,
-                          e.target.value.replace(/[^A-Za-z ñ]/gi, "")
+                          e.target.value.replace(/[^A-Za-z ñ]/gi, ""),
                         );
                       }}
                     />
@@ -273,14 +273,14 @@ const UpdateUser: React.FC<ContainerProps> = ({
                           type="tel"
                           name={"blockNumber"}
                           value={
-                            dataSend?.blockNumber
-                              ? dataSend["blockNumber"]
-                              : dataModall?.blockNumber
+                            dataSend?.propertyInfo?.sectionNumber
+                              ? dataSend["propertyInfo.sectionNumber"]
+                              : dataModall?.propertyInfo?.sectionNumber
                           }
                           onIonChange={(e: any) => {
                             handleValueChange(
                               e.target.name,
-                              e.target.value.toString().replace(/[^0-9]/gi, "")
+                              e.target.value.toString().replace(/[^0-9]/gi, ""),
                             );
                           }}
                         />
@@ -303,14 +303,14 @@ const UpdateUser: React.FC<ContainerProps> = ({
                           type="tel"
                           name={"homeNumber"}
                           value={
-                            dataSend?.homeNumber
-                              ? dataSend["homeNumber"]
-                              : dataModall?.homeNumber
+                            dataSend?.propertyInfo?.propertyNumber
+                              ? dataSend["propertyInfo.propertyNumber"]
+                              : dataModall?.propertyInfo.propertyNumber
                           }
                           onIonChange={(e: any) => {
                             handleValueChange(
                               e.target.name,
-                              e.target.value.toString().replace(/[^0-9]/gi, "")
+                              e.target.value.toString().replace(/[^0-9]/gi, ""),
                             );
                           }}
                         />
@@ -323,8 +323,10 @@ const UpdateUser: React.FC<ContainerProps> = ({
                   currentAddress={
                     dataModall
                       ? {
-                          homeNumber: dataModall.homeNumber,
-                          blockNumber: dataModall.blockNumber,
+                          "propertyInfo.propertyNumber":
+                            dataModall.propertyInfo.propertyNumber,
+                          "propertyInfo.sectionNumber":
+                            dataModall?.propertyInfo?.sectionNumber,
                           neighborhood:
                             dataModall.neighborhood && !dataModall.address
                               ? dataModall.neighborhood.firstName
@@ -344,17 +346,26 @@ const UpdateUser: React.FC<ContainerProps> = ({
                         handleValueChange("uniquecode", response.uniquecode);
                       }
                       if (
-                        response.homeNumber &&
-                        response.blockNumber &&
+                        response.propertyInfo.propertyNumber &&
+                        response?.propertyInfo?.sectionNumber &&
                         response.whereIlive === "Conjunto"
                       ) {
-                        if (response.homeNumber !== dataModall.homeNumber) {
-                          handleValueChange("homeNumber", response.homeNumber);
-                        }
-                        if (response.blockNumber !== dataModall.blockNumber) {
+                        if (
+                          response.propertyInfo.propertyNumber !==
+                          dataModall.propertyInfo.propertyNumber
+                        ) {
                           handleValueChange(
-                            "blockNumber",
-                            response.blockNumber
+                            "propertyInfo.propertyNumber",
+                            response.propertyInfo.propertyNumber,
+                          );
+                        }
+                        if (
+                          response?.propertyInfo?.sectionNumber !==
+                          dataModall?.propertyInfo?.sectionNumber
+                        ) {
+                          handleValueChange(
+                            "propertyInfo.sectionNumber",
+                            response?.propertyInfo?.sectionNumber,
                           );
                         }
                         if (
@@ -363,7 +374,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
                         ) {
                           handleValueChange(
                             "neighborhood",
-                            response.neighborhoodId
+                            response.neighborhoodId,
                           );
                           handleValueChange("address", "");
                         }
@@ -398,7 +409,7 @@ const UpdateUser: React.FC<ContainerProps> = ({
                 onIonChange={(e: any) => {
                   handleValueChange(
                     e.target.name,
-                    Number(e.target.value.toString().replace(/[^0-9]/gi, ""))
+                    Number(e.target.value.toString().replace(/[^0-9]/gi, "")),
                   );
                 }}
               />

@@ -79,7 +79,6 @@ export const ProviderRegisterContainer: React.FC<ContainerProps> = ({
              category: category,
              urlImage: urlImage,
            });
-         // eslint-disable-next-line react-hooks/exhaustive-deps
          }, [deliveryCharge, category, subCategory, schedule, urlImage ]);
          return (
            <>
@@ -180,7 +179,7 @@ export const ProviderRegisterContainer: React.FC<ContainerProps> = ({
                      <IonButton
                        size="default"
                        color="secondary"
-                       onClick={(e: any) => {
+                       onClick={() => {
                          registerSubCategory();
                        }}
                      >
@@ -197,7 +196,7 @@ export const ProviderRegisterContainer: React.FC<ContainerProps> = ({
                      {subCategory?.map((category: string, index: number) => {
                        return (
                          <IonChip
-                           onClick={(e: any) => {
+                           onClick={() => {
                              setSubCategory(
                                subCategory.filter(
                                  (item: string) => item !== category
@@ -227,7 +226,7 @@ export const ProviderRegisterContainer: React.FC<ContainerProps> = ({
                      {days?.map((day: string, index: number) => {
                        return (
                          <IonChip
-                           onClick={(e: any) => {
+                           onClick={() => {
                              if (days.length === 1) {
                                setDays(constants.DAYS_OF_WEEK);
                              } else {

@@ -72,18 +72,18 @@ export class LoginPage extends React.Component<
   async preValues() {
     try {
       const { getObject } = Storages();
-      let device = await witchDevice();
+      const device = await witchDevice();
       this.setState({ device: device });
       if (device === "android") {
-        let fingerToken = await getObject("fingerToken");
+        const fingerToken = await getObject("fingerToken");
         this.setState({ fingerToken: fingerToken.obj });
       }
-      let rememberme = await getObject("rememberme");
+      const rememberme = await getObject("rememberme");
       if (rememberme) {
         this.setState({ email: rememberme.obj.username });
         this.setState({ checked: rememberme.obj.checked });
       }
-      let user = await getObject("user");
+      const user = await getObject("user");
       if (user) {
         this.props.history.push("/home");
       } else {
@@ -101,7 +101,7 @@ export class LoginPage extends React.Component<
   }
   async fingerLogin() {
     if (this.state.fingerToken) {
-      let pass = await getFingerLogin(this.state.fingerToken, this.state.email)
+      const pass = await getFingerLogin(this.state.fingerToken, this.state.email)
         .then((result) => {
           return result;
         })
@@ -125,8 +125,8 @@ export class LoginPage extends React.Component<
     try {
 
       const { setObject, removeItem } = Storages();
-      let pathUrl = `${config.LoginContext}`;
-      let data = { email: this.state.email, password: this.state.password };
+      const pathUrl = `${config.LoginContext}`;
+      const data = { email: this.state.email, password: this.state.password };
       this.setState({ hiddenbar: false });
       await HttpRequest(pathUrl, "POST", data)
         .then(async (resultado: any) => {
@@ -144,7 +144,7 @@ export class LoginPage extends React.Component<
           if (this.state.device === "android" && !this.state.fingerToken)
             await setFingerLogin(this.state.email, this.state.password);
           if (this.state.checked) {
-            let rememberme = {
+            const rememberme = {
               checked: this.state.checked,
               username: this.state.email,
             };

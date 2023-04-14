@@ -1,23 +1,23 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { IonItem, IonIcon, IonCard, IonAvatar, IonSearchbar, IonModal, IonFab, IonFabButton, IonLabel, IonCardTitle, IonItemDivider, IonButton, IonCardContent, IonCardHeader, IonText, IonInput } from '@ionic/react';
-import { arrowBackOutline, carSportOutline, closeCircle, checkmarkCircle, bicycleOutline } from 'ionicons/icons';
-import './ListContainer.css';
-import CreateContainer from './CreateContainer';
-import ChosePosition from './ChosePositionContainer';
-import * as H from 'history';
-import config from '../../config';
-import { User } from '../../entities';
+import React, { useState, useCallback, useEffect } from "react";
+import { IonItem, IonIcon, IonCard, IonAvatar, IonSearchbar, IonModal, IonFab, IonFabButton, IonLabel, IonCardTitle, IonItemDivider, IonButton, IonCardContent, IonCardHeader, IonText, IonInput } from "@ionic/react";
+import { arrowBackOutline, carSportOutline, closeCircle, checkmarkCircle, bicycleOutline } from "ionicons/icons";
+import "./ListContainer.css";
+import CreateContainer from "./CreateContainer";
+import ChosePosition from "./ChosePositionContainer";
+import * as H from "history";
+import config from "../../config";
+import { User } from "../../entities";
 interface ContainerProps {
   parkingType: string;
   loaddata: boolean;
   inputs: Array<any>;
   history: H.History;
-  dataChanges:any;
-  currentUser:User;
+  dataChanges: any;
+  currentUser: User;
 }
 
-const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs, history,dataChanges,currentUser }) => {
-  const [searchText, setSearchText] = useState('');
+const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs,dataChanges,currentUser }) => {
+  const [searchText, setSearchText] = useState("");
   const [data, setdata] = useState([{}]);
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
@@ -26,10 +26,10 @@ const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs
     async (e: any) => {
       setdata(inputs);
       setSearchText(e.detail.value!);
-      if (searchText === '') {
+      if (searchText === "") {
         setdata([{}]);
       } else {
-        let newData = inputs.filter((item: any) => {
+        const newData = inputs.filter((item: any) => {
           let itemData = `P${item.posnumber.toUpperCase()} ${item.available.toUpperCase()}`;
           if (item.vehicle) {
             itemData = itemData + `${item.vehicle.plate.toUpperCase()}
@@ -44,9 +44,9 @@ const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs
 
     }, [inputs, searchText]);
   useEffect(() => {
-    setSearchText('');
+    setSearchText("");
     setdata([{}]);
-  }, [parkingType])
+  }, [parkingType]);
   try {
     if (inputs.length > 1) {
       return (
@@ -58,31 +58,31 @@ const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs
             showCancelButton="always" hidden={!loaddata}></IonSearchbar>
           {data.map((input: any, index: any) => {
             if (!input.posnumber) {
-              return (<IonCard key={index}></IonCard>)
+              return (<IonCard key={index}></IonCard>);
             }
             return (
               <IonCard key={index} >
-                <IonCardHeader color={input.available === 'false' ? 'danger' : 'primary'}>
+                <IonCardHeader color={input.available === "false" ? "danger" : "primary"}>
                   <IonCardTitle class='title'>
                     <IonText>
-                      {input.available !== 'false'
+                      {input.available !== "false"
                         ? <IonIcon size='medium' icon={checkmarkCircle} />
                         : <IonIcon size='medium' icon={closeCircle} />
                       }  P{input.posnumber}  </IonText>
                   </IonCardTitle>
                 </IonCardHeader>
-                <IonCardContent onClick={() => { setShowModal(true); setPositionData(input) }}>
+                <IonCardContent onClick={() => { setShowModal(true); setPositionData(input); }}>
                   <IonItemDivider>
                     <IonAvatar color='primary'>
-                      {input.vehicletype === 'Motorcycle'
-                        ? <IonIcon class='icon-avatar' size='large' src={'assets/icons/Motorcycle.svg'} />
+                      {input.vehicletype === "Motorcycle"
+                        ? <IonIcon class='icon-avatar' size='large' src={"assets/icons/Motorcycle.svg"} />
                         : <></>
                       }
-                      {input.vehicletype === 'Car'
+                      {input.vehicletype === "Car"
                         ? <IonIcon class='icon-avatar' size='large' src={carSportOutline} />
                         : <></>
                       }
-                      {input.vehicletype === 'Bike'
+                      {input.vehicletype === "Bike"
                         ? <IonIcon class='icon-avatar' size='large' src={bicycleOutline} />
                         : <></>
                       }
@@ -95,8 +95,8 @@ const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs
                     }
                   </IonItemDivider>
                 </IonCardContent>
-                <IonModal  isOpen={showModal} animated={true}  onDidDismiss={(e) => setShowModal(false)} >
-                  <ChosePosition dataModal={positionData} dataChange={(dat:boolean)=>{setShowModal(false);dataChanges(dat);setSearchText(''); setdata([{}])}}></ChosePosition>
+                <IonModal  isOpen={showModal} animated={true}  onDidDismiss={() => setShowModal(false)} >
+                  <ChosePosition dataModal={positionData} dataChange={(dat: boolean)=>{setShowModal(false);dataChanges(dat);setSearchText(""); setdata([{}]);}}></ChosePosition>
                   <IonFab vertical="bottom" horizontal="start" slot="fixed">
                     <IonFabButton onClick={() => {
                       setShowModal(false); 
@@ -105,28 +105,28 @@ const ListContainer: React.FC<ContainerProps> = ({ parkingType, loaddata, inputs
                   </IonFab>
                 </IonModal>
               </IonCard>
-            )
+            );
           })}
         </>
       );
     } else {
-      return (<> <IonButton expand="block" hidden={!loaddata} onClick={() => { if(!currentUser.roles?.includes(config.RolSecurityAccess)){setShowModal2(true)} }}>
+      return (<> <IonButton expand="block" hidden={!loaddata} onClick={() => { if(!currentUser.roles?.includes(config.RolSecurityAccess)){setShowModal2(true);} }}>
         Crear Parqueadero
       <IonIcon slot="end" icon={checkmarkCircle} />
       </IonButton>
-        <IonModal isOpen={showModal2} animated={true}   onDidDismiss={(e) => setShowModal2(false)} >
-          <CreateContainer parkingType={parkingType} dataChange={(dat:boolean)=>{setShowModal(false);dataChanges(dat);setSearchText(''); setdata([{}])}}></CreateContainer>
+        <IonModal isOpen={showModal2} animated={true}   onDidDismiss={() => setShowModal2(false)} >
+          <CreateContainer parkingType={parkingType} dataChange={(dat: boolean)=>{setShowModal(false);dataChanges(dat);setSearchText(""); setdata([{}]);}}></CreateContainer>
           <IonFab vertical="bottom" horizontal="start" slot="fixed">
                     <IonFabButton onClick={() => {
                       setShowModal2(false); 
                     }} >
                     <IonIcon icon={arrowBackOutline} /></IonFabButton>
                   </IonFab>
-        </IonModal></>)
+        </IonModal></>);
     }
   } catch (e) {
     console.error(e);
-    throw e
+    throw e;
   }
 };
 

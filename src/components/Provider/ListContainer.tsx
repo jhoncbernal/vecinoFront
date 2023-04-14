@@ -58,8 +58,8 @@ const ListContainer: React.FC<ContainerProps> = ({
               setdata(inputs);
               setSearchText(e.detail.value!);
 
-              let newData = inputs.filter((item) => {
-                let itemData = `${item.category.toUpperCase()} ${item.firstName.toUpperCase()}`;
+              const newData = inputs.filter((item) => {
+                const itemData = `${item.category.toUpperCase()} ${item.firstName.toUpperCase()}`;
 
                 const textData = searchText.toUpperCase();
                 return itemData.indexOf(textData) > -1;
@@ -82,7 +82,7 @@ const ListContainer: React.FC<ContainerProps> = ({
                     <IonCardContent
                       onClick={async (e) => {
                         e.preventDefault();
-                        let pathUrl = `/${config.ProductContext}?providerId=${input._id}&pageSize=100`;
+                        const pathUrl = `/${config.ProductContext}?providerId=${input._id}&pageSize=100`;
                         await HttpRequest(pathUrl, "GET", "", true)
                           .then(async (resultado: any) => {
                             setProductsArray(resultado);
@@ -124,7 +124,7 @@ const ListContainer: React.FC<ContainerProps> = ({
               })
             : null}
               <IonModal
-                      onDidDismiss={(e) => setShowModal(false)}
+                      onDidDismiss={() => setShowModal(false)}
                       isOpen={showModal}
                       animated={true}
                       id="productModal"
@@ -175,13 +175,13 @@ const ListContainer: React.FC<ContainerProps> = ({
               </IonThumbnail>
               <IonLabel>
                 <h3>
-                  <IonSkeletonText animated style={{ width: '50%' }} />
+                  <IonSkeletonText animated style={{ width: "50%" }} />
                 </h3>
                 <p>
-                  <IonSkeletonText animated style={{ width: '80%' }} />
+                  <IonSkeletonText animated style={{ width: "80%" }} />
                 </p>
                 <p>
-                  <IonSkeletonText animated style={{ width: '60%' }} />
+                  <IonSkeletonText animated style={{ width: "60%" }} />
                 </p>
               </IonLabel>
             </IonItem>

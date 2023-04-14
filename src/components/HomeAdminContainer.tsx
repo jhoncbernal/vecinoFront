@@ -21,10 +21,10 @@ import {
 
 import ChartsContainer from "./Dashboard/ChartsContainer";
 import config from "../config";
-import * as H from 'history';
+import * as H from "history";
 import { User } from "../entities";
 interface ContainerProps {
-  currentUser:User;
+  currentUser: User;
   history: H.History;
 }
 const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history,currentUser }) => {
@@ -159,7 +159,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history,currentUser 
             ) : segmentValue === "Cars" ? (
               <ParkingListContainer
               currentUser={currentUser}
-              dataChanges={(change:boolean)=>{if(change){setRefresh(change)}}}
+              dataChanges={(change: boolean)=>{if(change){setRefresh(change);}}}
                 history={history}
                 parkingType={segmentValue}
                 loaddata={loadData}
@@ -168,7 +168,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history,currentUser 
             ) :  segmentValue === "Motorcycles" ? (
               <ParkingListContainer
               currentUser={currentUser}
-              dataChanges={(change:boolean)=>{if(change){setRefresh(change)}}}
+              dataChanges={(change: boolean)=>{if(change){setRefresh(change);}}}
                 history={history}
                 parkingType={segmentValue}
                 loaddata={loadData}
@@ -177,7 +177,7 @@ const HomeAdminPageContainer: React.FC<ContainerProps> = ({ history,currentUser 
             ): segmentValue === "Bikes" ? (
               <ParkingListContainer
               currentUser={currentUser}
-              dataChanges={(change:boolean)=>{if(change){setRefresh(change)}}}
+              dataChanges={(change: boolean)=>{if(change){setRefresh(change);}}}
                 history={history}
                 parkingType={segmentValue}
                 loaddata={loadData}

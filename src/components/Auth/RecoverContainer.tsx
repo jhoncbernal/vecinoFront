@@ -41,13 +41,13 @@ export class RecoverContainer extends React.Component<
     e.preventDefault();
 
     try {
-      let pathUrl = `${config.RecoveryPasswordContext}`;
-      let data = { email: this.state.email };
+      const pathUrl = `${config.RecoveryPasswordContext}`;
+      const data = { email: this.state.email };
       this.setState({ hiddenbar: false });
       await HttpRequest(pathUrl, "POST", data)
         .then((response: any) => {
           this.setState({ hiddenbar: true });
-          this.setState({'email':''});
+          this.setState({"email":""});
           if (response.emailResult) {
             this.setState({
               loginMessage:
@@ -64,7 +64,7 @@ export class RecoverContainer extends React.Component<
           throw error;
         });
     } catch (e) {
-      this.setState({'email':''});
+      this.setState({"email":""});
       this.setState({ hiddenbar: true });
       this.setState({ loginMessage: e.message });
       this.setState({ showToast1: true });
@@ -109,7 +109,7 @@ export class RecoverContainer extends React.Component<
           </form>
 
           <IonToast
-          color={'warning'}
+          color={"warning"}
             isOpen={this.state.showToast1}
             onDidDismiss={() => this.setState({ showToast1: false })}
             message={this.state.loginMessage}

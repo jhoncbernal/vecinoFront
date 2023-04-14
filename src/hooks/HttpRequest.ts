@@ -7,14 +7,14 @@ export async function HttpRequest(
   pathUrl: string,
   method: any,
   data: any = "",
-  authorization: boolean = false,
+  authorization = false,
   headers: any = ""
 ) {
-  let jsonheader:any = {
+  let jsonheader: any = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
   };
-  if(method==='DELETE'){
+  if(method==="DELETE"){
     jsonheader={};
   }
   if (authorization) {
@@ -29,7 +29,7 @@ export async function HttpRequest(
     }
   }
 
-  let url = `${config.BASE_URL}${config.API_VERSION}${pathUrl}`;
+  const url = `${config.BASE_URL}${config.API_VERSION}${pathUrl}`;
   
   const options = {
     url: url,
@@ -57,7 +57,7 @@ export async function HttpRequest(
         .catch(async (error: any) => {
           // Error 😨
           let errorMessage;
-          let EspError=ErroDictionary().Errors;
+          const EspError=ErroDictionary().Errors;
           const err = new Error();
           if (error.response) {
             /*
@@ -71,17 +71,17 @@ export async function HttpRequest(
               errorMessage = error.Error;
             }
             if(errorMessage){
-            if(errorMessage.includes('token')){
+            if(errorMessage.includes("token")){
               const { removeItem } = Storages();
-                  await removeItem('token');
-                  await removeItem('user');
-                  await removeItem('fireToken');
+                  await removeItem("token");
+                  await removeItem("user");
+                  await removeItem("fireToken");
             }
             err.message = EspError.get(errorMessage)?EspError.get(errorMessage):errorMessage;
             throw err;
           }
           else{
-            err.message = 'Error con el servidor '+error.response.data?error.response.data:'';
+            err.message = "Error con el servidor "+error.response.data?error.response.data:"";
             throw err;
           }
           } else if (error.request) {
