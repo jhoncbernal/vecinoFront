@@ -22,9 +22,12 @@ jobs:
       REACT_APP_GOOGLE_API: ${{ vars.REACT_APP_GOOGLE_API }}
       REACT_APP_BASE_URL: ${{ vars.REACT_APP_BASE_URL }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: actions/setup-node@v2
       - run: yarn cache clean
       - run: yarn
       - run: yarn build --if-present
