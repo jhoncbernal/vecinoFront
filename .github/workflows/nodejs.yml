@@ -1,0 +1,33 @@
+name: Node.js CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        node-version: [16.10.0]
+    env:
+      NODE_ENV: production
+      PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+      REACT_APP_API_KEY: ${{ vars.REACT_APP_API_KEY }}
+      REACT_APP_APP_ID: ${{ vars.REACT_APP_APP_ID }}
+      REACT_APP_AUTH_DOMAIN: ${{ vars.REACT_APP_AUTH_DOMAIN }}
+      REACT_APP_DATABASE_URL: ${{ vars.REACT_APP_DATABASE_URL }}
+      REACT_APP_MESSAGING_SENDER_ID: ${{ vars.REACT_APP_MESSAGING_SENDER_ID }}
+      REACT_APP_PROJECT_ID: ${{ vars.REACT_APP_PROJECT_ID }}
+      REACT_APP_STAGE: ${{ vars.REACT_APP_STAGE }}
+      REACT_APP_STORAGE_BUCKET: ${{ vars.REACT_APP_STORAGE_BUCKET }}
+      REACT_APP_GOOGLE_API: ${{ vars.REACT_APP_GOOGLE_API }}
+      REACT_APP_BASE_URL: ${{ vars.REACT_APP_BASE_URL }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - run: yarn cache clean
+      - run: yarn
+      - run: yarn build --if-present
