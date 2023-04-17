@@ -40,7 +40,7 @@ const dev = {
 
 const prod = {
   API_VERSION: "/v1/api",
-  BASE_URL: "https://vecinoob.herokuapp.com",
+  BASE_URL: process.env.REACT_APP_BASE_URL,
   ...general
 };
 
