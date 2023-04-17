@@ -1,6 +1,7 @@
 name: Node.js CI
 
-on: [push]
+on:
+  push:
 
 jobs:
   build:
@@ -30,4 +31,12 @@ jobs:
       - uses: actions/setup-node@v2
       - run: yarn cache clean
       - run: yarn
-      - run: yarn build --if-present
+      - name: Build the app
+        run: yarn build --if-present --max-old-space-size=$(awk '/MemTotal/ {print int($2*0.75/1024)}' /proc/meminfo) --no-parallel
+        # This limits the memory used by Node.js to 75% of the available memory
+        # The $(awk '/MemTotal/ {print int($2*0.75/1024)}' /proc/meminfo) command
+        # calculates the appropriate value for --max-old-space-size based on the available memory
+        # The --no-parallel option disables parallelism to reduce memory usage
+      - name: Show build logs
+        run: cat build/log.txt
+        if: success() # This only runs if the previous step was successful
