@@ -74,7 +74,8 @@
     "resources": "cordova-res ios && cordova-res android && node scripts/resources.js"
   },
   "engines": {
-    "node": "v16.10.0"
+    "node": "v16.10.0",
+    "npm": "8.19.4"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",

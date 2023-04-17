@@ -1,42 +1,42 @@
-name: Node.js CI
+# name: Node.js CI
 
-on:
-  push:
+# on:
+#   push:
 
-jobs:
-  build:
-    runs-on: self-hosted
-    strategy:
-      matrix:
-        node-version: [16.10.0]
-    env:
-      NODE_ENV: production
-      PROJECT_NAME: ${{ vars.PROJECT_NAME }}
-      REACT_APP_API_KEY: ${{ vars.REACT_APP_API_KEY }}
-      REACT_APP_APP_ID: ${{ vars.REACT_APP_APP_ID }}
-      REACT_APP_AUTH_DOMAIN: ${{ vars.REACT_APP_AUTH_DOMAIN }}
-      REACT_APP_DATABASE_URL: ${{ vars.REACT_APP_DATABASE_URL }}
-      REACT_APP_MESSAGING_SENDER_ID: ${{ vars.REACT_APP_MESSAGING_SENDER_ID }}
-      REACT_APP_PROJECT_ID: ${{ vars.REACT_APP_PROJECT_ID }}
-      REACT_APP_STAGE: ${{ vars.REACT_APP_STAGE }}
-      REACT_APP_STORAGE_BUCKET: ${{ vars.REACT_APP_STORAGE_BUCKET }}
-      REACT_APP_GOOGLE_API: ${{ vars.REACT_APP_GOOGLE_API }}
-      REACT_APP_BASE_URL: ${{ vars.REACT_APP_BASE_URL }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: actions/setup-node@v2
-      - run: yarn cache clean
-      - run: yarn
-      - name: Build the app
-        run: yarn build --if-present --max-old-space-size=$(awk '/MemTotal/ {print int($2*0.75/1024)}' /proc/meminfo) --no-parallel
-        # This limits the memory used by Node.js to 75% of the available memory
-        # The $(awk '/MemTotal/ {print int($2*0.75/1024)}' /proc/meminfo) command
-        # calculates the appropriate value for --max-old-space-size based on the available memory
-        # The --no-parallel option disables parallelism to reduce memory usage
-      - name: Show build logs
-        run: cat build/log.txt
-        if: success() # This only runs if the previous step was successful
+# jobs:
+#   build:
+#     runs-on: self-hosted
+#     strategy:
+#       matrix:
+#         node-version: [16.10.0]
+#     env:
+#       NODE_ENV: production
+#       PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+#       REACT_APP_API_KEY: ${{ vars.REACT_APP_API_KEY }}
+#       REACT_APP_APP_ID: ${{ vars.REACT_APP_APP_ID }}
+#       REACT_APP_AUTH_DOMAIN: ${{ vars.REACT_APP_AUTH_DOMAIN }}
+#       REACT_APP_DATABASE_URL: ${{ vars.REACT_APP_DATABASE_URL }}
+#       REACT_APP_MESSAGING_SENDER_ID: ${{ vars.REACT_APP_MESSAGING_SENDER_ID }}
+#       REACT_APP_PROJECT_ID: ${{ vars.REACT_APP_PROJECT_ID }}
+#       REACT_APP_STAGE: ${{ vars.REACT_APP_STAGE }}
+#       REACT_APP_STORAGE_BUCKET: ${{ vars.REACT_APP_STORAGE_BUCKET }}
+#       REACT_APP_GOOGLE_API: ${{ vars.REACT_APP_GOOGLE_API }}
+#       REACT_APP_BASE_URL: ${{ vars.REACT_APP_BASE_URL }}
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Use Node.js ${{ matrix.node-version }}
+#         uses: actions/setup-node@v1
+#         with:
+#           node-version: ${{ matrix.node-version }}
+#       - uses: actions/setup-node@v2
+#       - run: yarn cache clean
+#       - run: yarn
+#       - name: Build the app
+#         run: yarn build --if-present --max-old-space-size=$(awk '/MemTotal/ {print int($2*0.75/1024)}' /proc/meminfo) --no-parallel
+#         # This limits the memory used by Node.js to 75% of the available memory
+#         # The $(awk '/MemTotal/ {print int($2*0.75/1024)}' /proc/meminfo) command
+#         # calculates the appropriate value for --max-old-space-size based on the available memory
+#         # The --no-parallel option disables parallelism to reduce memory usage
+#       - name: Show build logs
+#         run: cat build/log.txt
+#         if: success() # This only runs if the previous step was successful
